@@ -1,0 +1,15 @@
+{
+  "name": "ses-2a",
+  "version": "1.0.0",
+  "description": "software Engineering Studio 2A Backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Team 2",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

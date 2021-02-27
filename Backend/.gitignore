@@ -1,0 +1,5 @@
+# .gitignore for backend
+
+# node module realted 
+/node_modules
+package-lock.json
