@@ -12,8 +12,12 @@ This application is divided into two directories.
 
  - Directory: Frontend
 	 - Built in React
+	 - In your terminal access via `cd Frontend`
+	 - Install node modules and start development server (see REaDME.md inside directory for details)
  - Directory: Backend
 	 - Built in Node.js and Python
+	 - In your terminal access via `cd Backend`
+	 - Install node modules and start development server (see REaDME.md inside directory for details)
 
 ## Code Standards
 
