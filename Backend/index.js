@@ -1,6 +1,6 @@
 // Required
 const express = require('express');
-
+var bodyParser = require('body-parser')
 
 // Set up express app
 const app = express()
@@ -10,6 +10,10 @@ const PORT = process.env.port || 8080;
 
 // Import API routes
 const sample = require("./api/sample");
+
+// parse application/x-www-form-urlencoded &&  application/json
+app.use(bodyParser.urlencoded())
+app.use(bodyParser.json())
 
 //Implement API Routing
 app.use("/api", sample)

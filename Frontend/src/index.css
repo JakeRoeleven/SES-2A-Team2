@@ -11,3 +11,14 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
 }
+
+
+.menu {
+    background-color: red;
+    height: 60px;
+    padding: 2% 1% 0% 2%;
+}
+
+.float-right {
+    float: right
+}
