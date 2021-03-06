@@ -22,3 +22,15 @@ This application is divided into two directories.
 ## Code Standards
 
 This application contains code standards based the README's of each directory.
+
+## Requirements
+
+You will need to have the latest version of Node to run the application
+You can install this from [here](https://nodejs.org/en/)
+
+## Ports
+
+| Directory | PORT | Example |
+|--|--|--|
+| Frontend | 3000 | http://localhost:3000/ |
+| Backend | 8080 | http://localhost:8080/ |
