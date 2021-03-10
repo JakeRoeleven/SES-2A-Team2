@@ -4,7 +4,9 @@ This is the repository of Team 2 for UTS Software Engineering Studio 2A. This re
 
 ## Team 2 - Contributors 
 
- - [JakeRoeleven](https://github.com/JakeRoeleven) -> Jake Roeleven - 13246638 
+ - [JakeRoeleven](https://github.com/JakeRoeleven) -> Jake Roeleven - 13246638
+ - [Ashwin Saji](https://github.com/shwin132) -> Ashwin Saji - 13537598
+ - [Khurshid Manal](https://github.com/13556042) -> Khurshid Manal - 13556042  
 
 ## System Architecture
 
@@ -28,7 +30,7 @@ This application contains code standards based the README's of each directory.
 You will need to have the latest version of Node to run the application
 You can install this from [here](https://nodejs.org/en/)
 
-## Ports
+## Ports List
 
 | Directory | PORT | Example |
 |--|--|--|
