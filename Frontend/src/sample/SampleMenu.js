@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Button from '@material-ui/core/Button';
 
 function SampleMenu() {
     const [accessTime, setAccessTime] = useState('');
@@ -25,7 +26,7 @@ function SampleMenu() {
             <span> SES 2A </span>
             <div className='float-right'>
                 <span>This page was last updated at: {accessTime} </span>
-                <button onClick={fetchTime}> Refresh? </button>
+                <Button variant="contained" color="secondary" onClick={fetchTime}> Refresh? </Button>
             </div>
         </div>
     );
