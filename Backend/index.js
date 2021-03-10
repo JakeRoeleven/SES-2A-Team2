@@ -10,13 +10,15 @@ const PORT = process.env.port || 8080;
 
 // Import API routes
 const sample = require("./api/sample");
+const recommendation = require("./api/recommendation");
 
-// parse application/x-www-form-urlencoded &&  application/json
-app.use(bodyParser.urlencoded())
-app.use(bodyParser.json())
+// Parse application/x-www-form-urlencoded && application/json input
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //Implement API Routing
 app.use("/api", sample)
+app.use("/api", recommendation)
 
 // Start server
 app.listen(PORT, () => {
@@ -25,7 +27,6 @@ app.listen(PORT, () => {
 
 module.exports = app;
 
-// TODO: Add body/json parser?
 // TODO: Add cors, helmet security ect
 // TODO: Define routes
 // TODO: Spawn example python process 
