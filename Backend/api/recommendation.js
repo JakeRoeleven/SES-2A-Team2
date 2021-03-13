@@ -2,41 +2,13 @@ const express = require('express');
 const { spawn } = require('child_process');
 const router = express.Router();
 
-router.get('/test', (req, res) => {
+router.get('/random', (req, res) => {
 
     // Keep a track of time it takes for python to execute
     console.time("Spawn Child Script")
 
-    // Testing data
-    let test_json_courses = {
-        "engineering": {
-            "interests": ["math", "science"],
-            "note": "Build Shit"
-        },
-        "engineering a": {
-            "interests": ["math", "science"],
-            "note": "Build Shit"
-        },
-        "engineering v": {
-            "interests": ["math", "science"],
-            "note": "Build Shit"
-        },
-        "engineering 1": {
-            "interests": ["math", "science"],
-            "note": "Build Shit"
-        },
-        "maths": {
-            "interests": ["math", "science"],
-            "note": "Build Shit"
-        },
-        "programming": {
-            "interests": ["math", "science"],
-            "note": "Build Shit"
-        },
-    }
-
     // Looks like env path from python is py on my local machine
-    let process = spawn('py',["./api/sample.py",  'test',   'work']); 
+    let process = spawn('py',["./recommendation/subject_randomiser.py",  'test',   'work']); 
    
     // Define a variable to write python data to
     let data_out = "";
@@ -46,23 +18,12 @@ router.get('/test', (req, res) => {
         // Node receives data from python
         process.stdout.on('data', function(data) {
             console.log(data) 
-            data_out = data.toString('utf8')
+            res.send(data.toString('utf8'))
         });
 
         // Node receives err from python
-        // process.stderr.on('data', function(data) {
-        //     data_out += data.toString();
-        // });
-
-        // When python script ends
-        process.stdout.on('end', function(){
-
-            let python_data = data_out
-            console.log("Python Data");
-            console.log(python_data)
-            res.send(python_data);
-            console.log("-------------");
-        
+        process.stderr.on('data', function(data) {
+            data_out += data.toString();
         });
 
         // Send JSON to Python
@@ -74,7 +35,7 @@ router.get('/test', (req, res) => {
     }
 
     console.timeEnd("Spawn Child Script")
-
+    
 });
 
 module.exports = router;
