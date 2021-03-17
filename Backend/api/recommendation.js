@@ -17,8 +17,7 @@ router.get('/random', (req, res) => {
 
         // Node receives data from python
         process.stdout.on('data', function(data) {
-            console.log(data) 
-            res.send(data.toString('utf8'))
+            data_out = data.toString('utf8')
         });
 
         // Node receives err from python
@@ -26,16 +25,25 @@ router.get('/random', (req, res) => {
             data_out += data.toString();
         });
 
-        // Send JSON to Python
-        process.stdin.write(JSON.stringify(test_json_courses));
-        process.stdin.end();
+        // When python script ends
+        process.stdout.on('end', function() {
+
+            try {
+                console.log(typeof data_out)
+                let t = JSON.parse(data_out)
+                res.json(t)
+            } catch (error) {
+                console.log(data_out)
+                res.status(500)
+            }
+        });
 
     } catch (error) {
         res.status(500)
     }
 
     console.timeEnd("Spawn Child Script")
-    
+
 });
 
 module.exports = router;

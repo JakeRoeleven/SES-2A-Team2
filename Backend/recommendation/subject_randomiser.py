@@ -20,7 +20,7 @@ def main():
     for subject_code in selected_subjects:
         random_subjects[subject_code] = all_subjects[subject_code]
 
-    print(random_subjects)
+    print(json.dumps(random_subjects))
 
     exit()
 
