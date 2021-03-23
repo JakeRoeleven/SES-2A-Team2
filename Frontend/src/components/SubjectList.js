@@ -12,6 +12,7 @@ function SubjectList(props) {
         fetch('/api/random').then(async (res) => {
             let data = await res.json();
             setSubjects(data)
+            console.log(subjects)
             setLoading(false)
         }).catch((err) => {
             console.log(err)
@@ -26,10 +27,14 @@ function SubjectList(props) {
         return <CircularProgress />
     } else {
         return (
-            <div>
-                {Object.keys(subjects).map((subject, key) => (
+            <div style={{padding: "2%"}}>
+
+                <h2>Subjects Recommended for You</h2>
+
+                {Object.keys(subjects).slice(0, 4).map((subject, key) => (
                     <SubjectCard key={key} subject={subjects[subject]} />
                 ))}
+                
             </div>
         )
     }

@@ -1,14 +1,13 @@
 import React from 'react';
 
-
 import SubjectList from './components/SubjectList';
-import SampleMenu from './sample/SampleMenu';
-
+import AppMenu from './components/AppMenu';
 
 function App() {
 	
 	return ( 
 		<>
+			<AppMenu />
 			<SubjectList />
 		</>
 	)

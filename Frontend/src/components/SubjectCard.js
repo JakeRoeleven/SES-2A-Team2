@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import {
     Card,
@@ -9,19 +9,14 @@ import {
 } from '@material-ui/core';
 
 function SubjectCard(props) {
-
-    const [subject, setSubject] = useState({});
- 
     return (
-        <Card>
-            <CardContent>
-                
-                <Typography color='textSecondary' gutterBottom> {props.subject.course_name} </Typography>
-
-                <Typography variant='body2' component='p'> {props.subject.description } </Typography>
+        <Card style={{marginBottom: "1%"}}>
+            <CardContent>   
+                <Typography color='textPrimary' gutterBottom> {props.subject.course_name} </Typography>
+                <Typography variant='body2' component='p'> {props.subject.description} </Typography>
             </CardContent>
             <CardActions>
-                <Button size='small'>Learn More</Button>
+                <Button target="_blank" color="primary" size='small'  href={props.subject.link}>Learn More</Button>
             </CardActions>
         </Card>
     );
