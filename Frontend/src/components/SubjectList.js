@@ -24,7 +24,11 @@ function SubjectList(props) {
     }, []);
 
     if (loading || error) {
-        return <CircularProgress />
+        return (
+            <div style={{paddingTop: "10%"}}>
+                <center><CircularProgress /></center>
+            </div>
+        )
     } else {
         return (
             <div style={{padding: "2%"}}>
@@ -34,7 +38,7 @@ function SubjectList(props) {
                 {Object.keys(subjects).slice(0, 4).map((subject, key) => (
                     <SubjectCard key={key} subject={subjects[subject]} />
                 ))}
-                
+
             </div>
         )
     }
