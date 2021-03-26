@@ -12,7 +12,7 @@ router.get('/py', async (req, res) => {
 
     try {
         let startTime = process.hrtime();
-        PythonShell.run('./recommendation/subject_randomiser.py', null, function(err, results) {
+        PythonShell.run('./recommendation/subject_randomiser.py', null, async function(err, results) {
             if (err) {
                 console.log(err)
                 res.status(200).send(err);
@@ -21,7 +21,7 @@ router.get('/py', async (req, res) => {
                 json_data = await JSON.parse(data);
                 let time = await parseHrtimeToSeconds(process.hrtime(startTime));
                 json_data["run_time"] = await time;
-                res.status(200).json(await json_data);
+                res.status(200).json(json_data);
             }
         });
     } catch (e) {
