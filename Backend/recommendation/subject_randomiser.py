@@ -9,13 +9,8 @@ try:
         with open('./recommendation/uts_subjects.json', encoding="utf8") as file:
             all_subjects = json.load(file)
 
-        print(1)
-
-
         all_subjects_keys = [k for k in all_subjects.keys()]
         selected_subjects = [];
-
-        print(2)
 
         while (len(selected_subjects) < 10):
             length =  len(all_subjects_keys)
@@ -26,9 +21,6 @@ try:
         random_subjects = {}
         for subject_code in selected_subjects:
             random_subjects[subject_code] = all_subjects[subject_code]
-
-
-        print(3)
 
         print(json.dumps(random_subjects))
 
