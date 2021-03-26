@@ -16,7 +16,8 @@ router.get('/py', async (req, res) => {
                 console.log(data)
                 json_data = JSON.parse(data);
                 let time = console.timeEnd('Spawn Child Script');
-                json_data[run_time] = time;
+                json_data["run_time"] = time;
+                console.log(json_data)
                 res.status(200).json(json_data);
             }
         });
