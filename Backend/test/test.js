@@ -6,7 +6,7 @@ let {PythonShell} = require('python-shell')
 router.get('/py', async (req, res) => {
 
     try {
-        PythonShell.run('./test/test3.py', null, function(err, results) {
+        PythonShell.run('./recommendation/subject_randomiser.py', null, function(err, results) {
             if (err) {
                 console.log(err)
                 res.status(200).send(err);
