@@ -12,10 +12,12 @@ router.get('/py', async (req, res) => {
                 res.status(200).send(err);
             } else {
                 let data = results;
+                console.log(data)
                 res.status(200).send(data);
             }
         });
     } catch (e) {
+        console.log(e)
         res.status(200).send(e);
     }
 
