@@ -5,13 +5,15 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 function SubjectList(props) {
 
     const [subjects, setSubjects] = useState({})
+    const [loadTime, setLoadTime] = useState('')
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
 
     const fetchSubjects = async () => {
-        fetch('/api/random').then(async (res) => {
+        fetch('/api/py').then(async (res) => {
             let data = await res.json();
             setSubjects(data)
+            setLoadTime(data.run_time);
             console.log(subjects)
             setLoading(false)
         }).catch((err) => {
@@ -33,9 +35,12 @@ function SubjectList(props) {
         return (
             <div style={{padding: "2%"}}>
 
-                <h2>Subjects Recommended for You</h2>
+                <div>
+                    <h2 style={{display: "inline-block"}}>Subjects Recommended for You</h2>
+                    <p style={{float: "right"}}> 5 Subjects found in: {loadTime}s </p>
+                </div>
 
-                {Object.keys(subjects).slice(0, 4).map((subject, key) => (
+                {Object.keys(subjects).slice(0, 5).map((subject, key) => (
                     <SubjectCard key={key} subject={subjects[subject]} />
                 ))}
 
