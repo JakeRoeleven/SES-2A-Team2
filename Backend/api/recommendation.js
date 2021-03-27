@@ -1,25 +1,23 @@
 const express = require('express');
 const router = express.Router();
-let {PythonShell} = require('python-shell')
+let {PythonShell} = require('python-shell');
 
 router.get('/random', (req, res) => {
+    let startTime = process.hrtime();
     try {
-        let startTime = process.hrtime();
-        PythonShell.run('./recommendation/subject_randomiser.py', null, async function(err, results) {
-            if (err) {
-                console.log(err)
-                res.status(200).send(err);
-            } else {
-                let data = results;
-                json_data = await JSON.parse(data);
-                let time = await parseHrtimeToSeconds(process.hrtime(startTime));
-                json_data["run_time"] = await time;
-                res.status(200).json(json_data);
+        PythonShell.run('./python/recommendation/subject_randomiser.py', null, async function (error, results) {
+                if (error) {
+                    res.status(400).send(error);
+                } else {
+                    let json_data = {};
+                    json_data['subjects'] = await JSON.parse(results);
+                    json_data['run_time'] = await parseHrtimeToSeconds(process.hrtime(startTime));
+                    res.status(200).json(json_data);
+                }
             }
-        });
-    } catch (e) {
-        console.log(e)
-        res.status(200).send(e);
+        );
+    } catch (error) {
+        res.status(400).send(error);
     }
 });
 

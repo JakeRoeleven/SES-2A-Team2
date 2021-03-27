@@ -6,7 +6,7 @@ try:
     def main():
         all_subjects = {}
 
-        with open('./recommendation/uts_subjects.json', encoding="utf8") as file:
+        with open('./json/uts_subjects.json', encoding="utf8") as file:
             all_subjects = json.load(file)
 
         all_subjects_keys = [k for k in all_subjects.keys()]
