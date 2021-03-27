@@ -18,12 +18,13 @@ function SubjectList(props) {
             setLoading(false)
         }).catch((err) => {
             console.log(err)
+            setError(err)
         });
     };
 
     useEffect(() => {
         fetchSubjects();
-    }, []);
+    });
 
     if (loading || error) {
         return (
