@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/417f1cdf-7652-463a-9700-9cc77290ab79/resourceGroups/Studio2A/providers/Microsoft.Web/sites/Studio2A",
+    "appService.deploySubpath": "./Backend"
+}
