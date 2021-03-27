@@ -11,14 +11,16 @@ const PORT = process.env.port || 8080;
 // Import API routes
 const sample = require("./api/sample");
 const recommendation = require("./api/recommendation");
+const subjects = require("./api/subjects");
 
 // Parse application/x-www-form-urlencoded && application/json input
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //Implement API Routing
-app.use("/api", sample)
-app.use("/api", recommendation)
+app.use("/api", sample);
+app.use("/api", recommendation);
+app.use("/api", subjects);
 
 // Start server
 app.listen(PORT, () => {
