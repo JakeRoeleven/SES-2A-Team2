@@ -10,7 +10,12 @@ function SubjectList(props) {
     const [error, setError] = useState(false)
 
     const fetchSubjects = async () => {
-        fetch('http://178.128.216.237:8080/api/py').then(async (res) => {
+        fetch('http://178.128.216.237:8080/api/py', {
+            crossDomain: true,
+            mode:'cors',
+            method: 'GET',
+            headers: {'Content-Type':'application/json'}
+        }).then(async (res) => {
             let data = await res.json();
             setSubjects(data)
             setLoadTime(data.run_time);
@@ -24,7 +29,7 @@ function SubjectList(props) {
 
     useEffect(() => {
         fetchSubjects();
-    });
+    }, []);
 
     if (loading || error) {
         return (

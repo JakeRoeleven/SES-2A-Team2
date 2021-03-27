@@ -13,6 +13,10 @@ const sample = require("./api/sample");
 const recommendation = require("./api/recommendation");
 const testing = require("./test/test");
 
+// TODO: Fix up cors
+const cors = require('cors');
+app.use(cors())
+
 // Parse application/x-www-form-urlencoded && application/json input
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
