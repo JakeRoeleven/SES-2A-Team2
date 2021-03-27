@@ -14,7 +14,10 @@ function SubjectList(props) {
             crossDomain: true,
             mode:'cors',
             method: 'GET',
-            headers: {'Content-Type':'application/json'}
+            headers: {
+                'Content-Type':'application/json',
+                "Access-Control-Allow-Origin": "*"
+            }
         }).then(async (res) => {
             let data = await res.json();
             setSubjects(data)

@@ -1,6 +1,7 @@
 // Required
 const express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+const cors = require('cors');
 
 // Set up express app
 const app = express()
@@ -14,7 +15,6 @@ const recommendation = require("./api/recommendation");
 const testing = require("./test/test");
 
 // TODO: Fix up cors
-const cors = require('cors');
 app.use(cors())
 
 // Parse application/x-www-form-urlencoded && application/json input
