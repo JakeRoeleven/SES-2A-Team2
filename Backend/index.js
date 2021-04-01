@@ -1,6 +1,6 @@
 // Required
 const express = require('express');
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
 // Set up express app
 const app = express()
