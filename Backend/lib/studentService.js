@@ -1,6 +1,6 @@
 const fireStore = require('firebase-admin');
 
-class SubjectService {
+class studentService {
 
     constructor() {
         this.init();
@@ -27,24 +27,26 @@ class SubjectService {
         });
     }
 
-    async setSubjects(id, subject) {
-        const courses = this.db.collection('courses');
-        let courseDoc = courses.doc(id);
-        await courseDoc.set(subject)
+    async setStudent(id, student) {
+        const students = this.db.collection('students');
+        let studentDoc = students.doc(id);
+        await studentsDoc.set(student)
     }
 
-    async getSubject(id) {
-        const courseRef = this.db.collection('courses').doc(id);
+    async getStudent(id) {
+        const courseRef = this.db.collection('students').doc(id);
         const doc = await courseRef.get();
         if (!doc.exists) {
             console.log('No such document!');
         } else {
-            console.log('Document data:', doc.data());
+            let student = {}
+            student[doc.id] = doc.data();
+            return student;
         }
     }
 
-    async getAllSubjects() {
-        const courseRef = this.db.collection('courses');
+    async getAllStudents() {
+        const courseRef = this.db.collection('students');
         const snapshot = await courseRef.get();
 
         if (snapshot.empty) {
@@ -52,38 +54,19 @@ class SubjectService {
             return;
         }  
           
-        let subjects ={}
+        let students ={}
 
         snapshot.forEach(doc => {
-            subjects[doc.id] = doc.data();
+            students[doc.id] = doc.data();
         });
 
-        console.log(subjects);
+        return students;
     }
 
-    async getSubjectFromName(name) {
-        const courseRef = this.db.collection('courses');
-        const snapshot = await courseRef.where('course_name', '>=', name).where('course_name', '<=', name + '\uf8ff').get();
-
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        }  
-
-        snapshot.forEach(doc => {
-            console.log(doc.id, '=>', doc.data());
-        });
+    async deleteStudent(id) {
+        await db.collection('students').doc(id).delete(); 
     }
 
-
-
-    // TODO: AllSubjects, Subject Description, Subject Update Subject Delete, JSON to Subjects
 }
 
-subjectService =  new SubjectService();
-subjectService.setSubjects();
-// subjectService.getSubject("57239")
-// subjectService.getSubjectFromName("Writing")
-// subjectService.getSubjectFromName("Lol")
-// subjectService.getSubjectFromName("Practice")
-subjectService.getAllSubjects();
+module.exports = studentService;
