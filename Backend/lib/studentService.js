@@ -1,6 +1,6 @@
 const fireStore = require('firebase-admin');
 
-class studentService {
+class StudentService {
 
     constructor() {
         this.init();
@@ -21,10 +21,11 @@ class studentService {
             "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-tzrft%40ses-2a-team-2.iam.gserviceaccount.com"
         };
         
-        
-        fireStore.initializeApp({
-            credential: fireStore.credential.cert(serviceAccount)
-        });
+        if (fireStore.apps.length === 0) {
+            fireStore.initializeApp({
+                credential: fireStore.credential.cert(serviceAccount)
+            });
+        }
     }
 
     async setStudent(id, student) {
@@ -69,4 +70,4 @@ class studentService {
 
 }
 
-module.exports = studentService;
+module.exports = StudentService;
