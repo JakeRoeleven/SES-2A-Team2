@@ -1,30 +1,18 @@
 import React from 'react';
+import clsx from 'clsx';
 
 // Material UI Imports
-import {makeStyles} from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-}));
-
 function AppMenu(props) {
 
-    const classes = useStyles();
+    const classes = props.styles;
 
     return (
-        <AppBar position='static'>
+        <AppBar position="fixed"  className={clsx(classes.appBar, {  [classes.appBarShift]: props.open, })}>
             <Toolbar>
-                <IconButton onClick={props.open} edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
+                <IconButton color="inherit" aria-label="open drawer" onClick={props.handleDrawerOpen} edge="start" className={clsx(classes.menuButton, {[classes.hide]: props.open, })}>
                     <MenuIcon />
                 </IconButton>
                 <Typography variant='h6' className={classes.title}>
