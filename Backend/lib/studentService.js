@@ -31,7 +31,7 @@ class StudentService {
     async setStudent(id, student) {
         const students = this.db.collection('students');
         let studentDoc = students.doc(id);
-        await studentsDoc.set(student)
+        await studentDoc.set(student)
     }
 
     async getStudent(id) {
