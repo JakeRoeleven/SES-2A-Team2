@@ -13,6 +13,7 @@ const sample = require("./api/sample");
 const recommendation = require("./api/recommendation");
 const subjects = require("./api/subjects");
 const students = require("./api/students");
+const interests = require("./api/interests");
 
 // Parse application/x-www-form-urlencoded && application/json input
 app.use(express.json());
@@ -23,6 +24,7 @@ app.use("/api", sample);
 app.use("/api", recommendation);
 app.use("/api", subjects);
 app.use("/api", students);
+app.use("/api", interests);
 
 // Start server
 app.listen(PORT, () => {
