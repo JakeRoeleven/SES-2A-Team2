@@ -1,11 +1,18 @@
 import React from 'react';
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
-import ListItem from '@material-ui/core/ListItem';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Transform from '@material-ui/icons/Transform';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Favorite from '@material-ui/icons/Favorite';
 
 export default function AppDrawer(props) {
    
@@ -36,8 +43,24 @@ export default function AppDrawer(props) {
                 </IconButton>
             </div>
             <Divider />
-            <ListItem>Menu Item 5</ListItem>
-            <ListItem>Menu Item 2</ListItem>
+            <List>
+                <ListItem button>
+                    <ListItemIcon><Transform/></ListItemIcon>
+                    <ListItemText primary={"Recommendations"} />
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><SearchIcon/></ListItemIcon>
+                    <ListItemText primary={"Search"} />
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><AccountCircle/></ListItemIcon>
+                    <ListItemText primary={"Account"} />
+                </ListItem>
+                <ListItem button>
+                    <ListItemIcon><Favorite/></ListItemIcon>
+                    <ListItemText primary={"Favorites"} />
+                </ListItem>
+             </List>
         </Drawer>
     );
 }

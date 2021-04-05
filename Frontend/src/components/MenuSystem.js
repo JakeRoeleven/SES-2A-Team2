@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppMenu from './menus/AppMenu';
 import AppDrawer from './menus/Drawer';
 
-const drawerWidth = 100;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -50,8 +50,8 @@ const useStyles = makeStyles((theme) => ({
         }),
         overflowX: 'hidden',
         width: theme.spacing(7) + 1,
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9) + 1,
+        [theme.breakpoints.up('xl')]: {
+            width: theme.spacing(7) + 1,
         },
     },
     toolbar: {
@@ -69,13 +69,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NavWrapper(props) {
-
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
-        console.log('called')
+        console.log('called');
         setOpen(true);
     };
 
@@ -84,12 +83,24 @@ function NavWrapper(props) {
     };
 
     return (
-        <> 
+        <>
             <div className={classes.root}>
-              <CssBaseline /> 
-                <AppMenu handleDrawerOpen={handleDrawerOpen} styles={classes} open={open}/>
-                <AppDrawer handleDrawerClose={handleDrawerClose} styles={classes} open={open} theme={theme}/>
-                <div className={classes.content}>{props.children}</div>
+                <CssBaseline />
+                <AppMenu
+                    handleDrawerOpen={handleDrawerOpen}
+                    styles={classes}
+                    open={open}
+                />
+                <AppDrawer
+                    handleDrawerClose={handleDrawerClose}
+                    styles={classes}
+                    open={open}
+                    theme={theme}
+                />
+                <div className={classes.content}>
+                    <div className={classes.toolbar} />
+                    {props.children}
+                </div>
             </div>
         </>
     );
