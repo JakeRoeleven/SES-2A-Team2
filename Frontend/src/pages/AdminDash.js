@@ -22,6 +22,13 @@ const columns = [
     { field: 'crequirements', headerName: 'Course Requirements', width: 400 },
     { field: 'ctype', headerName: 'Course Type', width: 400 },
 ];
+
+const [rows, setRows] = React.useState(['']);
+const addRow = () => {
+	const newRows = [...rows];
+	newRows.push('');
+	setRows(newRows);
+};
   
 const rows = [
     { id: 1, cname: 'MM2', crequirements: 'MM1', ctype: Math },
