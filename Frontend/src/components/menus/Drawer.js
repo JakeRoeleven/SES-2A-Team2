@@ -44,22 +44,30 @@ export default function AppDrawer(props) {
             </div>
             <Divider />
             <List>
-                <ListItem button>
-                    <ListItemIcon><Transform/></ListItemIcon>
-                    <ListItemText primary={"Recommendations"} />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon><SearchIcon/></ListItemIcon>
-                    <ListItemText primary={"Search"} />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon><AccountCircle/></ListItemIcon>
-                    <ListItemText primary={"Account"} />
-                </ListItem>
-                <ListItem button>
-                    <ListItemIcon><Favorite/></ListItemIcon>
-                    <ListItemText primary={"Favorites"} />
-                </ListItem>
+                <a href={'/recommendations'}>
+                    <ListItem button>
+                        <ListItemIcon><Transform/></ListItemIcon>
+                        <ListItemText primary={"Recommendations"} />
+                    </ListItem>
+                </a>
+                <a href={'/search'}>
+                    <ListItem button>
+                        <ListItemIcon><SearchIcon/></ListItemIcon>
+                        <ListItemText primary={"Search"} />
+                    </ListItem>
+                </a>
+                <a href={'/account'}>
+                    <ListItem button>
+                        <ListItemIcon><AccountCircle/></ListItemIcon>
+                        <ListItemText primary={"Account"} />
+                    </ListItem>
+                </a>
+                <a href={'/liked-courses'}>
+                    <ListItem button>
+                        <ListItemIcon><Favorite/></ListItemIcon>
+                        <ListItemText primary={"Favorites"} />
+                    </ListItem>
+                </a>
              </List>
         </Drawer>
     );
