@@ -50,7 +50,7 @@ export default function AdminDash() {
             <DataGrid rows={rows} columns={columns} checkboxSelection />
         </div>
         <div>
-            <Fab color="primary" aria-label="add"><AddIcon/></Fab>
+            <Fab color="primary" aria-label="add" onClick="addRow"><AddIcon/></Fab>
             <Fab color="secondary" aria-label="edit"><EditIcon/></Fab>
         </div>
     </div>
