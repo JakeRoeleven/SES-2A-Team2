@@ -1,16 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
+const CourseService = require('../lib/CourseService');
 
 router.get('/subjects', async (req, res) => {
-    try {
-        let file_data = fs.readFileSync('./json/uts_subjects.json');
-        let subject_list = await JSON.parse(file_data);
-        res.status(200).json(subject_list);
-    } catch (error) {
-        console.log(error)
-        res.status(401).send(error);
-    }
+    const courseService = new CourseService();
+    let course_list = await courseService.getAllCourses();
+    res.status(200).json(course_list);
+});
+
+router.get('/subject/:id', async (req, res) => {
+    const id = req.params.id;
+    const courseService = new CourseService();
+    let course = await courseService.getCourse(id);
+    res.status(200).json(course);
+});
+
+router.get('/subject/name/:name', async (req, res) => {
+    const name = req.params.name;
+    const courseService = new CourseService();
+    let course = await courseService.getCoursesFromName(name);
+    res.status(200).json(course);
+});
+
+router.get('/subject/name/:name', async (req, res) => {
+    const name = req.params.name;
+    const courseService = new CourseService();
+    let course = await courseService.getCoursesFromName(name);
+    res.status(200).json(course);
 });
 
 module.exports = router;
