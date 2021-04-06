@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 // Import Pages
 import Home from './pages/Home';
 import Recommendations from './pages/Recommendations';
+import AdminDash from './pages/AdminDash';
 
 function App() {
 	
@@ -16,7 +17,8 @@ function App() {
 				<AppMenu />
 				<Switch > 
 					<Route exact path="/" component={Home} />
-					<Route exact path="/recommendations" component={Recommendations} /> 
+					<Route exact path="/recommendations" component={Recommendations} />
+					<Route exact path="/admindash" component={AdminDash} />
 				</Switch>
 			</Router>
 		</>
