@@ -28,7 +28,7 @@ const columns = [
 //	const newRows = [...rows];
 //	newRows.push('');
 //	setRows(newRows);
-//};
+//}; test commit
   
 const rows = [
     { id: 1, cname: 'MM2', crequirements: 'MM1', ctype: Math },
