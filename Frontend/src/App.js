@@ -1,25 +1,31 @@
-<<<<<<< HEAD
 import React from 'react';
-
-import AppMenu from './components/AppMenu';
-
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 // Import Pages
 import Home from './pages/Home';
 import Recommendations from './pages/Recommendations';
 import AdminDash from './pages/AdminDash';
+import NavWrapper from './components/MenuSystem';
+import Search from './pages/Search';
+import Account from './pages/Account';
+import LikedCourses from './pages/LikedCourses';
 
 function App() {
 	
 	return ( 
 		<>
 		    <Router>
-				<AppMenu />
 				<Switch > 
 					<Route exact path="/" component={Home} />
 					<Route exact path="/recommendations" component={Recommendations} />
 					<Route exact path="/admindash" component={AdminDash} />
+					<NavWrapper>
+						<Route exact path="/" component={Home} />
+						<Route exact path="/recommendations" component={Recommendations} />
+						<Route exact path="/search" component={Search} />
+						<Route exact path="/account" component={Account} /> 
+						<Route exact path="/liked-courses" component={LikedCourses} /> 
+					</NavWrapper>
 				</Switch>
 			</Router>
 		</>
@@ -28,7 +34,6 @@ function App() {
 import React, { Component } from 'react';
 import './index.css';
 import StudentForm from './selectmenu/StudentForm';
->>>>>>> 45e9e486dcbe85680c211d4cd1b557abfcc95f26
 
 class App extends Component {
   render() {
@@ -42,5 +47,3 @@ class App extends Component {
 }
 
 export default App;
-
-//didnt't wanna fuck up master sorry
