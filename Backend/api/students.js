@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const StudentService = require('../lib/StudentService');
+const StudentService = require('../lib/studentService');
 
 router.get('/students', async (req, res) => {
     const studentService = new StudentService();
