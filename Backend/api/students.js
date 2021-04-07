@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const StudentService = require('../lib/studentService');
-const isValidStudent = require('../middlewares/studentValidator').isValidStudent;
 
 router.get('/students', async (req, res) => {
     const studentService = new StudentService();
@@ -9,11 +8,11 @@ router.get('/students', async (req, res) => {
     res.status(200).json(student_list);
 });
 
-router.post('/new-student', isValidStudent, async (req, res) => {
+router.post('/new-student', async (req, res) => {
+    
     const student = req.body.student_data;
     const id = req.body.id;
-    console.log(id)
-    console.log(student);
+
     try {
         const studentService = new StudentService();
         await studentService.setStudent(id, student);
