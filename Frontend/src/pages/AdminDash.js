@@ -23,12 +23,12 @@ const columns = [
     { field: 'ctype', headerName: 'Course Type', width: 400 },
 ];
 
-const [rows, setRows] = React.useState(['']);
-const addRow = () => {
-	const newRows = [...rows];
-	newRows.push('');
-	setRows(newRows);
-};
+//const [rows, setRows] = React.useState(['']);
+//const addRow = () => {
+//	const newRows = [...rows];
+//	newRows.push('');
+//	setRows(newRows);
+//};
   
 const rows = [
     { id: 1, cname: 'MM2', crequirements: 'MM1', ctype: Math },
@@ -50,7 +50,7 @@ export default function AdminDash() {
             <DataGrid rows={rows} columns={columns} checkboxSelection />
         </div>
         <div>
-            <Fab color="primary" aria-label="add" onClick="addRow"><AddIcon/></Fab>
+            <Fab color="primary" aria-label="add"><AddIcon/></Fab>
             <Fab color="secondary" aria-label="edit"><EditIcon/></Fab>
         </div>
     </div>
