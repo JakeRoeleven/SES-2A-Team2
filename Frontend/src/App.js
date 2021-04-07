@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 
 import AppMenu from './components/AppMenu';
@@ -23,7 +24,23 @@ function App() {
 			</Router>
 		</>
 	)
+=======
+import React, { Component } from 'react';
+import './index.css';
+import StudentForm from './selectmenu/StudentForm';
+>>>>>>> 45e9e486dcbe85680c211d4cd1b557abfcc95f26
 
+class App extends Component {
+  render() {
+    return (
+      <div className="col-md-6">
+        <h3> Student Interest Form </h3>
+        <StudentForm />
+      </div>
+    );
+  }
 }
 
-export default App
+export default App;
+
+//didnt't wanna fuck up master sorry
