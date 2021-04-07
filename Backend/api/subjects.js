@@ -22,13 +22,6 @@ router.get('/subject/name/:name', async (req, res) => {
     res.status(200).json(course);
 });
 
-router.get('/subject/name/:name', async (req, res) => {
-    const name = req.params.name;
-    const courseService = new CourseService();
-    let course = await courseService.getCoursesFromName(name);
-    res.status(200).json(course);
-});
-
 router.get('/set_all_subjects', async (req, res) => {
     const courseService = new CourseService();
     await courseService.setAllCourses();
