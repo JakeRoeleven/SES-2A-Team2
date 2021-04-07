@@ -4,8 +4,14 @@ const CourseService = require('../lib/CourseService');
 
 router.get('/subjects', async (req, res) => {
     const courseService = new CourseService();
-    let course_list = await courseService.getAllCourses();
-    res.status(200).json(course_list);
+    try {
+        let course_list = await courseService.getAllCourses();
+        res.status(200).json(course_list);
+    } catch (e) {
+        console.log(e)
+        res.status(400);
+    }
+
 });
 
 router.get('/subject/:id', async (req, res) => {
@@ -22,11 +28,10 @@ router.get('/subject/name/:name', async (req, res) => {
     res.status(200).json(course);
 });
 
-router.get('/subject/name/:name', async (req, res) => {
-    const name = req.params.name;
+router.get('/set_all_subjects', async (req, res) => {
     const courseService = new CourseService();
-    let course = await courseService.getCoursesFromName(name);
-    res.status(200).json(course);
+    await courseService.setAllCourses();
+    res.status(200).json();
 });
 
 module.exports = router;
