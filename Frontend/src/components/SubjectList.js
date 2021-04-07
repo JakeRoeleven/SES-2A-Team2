@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SubjectCard from './SubjectCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -9,21 +9,30 @@ function SubjectList(props) {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
 
-    const fetchSubjects = async () => {
-        fetch('/api/py').then(async (res) => {
+    const fetchSubjects = useCallback(async () => {
+        fetch('/api/subjects', {
+            crossDomain: true,
+            mode:'cors',
+            method: 'GET',
+            headers: {
+                'Content-Type':'application/json',
+                "Access-Control-Allow-Origin": "*"
+            }
+        }).then(async (res) => {
+            console.lgo9res
             let data = await res.json();
             setSubjects(data)
             setLoadTime(data.run_time);
-            console.log(subjects)
             setLoading(false)
         }).catch((err) => {
             console.log(err)
+            setError(err)
         });
-    };
+    }, []);
 
     useEffect(() => {
         fetchSubjects();
-    }, []);
+    }, [fetchSubjects]);
 
     if (loading || error) {
         return (
