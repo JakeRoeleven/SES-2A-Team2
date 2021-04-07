@@ -29,4 +29,10 @@ router.get('/subject/name/:name', async (req, res) => {
     res.status(200).json(course);
 });
 
+router.get('/set_all_subjects', async (req, res) => {
+    const courseService = new CourseService();
+    await courseService.setAllCourses();
+    res.status(200).json();
+});
+
 module.exports = router;

@@ -1,6 +1,7 @@
 // Required
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 // Set up express app
 const app = express()
@@ -14,6 +15,12 @@ const recommendation = require("./api/recommendation");
 const subjects = require("./api/subjects");
 const students = require("./api/students");
 const interests = require("./api/interests");
+
+//Connect to Mongo Database
+mongoose.connect('mongodb://root:password@165.232.165.231:27017', {useNewUrlParser: true, useUnifiedTopology: true, 
+    useCreateIndex: true, useFindAndModify: false}).then(() => console.log("Successfully connected to the database"))
+    .catch(error => console.log("Failed to connect to database: ", error));
+
 
 // Parse application/x-www-form-urlencoded && application/json input
 app.use(express.json());

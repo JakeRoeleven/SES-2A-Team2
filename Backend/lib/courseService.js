@@ -1,5 +1,6 @@
 const fireStore = require('firebase-admin');
 const fs = require('fs');
+const Course = require('../models/CourseModel')
 
 class CourseService {
 
@@ -30,13 +31,24 @@ class CourseService {
     }
 
     async setCourse(id, course) {
-        const courses = this.db.collection('courses');
-        let courseDoc = courses.doc(id);
-        await courseDoc.set(course)
+        console.log(id)
+        const courseObject = new Course({
+            _id: id, 
+            course_name: course.course_name,
+            credit_points: course.credit_points,
+            faculty: course.faculty,
+            postgraduate: course.postgraduate,
+            'pre-requisites': course['pre-requisites'],
+            'anti-requisites': course['ani-requisites'],
+            description: course.description,
+            link: course.link
+        });
+
+        await courseObject.save();
     }
 
     async setAllCourses() {
-        let courses = await JSON.parse(fs.readFileSync('../json/uts_subjects.json'));
+        let courses = await JSON.parse(fs.readFileSync('./json/uts_subjects.json'));
         Object.keys(courses).forEach(elem => {
             this.setCourse(elem, courses[elem]);
         })
@@ -55,21 +67,8 @@ class CourseService {
     }
 
     async getAllCourses() {
-        const courseRef = this.db.collection('courses');
-        const snapshot = await courseRef.get();
-
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        }  
-          
-        let subjects ={}
-
-        snapshot.forEach(doc => {
-            subjects[doc.id] = doc.data();
-        });
-
-        return subjects;
+        const courseRef  = await Course.find();
+        return courseRef;
     }
 
     async getCoursesFromName(name) {
