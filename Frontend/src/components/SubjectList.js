@@ -10,7 +10,7 @@ function SubjectList(props) {
     const [error, setError] = useState(false)
 
     const fetchSubjects = useCallback(async () => {
-        fetch('http://178.128.216.237:8080/api/py', {
+        fetch('/api/subjects', {
             crossDomain: true,
             mode:'cors',
             method: 'GET',
@@ -19,9 +19,10 @@ function SubjectList(props) {
                 "Access-Control-Allow-Origin": "*"
             }
         }).then(async (res) => {
+            console.log(res)
+            console.log("Found res")
             let data = await res.json();
             setSubjects(data)
-            setLoadTime(data.run_time);
             setLoading(false)
         }).catch((err) => {
             console.log(err)
@@ -45,7 +46,6 @@ function SubjectList(props) {
 
                 <div>
                     <h2 style={{display: "inline-block"}}>Subjects Recommended for You</h2>
-                    <p style={{float: "right"}}> 5 Subjects found in: {loadTime}s </p>
                 </div>
 
                 {Object.keys(subjects).slice(0, 5).map((subject, key) => (

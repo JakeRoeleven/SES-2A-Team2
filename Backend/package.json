@@ -4,7 +4,8 @@
   "description": "software Engineering Studio 2A Backend",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start index.js --no-daemon",
+    "start": "nodemon index.js",
+    "prod": "pm2 start index.js --no-daemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Team 2",
@@ -13,6 +14,8 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "firebase-admin": "^9.6.0",
+    "mongoose": "^5.12.3",
     "pm2": "^4.5.5",
     "python-shell": "^2.0.3"
   },
