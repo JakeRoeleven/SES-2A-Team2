@@ -6,7 +6,6 @@ class CourseService {
 
     constructor() {
         this.init();
-        this.db = fireStore.firestore(); 
     }
 
     init() {
@@ -30,8 +29,8 @@ class CourseService {
         }
     }
 
+    // TODO: Error handling
     async setCourse(id, course) {
-        console.log(id)
         const courseObject = new Course({
             _id: id, 
             course_name: course.course_name,
@@ -43,7 +42,6 @@ class CourseService {
             description: course.description,
             link: course.link
         });
-
         await courseObject.save();
     }
 
@@ -55,15 +53,13 @@ class CourseService {
     }
 
     async getCourse(id) {
-        const courseRef = this.db.collection('courses').doc(id);
-        const doc = await courseRef.get();
-        if (!doc.exists) {
-            console.log('No such document!');
-        } else {
-            let subject = {}
-            subject[doc.id] = doc.data();
-            return subject;
-        }
+        Course.findOne({ _id: id }, (err, course) => {
+            if (err || !course) {
+                return ({ err: "Could not find course!" });
+            } else {
+                return course;
+            }
+        });
     }
 
     async getAllCourses() {
@@ -72,25 +68,17 @@ class CourseService {
     }
 
     async getCoursesFromName(name) {
-        const courseRef = this.db.collection('courses');
-        const snapshot = await courseRef.where('course_name', '>=', name).where('course_name', '<=', name + '\uf8ff').get();
-
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        }  
-
-        let subjects ={}
-
-        snapshot.forEach(doc => {
-            subjects[doc.id] = doc.data();
+        Course.findOne({ course_name: name }, (err, course) => {
+            if (err || !course) {
+                return ({ err: "Could not find course!" });
+            } else {
+                return course;
+            }
         });
-
-        return subjects;
     }
 
     async deleteCourse(id) {
-        await db.collection('course').doc(id).delete(); 
+        await Course.deleteOne({ _id: id });
     }
 
 }
