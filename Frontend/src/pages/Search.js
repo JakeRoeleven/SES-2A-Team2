@@ -7,6 +7,8 @@ import InputBase from '@material-ui/core/InputBase';
 import {fade, makeStyles} from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
+import SearchHandler from '../lib/searchHandler.js';
+import SubjectCard from '../components/SubjectCard';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,12 +66,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Search() {
+
     const classes = useStyles();
     const [subjects, setSubjects] = useState({});
+    const [results, setResults] = useState({});
+    const [searchValue, setSearchValue] = useState('');
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const fetchData = useCallback(async () => {
+        console.log("Set subjects");
         fetch('http://localhost:8080/api/subjects', {
             crossDomain: true,
             mode: 'cors',
@@ -83,6 +89,8 @@ function Search() {
                 if (res.status === 200) {
                     let json = await res.json();
                     setSubjects(json);
+                    console.log(json);
+                    console.log("Set subjects");
                 } else {
                     setError(true);
                     setErrorMessage(
@@ -98,12 +106,28 @@ function Search() {
             });
     }, []);
 
+    const searchSubjects = async (key) => {
+        console.log(subjects)
+        console.log(key)
+        setResults({});
+        let searchHandler = new SearchHandler(subjects);
+        let searchResults = await searchHandler.searchAllSubjects(key);
+        setResults(searchResults)
+        console.log(searchResults)
+    }
+
+    const onChange = (event) => {
+        setSearchValue(event.target.value);
+    };
+
     useEffect(() => {
         if (Object.keys(subjects).length < 1000) fetchData();
     }, [fetchData, subjects]);
 
-    const Heading = () => {
-        return (
+    return (
+        <>
+            <CssBaseline />
+            <Container maxWidth={false}>
             <Grid container spacing={3}>
                 <Grid item xs={8}>
                     <Typography variant='h5'> Subject List Search </Typography>
@@ -120,20 +144,18 @@ function Search() {
                                 input: classes.inputInput,
                             }}
                             inputProps={{'aria-label': 'search'}}
+                            value={searchValue}
+                            onChange={onChange}
                         />
-                        <Button variant="contained">Search</Button>
+                        <Button variant="contained" onClick={() => searchSubjects(searchValue)}>Search</Button>
                     </div>
                 </Grid>
             </Grid>
-        );
-    };
-
-    return (
-        <>
-            <CssBaseline />
-            <Container maxWidth={false}>
-                <Heading />
                 <Typography />
+                <br />
+                {Object.keys(results).slice(0, 5).map((subject, key) => (
+                    <SubjectCard key={key} subject={results[subject]} />
+                ))}
             </Container>
         </>
     );

@@ -1,4 +1,5 @@
 const fireStore = require('firebase-admin');
+const coursesFile = require('../json/uts_subjects.json')
 const fs = require('fs');
 
 class CourseService {
@@ -55,21 +56,22 @@ class CourseService {
     }
 
     async getAllCourses() {
-        const courseRef = this.db.collection('courses');
-        const snapshot = await courseRef.get();
+        let courses = coursesFile
+        // const courseRef = this.db.collection('courses');
+        // const snapshot = await courseRef.get();
 
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        }  
+        // if (snapshot.empty) {
+        //     console.log('No matching documents.');
+        //     return;
+        // }  
           
-        let subjects ={}
+        // let subjects ={}
 
-        snapshot.forEach(doc => {
-            subjects[doc.id] = doc.data();
-        });
+        // snapshot.forEach(doc => {
+        //     subjects[doc.id] = doc.data();
+        // });
 
-        return subjects;
+        return courses;
     }
 
     async getCoursesFromName(name) {
