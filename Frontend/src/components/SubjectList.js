@@ -19,10 +19,10 @@ function SubjectList(props) {
                 "Access-Control-Allow-Origin": "*"
             }
         }).then(async (res) => {
-            console.lgo9res
+            console.log(res)
+            console.log("Found res")
             let data = await res.json();
             setSubjects(data)
-            setLoadTime(data.run_time);
             setLoading(false)
         }).catch((err) => {
             console.log(err)
@@ -46,7 +46,6 @@ function SubjectList(props) {
 
                 <div>
                     <h2 style={{display: "inline-block"}}>Subjects Recommended for You</h2>
-                    <p style={{float: "right"}}> 5 Subjects found in: {loadTime}s </p>
                 </div>
 
                 {Object.keys(subjects).slice(0, 5).map((subject, key) => (
