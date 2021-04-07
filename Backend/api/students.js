@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const StudentService = require('../lib/StudentService');
+const StudentService = require('../lib/studentService');
 const isValidStudent = require('../middlewares/studentValidator').isValidStudent;
 
 router.get('/students', async (req, res) => {
