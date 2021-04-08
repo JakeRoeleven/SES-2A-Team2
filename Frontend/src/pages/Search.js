@@ -78,7 +78,7 @@ function Search() {
 
     const fetchData = useCallback(async () => {
         console.log("Set subjects");
-        fetch('/api/subjects', {
+        fetch('178.128.216.237:8080/api/subjects', {
             crossDomain: true,
             mode: 'cors',
             method: 'GET',
@@ -129,6 +129,7 @@ function Search() {
         return (
             <div style={{paddingTop: "10%"}}>
                 <center><CircularProgress /></center>
+                <p> {errorMessage} </p>
             </div>
         )
     } else {
