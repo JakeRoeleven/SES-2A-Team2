@@ -21,7 +21,7 @@ mongoose.connect('mongodb://root:password@165.232.165.231:27017', {useNewUrlPars
     useCreateIndex: true, useFindAndModify: false}).then(() => console.log("Successfully connected to the database"))
     .catch(error => console.log("Failed to connect to database: ", error));
 
-const cors = require('cors');
+app.use(cors());
 
 // Parse application/x-www-form-urlencoded && application/json input
 app.use(express.json());
