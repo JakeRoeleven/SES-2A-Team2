@@ -22,4 +22,4 @@ class SearchHandler {
     
 }
 
-module.exports = SearchHandler;
+export default SearchHandler;

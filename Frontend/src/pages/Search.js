@@ -9,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import SearchHandler from '../lib/searchHandler.js';
 import SubjectCard from '../components/SubjectCard';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -71,12 +72,13 @@ function Search() {
     const [subjects, setSubjects] = useState({});
     const [results, setResults] = useState({});
     const [searchValue, setSearchValue] = useState('');
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const fetchData = useCallback(async () => {
         console.log("Set subjects");
-        fetch('http://localhost:8080/api/subjects', {
+        fetch('http://178.128.216.237:8080/api/subjects', {
             crossDomain: true,
             mode: 'cors',
             method: 'GET',
@@ -86,12 +88,14 @@ function Search() {
             },
         })
             .then(async (res) => {
+                console.log(await res.text())
                 if (res.status === 200) {
                     let json = await res.json();
+                    console.log(res)
                     setSubjects(json);
-                    console.log(json);
-                    console.log("Set subjects");
+                    setLoading(false);
                 } else {
+
                     setError(true);
                     setErrorMessage(
                         'The application failed to get the subject list. Please try again later'
@@ -99,6 +103,7 @@ function Search() {
                 }
             })
             .catch((err) => {
+                console.log(err)
                 setError(true);
                 setErrorMessage(
                     'The application failed to get the subject list. Please try again later'
@@ -124,41 +129,50 @@ function Search() {
         if (Object.keys(subjects).length < 1000) fetchData();
     }, [fetchData, subjects]);
 
-    return (
-        <>
-            <CssBaseline />
-            <Container maxWidth={false}>
-            <Grid container spacing={3}>
-                <Grid item xs={8}>
-                    <Typography variant='h5'> Subject List Search </Typography>
-                </Grid>
-                <Grid item xs={4} alignItems={'flex-end'} alignContent={'flex-end'}>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
+    if (loading || error) {
+        return (
+            <div style={{paddingTop: "10%"}}>
+                <center><CircularProgress /></center>
+                <p> {errorMessage} </p>
+            </div>
+        )
+    } else {
+        return (
+            <>
+                <CssBaseline />
+                <Container maxWidth={false}>
+                <Grid container spacing={3}>
+                    <Grid item xs={8}>
+                        <Typography variant='h5'> Subject List Search </Typography>
+                    </Grid>
+                    <Grid item xs={4} alignItems={'flex-end'} alignContent={'flex-end'}>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                placeholder='Search…'
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{'aria-label': 'search'}}
+                                value={searchValue}
+                                onChange={onChange}
+                            />
+                            <Button variant="contained" onClick={() => searchSubjects(searchValue)}>Search</Button>
                         </div>
-                        <InputBase
-                            placeholder='Search…'
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{'aria-label': 'search'}}
-                            value={searchValue}
-                            onChange={onChange}
-                        />
-                        <Button variant="contained" onClick={() => searchSubjects(searchValue)}>Search</Button>
-                    </div>
+                    </Grid>
                 </Grid>
-            </Grid>
-                <Typography />
-                <br />
-                {Object.keys(results).slice(0, 5).map((subject, key) => (
-                    <SubjectCard key={key} subject={results[subject]} />
-                ))}
-            </Container>
-        </>
-    );
+                    <Typography />
+                    <br />
+                    {Object.keys(results).slice(0, 5).map((subject, key) => (
+                        <SubjectCard key={key} subject={results[subject]} />
+                    ))}
+                </Container>
+            </>
+        );
+    }
 }
 
 export default Search;

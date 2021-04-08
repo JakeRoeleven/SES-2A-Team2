@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const CourseService = require('../lib/CourseService');
+const CourseService = require('../lib/courseService');
 
 router.get('/subjects', async (req, res) => {
-    console.log("requested subjects")
     const courseService = new CourseService();
     try {
         let course_list = await courseService.getAllCourses();
-        console.log("Sending subjects")
         res.status(200).json(course_list);
     } catch (e) {
         console.log(e)
@@ -30,11 +28,10 @@ router.get('/subject/name/:name', async (req, res) => {
     res.status(200).json(course);
 });
 
-router.get('/subject/name/:name', async (req, res) => {
-    const name = req.params.name;
+router.get('/set_all_subjects', async (req, res) => {
     const courseService = new CourseService();
-    let course = await courseService.getCoursesFromName(name);
-    res.status(200).json(course);
+    await courseService.setAllCourses();
+    res.status(200).json();
 });
 
 module.exports = router;
