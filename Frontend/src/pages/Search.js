@@ -78,7 +78,7 @@ function Search() {
 
     const fetchData = useCallback(async () => {
         console.log("Set subjects");
-        fetch('178.128.216.237:8080/api/subjects', {
+        fetch('http://178.128.216.237:8080/api/subjects', {
             crossDomain: true,
             mode: 'cors',
             method: 'GET',
@@ -88,11 +88,14 @@ function Search() {
             },
         })
             .then(async (res) => {
+                console.log(await res.text())
                 if (res.status === 200) {
                     let json = await res.json();
+                    console.log(res)
                     setSubjects(json);
                     setLoading(false);
                 } else {
+
                     setError(true);
                     setErrorMessage(
                         'The application failed to get the subject list. Please try again later'
@@ -100,6 +103,7 @@ function Search() {
                 }
             })
             .catch((err) => {
+                console.log(err)
                 setError(true);
                 setErrorMessage(
                     'The application failed to get the subject list. Please try again later'

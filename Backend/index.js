@@ -1,10 +1,10 @@
 // Required
 const express = require('express');
-const bodyParser = require('body-parser');
+const cors = require('cors');
 const mongoose = require('mongoose');
 
 // Set up express app
-const app = express()
+const app = express();
 
 // Define a port
 const PORT = process.env.port || 8080;
@@ -21,6 +21,7 @@ mongoose.connect('mongodb://root:password@165.232.165.231:27017', {useNewUrlPars
     useCreateIndex: true, useFindAndModify: false}).then(() => console.log("Successfully connected to the database"))
     .catch(error => console.log("Failed to connect to database: ", error));
 
+const cors = require('cors');
 
 // Parse application/x-www-form-urlencoded && application/json input
 app.use(express.json());
