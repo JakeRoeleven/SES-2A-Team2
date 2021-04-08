@@ -88,7 +88,6 @@ function Search() {
             },
         })
             .then(async (res) => {
-                console.log(await res.text())
                 if (res.status === 200) {
                     let json = await res.json();
                     console.log(res)
