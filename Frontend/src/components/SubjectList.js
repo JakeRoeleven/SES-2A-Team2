@@ -5,12 +5,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 function SubjectList(props) {
 
     const [subjects, setSubjects] = useState({})
-    const [loadTime, setLoadTime] = useState('')
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
 
     const fetchSubjects = useCallback(async () => {
-        fetch('/api/subjects', {
+        fetch('178.128.216.237:8080/api/subjects', {
             crossDomain: true,
             mode:'cors',
             method: 'GET',
