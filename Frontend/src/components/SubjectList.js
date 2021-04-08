@@ -9,7 +9,7 @@ function SubjectList(props) {
     const [error, setError] = useState(false)
 
     const fetchSubjects = useCallback(async () => {
-        fetch('178.128.216.237:8080/api/subjects', {
+        fetch('http://178.128.216.237:8080/api/subjects', {
             crossDomain: true,
             mode:'cors',
             method: 'GET',
