@@ -4,11 +4,11 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 // Import Pages
 import Home from './pages/Home';
 import Recommendations from './pages/Recommendations';
-import AdminDash from './pages/AdminDash';
 import NavWrapper from './components/MenuSystem';
 import Search from './pages/Search';
 import Account from './pages/Account';
 import LikedCourses from './pages/LikedCourses';
+import AdminDash from './pages/AdminComponents/AdminDash';
 
 function App() {
 	
