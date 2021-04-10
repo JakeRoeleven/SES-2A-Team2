@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback, useContext} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -9,7 +9,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import SearchHandler from '../lib/searchHandler.js';
 import SubjectCard from '../components/SubjectCard';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { AppContext } from '../AppContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -68,56 +69,18 @@ const useStyles = makeStyles((theme) => ({
 
 function Search() {
 
+    const data = useContext(AppContext);
     const classes = useStyles();
+
     const [subjects, setSubjects] = useState({});
     const [results, setResults] = useState({});
     const [searchValue, setSearchValue] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-
-    const fetchData = useCallback(async () => {
-        console.log("Set subjects");
-        fetch('http://178.128.216.237:8080/api/subjects', {
-            crossDomain: true,
-            mode: 'cors',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
-            .then(async (res) => {
-                if (res.status === 200) {
-                    let json = await res.json();
-                    console.log(res)
-                    setSubjects(json);
-                    setLoading(false);
-                } else {
-
-                    setError(true);
-                    setErrorMessage(
-                        'The application failed to get the subject list. Please try again later'
-                    );
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-                setError(true);
-                setErrorMessage(
-                    'The application failed to get the subject list. Please try again later'
-                );
-            });
-    }, []);
 
     const searchSubjects = async (key) => {
-        console.log(subjects)
-        console.log(key)
         setResults({});
         let searchHandler = new SearchHandler(subjects);
         let searchResults = await searchHandler.searchAllSubjects(key);
         setResults(searchResults)
-        console.log(searchResults)
     }
 
     const onChange = (event) => {
@@ -125,53 +88,44 @@ function Search() {
     };
 
     useEffect(() => {
-        if (Object.keys(subjects).length < 1000) fetchData();
-    }, [fetchData, subjects]);
+        setSubjects(data)
+    }, [data]);
 
-    if (loading || error) {
-        return (
-            <div style={{paddingTop: "10%"}}>
-                <center><CircularProgress /></center>
-                <p> {errorMessage} </p>
-            </div>
-        )
-    } else {
-        return (
-            <>
-                <CssBaseline />
-                <Container maxWidth={false}>
-                <Grid container spacing={3}>
-                    <Grid item xs={8}>
-                        <Typography variant='h5'> Subject List Search </Typography>
-                    </Grid>
-                    <Grid item xs={4} alignItems={'flex-end'} alignContent={'flex-end'}>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
-                            <InputBase
-                                placeholder='Search…'
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{'aria-label': 'search'}}
-                                value={searchValue}
-                                onChange={onChange}
-                            />
-                            <Button variant="contained" onClick={() => searchSubjects(searchValue)}>Search</Button>
-                        </div>
-                    </Grid>
+    return (
+        <>
+            <CssBaseline />
+            <Container maxWidth={false}>
+            <Grid container spacing={3}>
+                <Grid item xs={8}>
+                    <Typography variant='h5'> Subject List Search </Typography>
                 </Grid>
-                    <Typography />
-                    <br />
-                    {Object.keys(results).slice(0, 5).map((subject, key) => (
-                        <SubjectCard key={key} subject={results[subject]} />
-                    ))}
-                </Container>
-            </>
-        );
-    }
+                <Grid item xs={4} alignItems={'flex-end'} alignContent={'flex-end'}>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            placeholder='Search…'
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{'aria-label': 'search'}}
+                            value={searchValue}
+                            onChange={onChange}
+                        />
+                        <Button variant="contained" onClick={() => searchSubjects(searchValue)}>Search</Button>
+                    </div>
+                </Grid>
+            </Grid>
+                <Typography />
+                <br />
+                {Object.keys(results).slice(0, 5).map((subject, key) => (
+                    <SubjectCard key={key} subject={results[subject]} />
+                ))}
+            </Container>
+        </>
+    ); 
 }
 
 export default Search;
