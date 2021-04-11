@@ -35,13 +35,16 @@ export default function AdminDash() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-        <div style={{ height: 600, width: '99%' }}>
-            <DataGrid rows={rows} columns={columns} checkboxSelection />
-        </div>
-        <div>
-          <Fab color="primary" aria-label="add"><AddIcon/></Fab>
-          <Fab color="secondary" aria-label="edit"><EditIcon/></Fab>
-        </div>
+      <div>
+        <center><header><strong>Admin Dashboard</strong></header></center>
+      </div>
+      <div style={{ height: 600, width: '99%' }}>
+          <DataGrid rows={rows} columns={columns} checkboxSelection />
+      </div>
+      <div>
+        <Fab color="primary" aria-label="add"><AddIcon/></Fab>
+        <Fab color="secondary" aria-label="edit"><EditIcon/></Fab>
+      </div>
     </div>
   );
 }
