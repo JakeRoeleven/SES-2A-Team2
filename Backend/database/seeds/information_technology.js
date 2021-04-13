@@ -29,7 +29,7 @@ async function buildStudents(year_level, degree_name, interests_input, major_url
     const degree = degree_name;
     const postgraduate = false;
     const interests = interests_input;
-    const coreEngineeringSubjects = await scrapeElectives('https://handbook.uts.edu.au/directory/stm91173.html')
+    const coreEngineeringSubjects = [68037, 33130, 33230, 48230, 48240, 48250, 48270, 48260];
     const coreMajorSubjects = await scrapeElectives(major_url);
     const courseElectives = [];
     
@@ -98,6 +98,23 @@ async function main() {
     const biomedicalElectives = ['https://handbook.uts.edu.au/directory/stm91230.html', 'https://handbook.uts.edu.au/directory/stm91229.html', 'https://handbook.uts.edu.au/directory/stm91229.html'];
     console.log(await buildStudents(1, 'Bachelor of Biomedical Engineering', biomedicalInterests, 'https://handbook.uts.edu.au/directory/maj03472.html', biomedicalElectives))
 
+    const civilInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing'];
+    const civilElectives = ['https://handbook.uts.edu.au/directory/stm90494.html', 'https://handbook.uts.edu.au/directory/stm90496.html', 'https://handbook.uts.edu.au/directory/stm90493.html'];
+    console.log(await buildStudents(1, 'Bachelor of Civil Engineering', civilInterests, 'https://handbook.uts.edu.au/directory/maj03001.html', civilElectives))
+
+    const electricalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing'];
+    const electricalElectives = ['https://handbook.uts.edu.au/directory/cbk91782.html'];
+    console.log(await buildStudents(1, 'Bachelor of Electrical Engineering', electricalInterests, 'https://handbook.uts.edu.au/directory/maj03005.html', electricalElectives))
+
+    const softwareInterests = ['Programming', 'Maths', 'Statistics', 'Engineering', 'Computing'];
+    const softwareElectives = ['https://handbook.uts.edu.au/directory/cbk91234.html'];
+    console.log(await buildStudents(1, 'Bachelor of Software Engineering', softwareInterests, 'https://handbook.uts.edu.au/directory/maj03523.html', softwareElectives))
+
+
+    const civilEnvironmentalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing', 'Biology', 'Geography'];
+    const dataInterests = ['Programming', 'Maths', 'Statistics', 'Engineering', 'Computing'];
+
+    // Sample Software Engineering Student
  
 }
 
