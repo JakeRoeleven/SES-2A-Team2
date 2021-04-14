@@ -79,6 +79,7 @@ async function buildStudents(year_level, degree_name, interests_input, major_url
 
     return({
         name: student_name,
+        year: year_level,
         major: major,
         degree: degree,
         postgraduate: postgraduate,
@@ -128,7 +129,7 @@ async function main() {
 
     const flexibleInterests = ['Math', 'Physics', 'Statistics', 'Engineering', 'Computing', 'Chemistry', 'Programming', 'Architecture'];
     const flexibleElectives = ['https://handbook.uts.edu.au/directory/cbk91969.html', 'https://handbook.uts.edu.au/directory/cbk91970.html'];
-    console.log(await buildStudents(1, 'Bachelor of Flexible Engineering', flexibleInterests, 'https://handbook.uts.edu.au/directory/maj03540.html', flexibleElectives))
+    console.log(await buildStudents((Math.floor(Math.random() * 4) + 1), 'Bachelor of Flexible Engineering', flexibleInterests, 'https://handbook.uts.edu.au/directory/maj03540.html', flexibleElectives))
 
     //const civilEnvironmentalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing', 'Biology', 'Geography'];
     //const dataInterests = ['Programming', 'Maths', 'Statistics', 'Engineering', 'Computing'];
