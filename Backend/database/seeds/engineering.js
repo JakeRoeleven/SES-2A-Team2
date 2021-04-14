@@ -110,6 +110,25 @@ async function main() {
     const softwareElectives = ['https://handbook.uts.edu.au/directory/cbk91234.html'];
     console.log(await buildStudents(1, 'Bachelor of Software Engineering', softwareInterests, 'https://handbook.uts.edu.au/directory/maj03523.html', softwareElectives))
 
+    const electronicsInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Computing'];
+    const electronicsElectives = ['https://handbook.uts.edu.au/directory/cbk91741.html'];
+    console.log(await buildStudents(1, 'Bachelor of Electronic Engineering', electronicsInterests, 'https://handbook.uts.edu.au/directory/maj03527.html', electronicsInterests))
+
+    const dataInterests = ['Math', 'Programming', 'Statisstics', 'Engineeering', 'Computing'];
+    const dataElectives = ['https://handbook.uts.edu.au/directory/cbk91233.html'];
+    console.log(await buildStudents(1, 'Bachelor of Data Engineering', dataInterests, 'https://handbook.uts.edu.au/directory/maj03518.html', dataInterests))
+
+    const mechanicalInterests = ['Math', 'Physics', 'Statistics', 'Engineering', 'Computing', 'Chemistry']
+    const mechanicalElectives = ['https://handbook.uts.edu.au/directory/cbk90976.html', 'https://handbook.uts.edu.au/directory/stm90675.html']
+    console.log(await buildStudents(1, 'Bachelor of Mechanical Engineering', mechanicalInterests, 'https://handbook.uts.edu.au/directory/maj03030.html', mechanicalInterests))
+
+    const mechatronicsInterests = ['Math', 'Physics', 'Statistics', 'Engineering', 'Computing', 'Chemistry', 'Programming'];
+    const mechatronicsElectives = ['https://handbook.uts.edu.au/directory/stm90675.html', 'https://handbook.uts.edu.au/directory/smj03050.html'];
+    console.log(await buildStudents(1, 'Bachelor of Mechatronics Engineering', mechatronicsInterests, 'https://handbook.uts.edu.au/directory/maj03507.html', mechatronicsElectives))
+
+    const flexibleInterests = ['Math', 'Physics', 'Statistics', 'Engineering', 'Computing', 'Chemistry', 'Programming', 'Architecture'];
+    const flexibleElectives = ['https://handbook.uts.edu.au/directory/cbk91969.html', 'https://handbook.uts.edu.au/directory/cbk91970.html'];
+    console.log(await buildStudents(1, 'Bachelor of Flexible Engineering', flexibleInterests, 'https://handbook.uts.edu.au/directory/maj03540.html', flexibleElectives))
 
     const civilEnvironmentalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing', 'Biology', 'Geography'];
     const dataInterests = ['Programming', 'Maths', 'Statistics', 'Engineering', 'Computing'];
