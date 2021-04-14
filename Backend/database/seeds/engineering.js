@@ -93,7 +93,7 @@ async function main() {
     // const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
     // 'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
     // 'Physics', 'Chemistry', 'Biology']
-
+    console.time('random')
     const biomedicalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Chemistry', 'Biology'];
     const biomedicalElectives = ['https://handbook.uts.edu.au/directory/stm91230.html', 'https://handbook.uts.edu.au/directory/stm91229.html', 'https://handbook.uts.edu.au/directory/stm91229.html'];
     console.log(await buildStudents(1, 'Bachelor of Biomedical Engineering', biomedicalInterests, 'https://handbook.uts.edu.au/directory/maj03472.html', biomedicalElectives))
@@ -112,15 +112,15 @@ async function main() {
 
     const electronicsInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Computing'];
     const electronicsElectives = ['https://handbook.uts.edu.au/directory/cbk91741.html'];
-    console.log(await buildStudents(1, 'Bachelor of Electronic Engineering', electronicsInterests, 'https://handbook.uts.edu.au/directory/maj03527.html', electronicsInterests))
+    console.log(await buildStudents(1, 'Bachelor of Electronic Engineering', electronicsInterests, 'https://handbook.uts.edu.au/directory/maj03527.html', electronicsElectives))
 
     const dataInterests = ['Math', 'Programming', 'Statisstics', 'Engineeering', 'Computing'];
     const dataElectives = ['https://handbook.uts.edu.au/directory/cbk91233.html'];
-    console.log(await buildStudents(1, 'Bachelor of Data Engineering', dataInterests, 'https://handbook.uts.edu.au/directory/maj03518.html', dataInterests))
+    console.log(await buildStudents(1, 'Bachelor of Data Engineering', dataInterests, 'https://handbook.uts.edu.au/directory/maj03518.html', dataElectives))
 
     const mechanicalInterests = ['Math', 'Physics', 'Statistics', 'Engineering', 'Computing', 'Chemistry']
     const mechanicalElectives = ['https://handbook.uts.edu.au/directory/cbk90976.html', 'https://handbook.uts.edu.au/directory/stm90675.html']
-    console.log(await buildStudents(1, 'Bachelor of Mechanical Engineering', mechanicalInterests, 'https://handbook.uts.edu.au/directory/maj03030.html', mechanicalInterests))
+    console.log(await buildStudents(1, 'Bachelor of Mechanical Engineering', mechanicalInterests, 'https://handbook.uts.edu.au/directory/maj03030.html', mechanicalElectives))
 
     const mechatronicsInterests = ['Math', 'Physics', 'Statistics', 'Engineering', 'Computing', 'Chemistry', 'Programming'];
     const mechatronicsElectives = ['https://handbook.uts.edu.au/directory/stm90675.html', 'https://handbook.uts.edu.au/directory/smj03050.html'];
@@ -130,9 +130,9 @@ async function main() {
     const flexibleElectives = ['https://handbook.uts.edu.au/directory/cbk91969.html', 'https://handbook.uts.edu.au/directory/cbk91970.html'];
     console.log(await buildStudents(1, 'Bachelor of Flexible Engineering', flexibleInterests, 'https://handbook.uts.edu.au/directory/maj03540.html', flexibleElectives))
 
-    const civilEnvironmentalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing', 'Biology', 'Geography'];
-    const dataInterests = ['Programming', 'Maths', 'Statistics', 'Engineering', 'Computing'];
-
+    //const civilEnvironmentalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing', 'Biology', 'Geography'];
+    //const dataInterests = ['Programming', 'Maths', 'Statistics', 'Engineering', 'Computing'];
+    console.timeEnd('random')
     // Sample Software Engineering Student
  
 }
