@@ -108,7 +108,7 @@ async function main() {
 
     const softwareInterests = ['Programming', 'Maths', 'Statistics', 'Engineering', 'Computing'];
     const softwareElectives = ['https://handbook.uts.edu.au/directory/cbk91234.html'];
-    console.log(await buildStudents(1, 'Bachelor of Software Engineering', softwareInterests, 'https://handbook.uts.edu.au/directory/maj03523.html', softwareElectives))
+    console.log(await buildStudents(3, 'Bachelor of Software Engineering', softwareInterests, 'https://handbook.uts.edu.au/directory/maj03523.html', softwareElectives))
 
 
     const civilEnvironmentalInterests = ['Maths', 'Statistics', 'Engineering', 'Physics', 'Architecture', 'Computing', 'Biology', 'Geography'];

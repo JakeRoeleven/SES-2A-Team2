@@ -27,6 +27,7 @@ module.exports.setInterestInJSON = () => (interests) => {
 ;
 
 module.exports.interestsJSONToArray = () => (interests_json) => {
+    console.log(test)
     let all_interests = getAllInterests();
     let interest_array = [];
     all_interests.forEach(interest => {
