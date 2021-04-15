@@ -83,7 +83,7 @@ def getRecommendations(KNN, x):
     del KNNCourses
     return recommendations
 
-def main(K, newStudent, amount, keyValuePair):
+def main(K, newStudent, amount, **keyValuePair):
     ####Converted JSON Format####
     #All courses (Dictionary)
     ##Course number (String Key)
