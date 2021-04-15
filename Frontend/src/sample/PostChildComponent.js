@@ -24,7 +24,7 @@ function SamplePostComponent(props) {
             });
     };
 
-    return <button onClick={fetchData}> Reverse </button>;
+    return <button onClick={fetchData}> Reverse! </button>;
 }
 
 export default SamplePostComponent;
