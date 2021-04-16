@@ -45,7 +45,6 @@ function logout(){
 }
 
 
-
 function register(){
 
   var userEmail = document.getElementById("email_field").value;

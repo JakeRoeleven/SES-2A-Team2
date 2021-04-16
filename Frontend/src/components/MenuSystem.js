@@ -82,28 +82,41 @@ function NavWrapper(props) {
         setOpen(false);
     };
 
-    return (
-        <>
+    console.log(props);
+    if (props.authenticated) {
+        return (
+            <>
+                <div className={classes.root}>
+                    <CssBaseline />
+                    <AppMenu
+                        handleDrawerOpen={handleDrawerOpen}
+                        styles={classes}
+                        open={open}
+                    />
+                    <AppDrawer
+                        handleDrawerClose={handleDrawerClose}
+                        styles={classes}
+                        open={open}
+                        theme={theme}
+                    />
+                    <div className={classes.content}>
+                        <div className={classes.toolbar} />
+                        {props.children}
+                    </div>
+                </div>
+            </>
+        );
+    } else {
+        return (
             <div className={classes.root}>
                 <CssBaseline />
-                <AppMenu
-                    handleDrawerOpen={handleDrawerOpen}
-                    styles={classes}
-                    open={open}
-                />
-                <AppDrawer
-                    handleDrawerClose={handleDrawerClose}
-                    styles={classes}
-                    open={open}
-                    theme={theme}
-                />
                 <div className={classes.content}>
                     <div className={classes.toolbar} />
                     {props.children}
                 </div>
             </div>
-        </>
-    );
+        );
+    }
 }
 
 export default NavWrapper;
