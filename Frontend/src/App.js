@@ -19,7 +19,7 @@ import Register from './pages/Auth/Register';
 
 function App() {
 
-	const [isAuthenticated, setAuthenticated] = useState(false);
+	const [isAuthenticated, setAuthenticated] = useState(true);
 
     // Check if Firebase is initialized
     useEffect(() => {
@@ -29,7 +29,6 @@ function App() {
     });
 
 	function checkAuthenticated() {
-		console.log(firebase.getCurrentUsername())
 		if (firebase.getCurrentUsername() == null) {
 			setAuthenticated(false);
 		} else {
