@@ -31,6 +31,21 @@ router.get('/random', (req, res) => {
 
 router.post('/recommendation', async (req, res) => {
 
+    let student = req.body.student;
+    const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
+    'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
+    'Physics', 'Chemistry', 'Biology']
+    let interests_json = student.interests
+    let interest_array = [];
+    all_interests.forEach(interest => {
+        if (interests_json.includes(interest)) {
+            interest_array.push(1)
+        } else {
+            interest_array.push(0)
+        }
+    });
+    student.interests = interest_array;
+
     const studentService = new StudentService();
     let student_list = await studentService.getAllStudents();
     let new_student_list = {};
@@ -60,41 +75,6 @@ router.post('/recommendation', async (req, res) => {
     Object.keys(course_list).forEach((elem, index) => {
         new_list[(course_list[elem]['_id'])] = course_list[elem];
     });
-
-    let student = {
-        name: 'Brigit Barris',
-        major: 'Engineering',
-        degree: 'Bachelor of Flexible Engineering',
-        postgraduate: false,
-        interests: [
-            1,
-            1,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-        ],
-        courses_completed: [
-            '48024',
-            '48023',
-            '31271',
-        ],
-    };
 
     python_data = {
         student: student,
