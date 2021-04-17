@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 #Cosine Similarity functions
 def dotProd(a,b):
@@ -82,7 +83,8 @@ def getRecommendations(KNN, x, students):
     del KNNCourses
     return recommendations
 
-def main(K, newStudent, amount, **keyValuePair):
+def main(courses, students, newStudent, K, amount, **keyValuePair):
+
     ####Converted JSON Format####
     #All courses (Dictionary)
     ##Course number (String Key)
@@ -96,8 +98,6 @@ def main(K, newStudent, amount, **keyValuePair):
     ###--"description"
     ###--"link"
     ###Property Data (Varies)
-    cfile = open(r"C:\Users\jaker\Desktop\SES-2A-Team2\Backend\python\recommendation\uts_subjects.json", encoding="utf8")
-    courses = json.load(cfile)
 
     ####Expected Converted JSON Format####
     #All students (Dictionary)
@@ -119,48 +119,13 @@ def main(K, newStudent, amount, **keyValuePair):
     ###--"biology" = boolean (0 or 1)
     ###--"it" = boolean (0 or 1)
     ###--"chemistry" = boolean (0 or 1)
-    sfile = open(r"C:\Users\jaker\Desktop\SES-2A-Team2\Backend\python\recommendation\students.json", encoding="utf8")
-    students= json.load(sfile)
 
-    studentList = getStudentSet(students, getMatchingCourseList(courses, **keyValuePair))
-    KNN = getKNNStudents(K, newStudent, studentList, students)
-    print(getRecommendations(KNN, amount, students))
+    studentList = getStudentSet(students, getMatchingCourseList(courses, **keyValuePair));
+    KNN = getKNNStudents(K, newStudent, studentList, students);
+    print(getRecommendations(KNN, amount, students));
+    exit()
 
 
-test_student = {
-    "name": "Christalle Peisch",
-    "major": "Engineering",
-    "degree": "Bachelor of Electronic Engineering",
-    "postgraduate": False,
-    "interests": [
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        1,
-        0,
-        0
-    ],
-    "courses_completed": [
-        "48024",
-        "41039",
-        "48430",
-        "48510",
-        "41090"
-    ]
-}
-main(5, test_student, 5)
+# Pass system arguments
+data_in = json.loads(sys.stdin.read())
+main(data_in['courses'], data_in['students'], data_in['student'], 2, 6)

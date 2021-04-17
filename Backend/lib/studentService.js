@@ -17,11 +17,11 @@ class StudentService {
         });
 
         if (student.courses_completed && student.courses_completed.length > 0) {
-            studentObject.courses_completed = courses_completed;
+            studentObject.courses_completed = student.courses_completed;
         }
 
         if (student.favorite_subjects && student.favorite_subjects.length > 0) {
-            studentObject.favorite_subjects = favorite_subjects;
+            studentObject.favorite_subjects = student.favorite_subjects;
         }
 
 

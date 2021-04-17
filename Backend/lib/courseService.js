@@ -30,11 +30,11 @@ class CourseService {
     }
 
     async getCourse(id) {
-        Course.findOne({ _id: id }, (err, course) => {
+        await Course.findOne({ _id: id }, async (err, course) => {
             if (err || !course) {
                 return ({ err: "Could not find course!" });
             } else {
-                return course;
+                return await course;
             }
         });
     }
