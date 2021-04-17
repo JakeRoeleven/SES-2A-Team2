@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import SubjectCard from './SubjectCard';
-import CircularProgress from '@material-ui/core/CircularProgress';
-
 import {AppContext} from '../AppContext';
 
 function SubjectList() {
@@ -10,6 +8,7 @@ function SubjectList() {
     const [subjects, setSubjects] = useState({})
 
     useEffect(() => {
+        console.log(data)
         setSubjects(data)
     }, [data]);
 

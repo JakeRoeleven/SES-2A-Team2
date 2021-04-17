@@ -1,5 +1,4 @@
 import React from 'react';
-
 import SubjectList from './../components/SubjectList'
 
 function Recommendations() {  
