@@ -1,6 +1,9 @@
 import React, {useState, useEffect, useCallback, useRef, useContext} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
+// Import Private Route
+import PrivateRoute from './components/PrivateRoute';
+
 // Import Pages
 import Home from './pages/Home';
 import Recommendations from './pages/Recommendations';
@@ -16,26 +19,44 @@ import Container from '@material-ui/core/Container';
 
 import {AppContext} from './AppContext';
 
+// Firebase Imports
+import firebase from './firebase';
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
+
 function App() {
 
+	const [isAuthenticated, setAuthenticated] = useState(true);
     const [subjects, setSubjects] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-
-	// App Context
+	
+	// App Context	
 	const { Provider } = AppContext;
 
+	function checkAuthenticated() {
+		if (firebase.getCurrentUsername() == null) {
+			setAuthenticated(false);
+		} else {
+			setAuthenticated(true);
+		}		
+	}
+
+	function setAuth(val) {
+		setAuthenticated(val);
+	}
+
 	// Fetch full subject list from API
-    const fetchSubjects = useCallback(async () => {
+	const fetchSubjects = useCallback(async () => {
 		fetch('http://178.128.216.237:8080/api/subjects', {
-            crossDomain: true,
-            mode: 'cors',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        }).then(async (res) => {
+			crossDomain: true,
+			mode: 'cors',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			},
+		}).then(async (res) => {
 			let data = await res.json();
 			setSubjects(data);
 			setLoading(false);
@@ -51,10 +72,14 @@ function App() {
 		}).catch((err) => {
 			console.log(err);
 			setError(err);
-        });
-    }, []);
+		});
+	}, []);
 
-    useEffect(() => {
+	// Check if Firebase is initialized
+	useEffect(() => {
+		firebase.isInitialized().then((val) => {
+			checkAuthenticated();
+		});
 
 		const hasLoaded = localStorage.getItem('hasLoaded');
 		const subjects = JSON.parse(localStorage.getItem('subjects'));
@@ -72,6 +97,7 @@ function App() {
 
 		//fetchSubjects();
     }, [fetchSubjects, setSubjects]);
+
 
     if (loading) {
         return (
@@ -98,23 +124,18 @@ function App() {
             <>
                 <Router>
                     <Switch>
-                        <NavWrapper>
-							<Provider value={subjects}>
-								<Route exact path='/' component={Home} />
-								<Route
-									exact
-									path='/recommendations'
-									component={Recommendations}
-								/>
-								<Route exact path='/search' component={Search} />
-								<Route exact path='/account' component={Account} />
-								<Route
-									exact
-									path='/liked-courses'
-									component={LikedCourses}
-								/>
-							</Provider>
-                        </NavWrapper>
+						<Provider value={subjects}>
+							<NavWrapper authenticated={isAuthenticated}>
+								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+								<Route exact path="/register" component={Register} />
+								<PrivateRoute authenticated={isAuthenticated} exact path="/home" component={Home} />
+								<PrivateRoute authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
+								<PrivateRoute authenticated={isAuthenticated} exact path="/search" component={Search} />
+								<PrivateRoute authenticated={isAuthenticated} exact path="/account" component={Account} /> 
+								<PrivateRoute authenticated={isAuthenticated} exact path="/liked-courses" component={LikedCourses} /> 
+							</NavWrapper>
+						</Provider>
                     </Switch>
                 </Router>
             </>
