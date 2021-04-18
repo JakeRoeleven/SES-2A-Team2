@@ -118,7 +118,6 @@ function Search() {
                     </div>
                 </Grid>
             </Grid>
-                <Typography />
                 <br />
                 {Object.keys(results).slice(0, 5).map((subject, key) => (
                     <SubjectCard key={key} subject={results[subject]} />

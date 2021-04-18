@@ -31,7 +31,10 @@ router.get('/random', (req, res) => {
 
 router.post('/recommendation', async (req, res) => {
 
+    
+
     let student = req.body.student;
+    console.log(student)
     const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
     'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
     'Physics', 'Chemistry', 'Biology']
