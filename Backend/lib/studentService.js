@@ -7,6 +7,8 @@ class StudentService {
     }
 
     async setStudent(id, student) {
+
+        console.log(student)
         
         const studentObject = new Student({
             _id: id, 
@@ -15,6 +17,10 @@ class StudentService {
             degree: student.degree,
             postgraduate: student.postgraduate
         });
+
+        if (student.year) {
+            studentObject.year = student.year;
+        }
 
         if (student.courses_completed && student.courses_completed.length > 0) {
             studentObject.courses_completed = student.courses_completed;

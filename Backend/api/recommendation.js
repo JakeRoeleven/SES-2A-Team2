@@ -37,7 +37,7 @@ router.post('/recommendation', async (req, res) => {
     console.log(student)
     const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
     'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
-    'Physics', 'Chemistry', 'Biology']
+    'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics']
     let interests_json = student.interests
     let interest_array = [];
     all_interests.forEach(interest => {
@@ -58,7 +58,7 @@ router.post('/recommendation', async (req, res) => {
         let interests_json = student_list[elem].interests
         const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
         'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
-        'Physics', 'Chemistry', 'Biology']
+        'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics']
         let interest_array = [];
         all_interests.forEach(interest => {
             if (interests_json.includes(interest)) {
@@ -96,6 +96,7 @@ router.post('/recommendation', async (req, res) => {
         
         pyshell.on('message', function (message) {
             // received a message sent from the Python script (a simple "print" statement)
+            console.log(message)
             let results = {
                 recommendations: message
             }
