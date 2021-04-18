@@ -30,16 +30,8 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 	const [isAuthenticated, setAuthenticated] = useState(true);
-<<<<<<< HEAD
-    const [subjects, setSubjects] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-	
-	// App Context	
-=======
 
 	// App Context
->>>>>>> knn
 	const { Provider } = AppContext;
 
 	function checkAuthenticated() {
@@ -83,19 +75,11 @@ function App() {
 		});
 	}, []);
 
-<<<<<<< HEAD
-	// Check if Firebase is initialized
-	useEffect(() => {
-		firebase.isInitialized().then((val) => {
-			checkAuthenticated();
-		});
-=======
     // Check if Firebase is initialized
     useEffect(() => {
         firebase.isInitialized().then((val) => {
 			checkAuthenticated();
-        });
->>>>>>> knn
+		});
 
 		const hasLoaded = localStorage.getItem('hasLoaded');
 		const subjects = JSON.parse(localStorage.getItem('subjects'));
@@ -112,12 +96,7 @@ function App() {
 		}
     }, [fetchSubjects, setSubjects]);
 
-<<<<<<< HEAD
-
-    if (loading) {
-=======
 	if (loading) {
->>>>>>> knn
         return (
             <>
                 <Skeleton variant='rect' width={'100%'} height={64} />
@@ -138,21 +117,12 @@ function App() {
             </>
         );
     } else {
-<<<<<<< HEAD
-        return (
-            <>
-                <Router>
-                    <Switch>
-						<Provider value={subjects}>
-							<NavWrapper authenticated={isAuthenticated}>
-=======
 		return ( 
 			<>
 				<Router>
 					<Switch > 
 						<NavWrapper authenticated={isAuthenticated}>
 							<Provider value={subjects}>
->>>>>>> knn
 								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 								<Route exact path="/register" component={Register} />
@@ -161,15 +131,6 @@ function App() {
 								<PrivateRoute authenticated={isAuthenticated} exact path="/search" component={Search} />
 								<PrivateRoute authenticated={isAuthenticated} exact path="/account" component={Account} /> 
 								<PrivateRoute authenticated={isAuthenticated} exact path="/liked-courses" component={LikedCourses} /> 
-<<<<<<< HEAD
-							</NavWrapper>
-						</Provider>
-                    </Switch>
-                </Router>
-            </>
-        );
-    }
-=======
 							</Provider>
 						</NavWrapper>
 					</Switch>
@@ -177,7 +138,6 @@ function App() {
 			</>
 		)
 	}
->>>>>>> knn
 }
 
 export default App;
