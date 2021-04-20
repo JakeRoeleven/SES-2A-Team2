@@ -1,16 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './index.css';
 import StudentForm from './selectmenu/StudentForm';
+import CourseForm from './selectmenu/CourseForm';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="col-md-6">
-        <h3> Student Interest Form </h3>
-        <StudentForm />
-      </div>
-    );
-  }
+function App() {
+  return (
+    <Router>
+    <div classname ="style">
+      <h1>Student Form</h1>
+      <CourseForm />
+    </div>
+    </Router>
+  );
 }
 
 export default App;
