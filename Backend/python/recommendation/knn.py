@@ -18,7 +18,10 @@ def trueLen(a):
 def cosSimilarity(a,b):
     top = dotProd(a,b)
     bottom = trueLen(a)*trueLen(b)
-    return top/bottom
+    if (bottom == 0): 
+        return 0
+    else: 
+        return top/bottom
 
 #Generic function to get candidate course set
 def getMatchingCourseList(courses, **keyValuePair):

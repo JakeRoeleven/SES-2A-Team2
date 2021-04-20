@@ -3,7 +3,8 @@
 module.exports.getAllInterests = () => {
     const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
     'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
-    'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics']
+    'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics', 'Games', 'Marketing',
+    'Accounting', 'Writing', 'Communications', 'Music', 'Design']
 
     return all_interests;
 };

@@ -31,13 +31,17 @@ router.get('/random', (req, res) => {
 
 router.post('/recommendation', async (req, res) => {
 
-    
-
     let student = req.body.student;
-    console.log(student)
+    student.major = 'Engineering '
+
     const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
     'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
-    'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics']
+    'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics', 'Games', 'Marketing',
+    'Accounting', 'Writing', 'Communications', 'Music', 'Design'];
+    all_faculties = ['Analytics and Data Science', 'Business', 'Communication', 'Creative Intelligence and Innovation',
+    'Design Architecture and Building', 'Education', 'Engineering', 'Health', 'Information Technology', 'International Studies',
+    'Law', 'Science', 'Transdisciplinary Innovation']
+
     let interests_json = student.interests
     let interest_array = [];
     all_interests.forEach(interest => {
@@ -47,6 +51,13 @@ router.post('/recommendation', async (req, res) => {
             interest_array.push(0)
         }
     });
+    all_faculties.forEach(fac => {
+        if (student.major == fac) {
+            interest_array.push(1)
+        } else {
+            interest_array.push(0)
+        }
+    })
     student.interests = interest_array;
 
     const studentService = new StudentService();
@@ -55,11 +66,10 @@ router.post('/recommendation', async (req, res) => {
 
     // Convert array to python format
     Object.keys(student_list).forEach(async elem => {
-        let interests_json = student_list[elem].interests
-        const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
-        'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
-        'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics']
+       
         let interest_array = [];
+        let interests_json = student_list[elem].interests
+
         all_interests.forEach(interest => {
             if (interests_json.includes(interest)) {
                 interest_array.push(1)
@@ -67,9 +77,19 @@ router.post('/recommendation', async (req, res) => {
                 interest_array.push(0)
             }
         });
+
+        all_faculties.forEach(fac => {
+            if (student_list[elem].major == fac) {
+                console.log(fac)
+                interest_array.push(1)
+            } else {
+                interest_array.push(0)
+            }
+        })
+
         student_list[elem].interests = interest_array;
         new_student_list[(student_list[elem]['_id'])] = student_list[elem]
-    })
+    });
 
     const courseService = new CourseService();
     let course_list = await courseService.getAllCourses()

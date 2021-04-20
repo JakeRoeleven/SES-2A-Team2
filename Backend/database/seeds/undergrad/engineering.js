@@ -162,8 +162,7 @@ async function BachelorOfEngineering(num_of_students) {
         studentService.setStudent(uniqid(),  await buildStudents(year, 'Bachelor of Biomedical Engineering', biomedicalInterests, biomedicalCore, biomedicalElectives))
     }
     // console.timeEnd("loop")
-
-        
+   
     console.time("write")
     fs.writeFileSync('engineering-students.json', JSON.stringify(students_json));
     console.timeEnd("write")
@@ -174,4 +173,4 @@ async function BachelorOfEngineering(num_of_students) {
 mongoose.connect('mongodb://root:password@165.232.165.231:27017', {useNewUrlParser: true, useUnifiedTopology: true, 
     useCreateIndex: true, useFindAndModify: false}).then(() => console.log("Successfully connected to the database"))
     .catch(error => console.log("Failed to connect to database: ", error));
-BachelorOfEngineering(1);
+BachelorOfEngineering(990);
