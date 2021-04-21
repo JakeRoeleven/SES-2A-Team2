@@ -1,4 +1,6 @@
 import json
+import os
+import sys
 
 #Cosine Similarity functions
 def dotProd(a,b):
@@ -16,10 +18,13 @@ def trueLen(a):
 def cosSimilarity(a,b):
     top = dotProd(a,b)
     bottom = trueLen(a)*trueLen(b)
-    return top/bottom
+    if (bottom == 0): 
+        return 0
+    else: 
+        return top/bottom
 
 #Generic function to get candidate course set
-def getMatchingCourseList(**keyValuePair):
+def getMatchingCourseList(courses, **keyValuePair):
     courseList = []
     for id in courses:
         flag = True
@@ -32,12 +37,12 @@ def getMatchingCourseList(**keyValuePair):
     return courseList
 
 #Generic function to get candidate student list from candidate course set
-def getStudentSet(courseList):
+def getStudentSet(students, courseList):
     #This will probably be a db call in the actual version
     studentList = []
     for id in students:
         for course in courseList:
-            if course in students[id]["courses"]:
+            if course in students[id]["courses_completed"]:
                 studentList.append(id)
                 break
     return studentList
@@ -45,44 +50,44 @@ def getStudentSet(courseList):
 #transforms a student in the format of the student dictionary within students into a vector for cosine similarity
 def studentToVector(student):
     studentVector = []
-    for key in student:
-        if(key != "courses"): #exclude non booleans
-            studentVector.append(int(student[key]))
+    for value in student["interests"]:
+        studentVector.append(value)
     return studentVector
 
 #will return the k nearest neighbours of newStudent in the candidate student list
 #newStudent should be a dictionary in the same format as the student dictionary within students
-def getKNNStudents(k, newStudent, studentList):
+def getKNNStudents(k, newStudent, studentList, students):
     relationships = {}
     neighbours = []
     newStudentVector = studentToVector(newStudent)
     for id in studentList:
         relationships[id]=cosSimilarity(newStudentVector, studentToVector(students[id]))
     while len(neighbours) < k:
-        nearest = max(relationships.keys, key=(lambda k: relationships[k]))
+        nearest = max(relationships, key=(relationships.get))
         neighbours.append(nearest)
         relationships.pop(nearest)
     del relationships
     return neighbours
 
 #Will give you x course recommendations based on your K nearest neighbours
-def getRecommendations(KNN, x):
+def getRecommendations(KNN, x, students):
     KNNCourses = {}
     recommendations = []
     for id in KNN:
-        for course in students[id]["courses"]:
+        for course in students[id]["courses_completed"]:
             if course in KNNCourses:
                 KNNCourses[course] += 1
             else:
                 KNNCourses[course] = 1
     while len(recommendations) < x:
-        recommended = max(KNNCourses.keys, key=(lambda k: KNNCourses[k]))
+        recommended = max(KNNCourses, key=(KNNCourses.get))
         recommendations.append(recommended)
         KNNCourses.pop(recommended)
     del KNNCourses
     return recommendations
 
-def main(K, newStudent, amount, **keyValuePair):
+def main(courses, students, newStudent, K, amount, **keyValuePair):
+
     ####Converted JSON Format####
     #All courses (Dictionary)
     ##Course number (String Key)
@@ -96,15 +101,13 @@ def main(K, newStudent, amount, **keyValuePair):
     ###--"description"
     ###--"link"
     ###Property Data (Varies)
-    cfile = open("C:\\Users\\Manal\\Desktop\\University\\SES2\\data_test.json", encoding="utf8")
-    courses = json.load(cfile)
 
     ####Expected Converted JSON Format####
     #All students (Dictionary)
     ##student id (String Key)
     ##student (Dictionary)
     ###Property name (String Key)
-    ###--"courses"
+    ###--"courses_completed"
     ###--"math"
     ###--"physics"
     ###--"english"
@@ -119,9 +122,14 @@ def main(K, newStudent, amount, **keyValuePair):
     ###--"biology" = boolean (0 or 1)
     ###--"it" = boolean (0 or 1)
     ###--"chemistry" = boolean (0 or 1)
-    sfile = open("C:\\Users\\Manal\\Desktop\\University\\SES2\\students.json", encoding="utf8")
-    students= json.load(sfile)
 
-    studentList = getStudentSet(getMatchingCourseList(keyValuePair))
-    KNN = getKNNStudents(K, newStudent, studentList)
-    return getRecommendations(KNN, amount)
+    studentList = getStudentSet(students, getMatchingCourseList(courses, **keyValuePair));
+    KNN = getKNNStudents(K, newStudent, studentList, students);
+    print(getRecommendations(KNN, amount, students));
+    exit()
+
+
+# Pass system arguments
+data_in = json.loads(sys.stdin.read())
+student_faculty = data_in['student']['major']
+main(data_in['courses'], data_in['students'], data_in['student'], 2, 10)

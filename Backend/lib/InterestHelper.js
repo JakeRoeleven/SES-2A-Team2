@@ -3,7 +3,8 @@
 module.exports.getAllInterests = () => {
     const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
     'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
-    'Physics', 'Chemistry', 'Biology']
+    'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics', 'Games', 'Marketing',
+    'Accounting', 'Writing', 'Communications', 'Music', 'Design']
 
     return all_interests;
 };
@@ -23,10 +24,10 @@ module.exports.setInterestInJSON = () => (interests) => {
         interests_json[element] = true;
     });
     return interests_json;
-}
-;
+};
 
 module.exports.interestsJSONToArray = () => (interests_json) => {
+    console.log(test)
     let all_interests = getAllInterests();
     let interest_array = [];
     all_interests.forEach(interest => {

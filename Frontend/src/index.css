@@ -22,3 +22,9 @@ code {
 .float-right {
     float: right
 }
+
+.loadingContainer {
+    text-align: center;
+    height: 50vh;
+    padding-top: 25vh;
+}

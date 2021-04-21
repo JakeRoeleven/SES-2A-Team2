@@ -30,17 +30,22 @@ class CourseService {
     }
 
     async getCourse(id) {
-        Course.findOne({ _id: id }, (err, course) => {
+        await Course.findOne({ _id: id }, async (err, course) => {
             if (err || !course) {
                 return ({ err: "Could not find course!" });
             } else {
-                return course;
+                return await course;
             }
         });
     }
 
     async getAllCourses() {
         const courseRef = Course.find().lean();
+        return courseRef;
+    }
+
+    async getAllKNNCourses(postgraduate) {
+        const courseRef = await Course.find({ postgraduate: postgraduate }, { _id: 1, faculty: 1 }).lean();
         return courseRef;
     }
 

@@ -7,7 +7,7 @@ class StudentService {
     }
 
     async setStudent(id, student) {
-        
+
         const studentObject = new Student({
             _id: id, 
             name: student.name,
@@ -16,12 +16,16 @@ class StudentService {
             postgraduate: student.postgraduate
         });
 
+        if (student.year) {
+            studentObject.year = student.year;
+        }
+
         if (student.courses_completed && student.courses_completed.length > 0) {
-            studentObject.courses_completed = courses_completed;
+            studentObject.courses_completed = student.courses_completed;
         }
 
         if (student.favorite_subjects && student.favorite_subjects.length > 0) {
-            studentObject.favorite_subjects = favorite_subjects;
+            studentObject.favorite_subjects = student.favorite_subjects;
         }
 
 
@@ -52,6 +56,16 @@ class StudentService {
     async getAllStudents() {
         const studentRef = Student.find().lean();
         return studentRef;
+    }
+
+    async getAllKNNStudentsByMajor(major) {
+        if (major) {
+            const studentRef = await Student.find({ major: major }, { _id: 1 , courses_completed : 1 , interests : 1 , postgraduate : 1, year: 1} ).lean();
+            return studentRef;
+        } else {
+            const studentRef = await Student.find().lean();
+            return studentRef;
+        }
     }
 
     async deleteStudent(id) {

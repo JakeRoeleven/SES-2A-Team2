@@ -15,6 +15,10 @@ const StudentModel = Schema({
         type: String,
         required: true,
     },
+    year: {
+        type: Number,
+        required: false,
+    },
     degree: {
         type: String,
         required: true,
