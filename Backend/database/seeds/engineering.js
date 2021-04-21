@@ -83,6 +83,7 @@ async function buildStudents(year_level, degree_name, interests_input, major_url
 
     return({
         name: student_name,
+        year: year_level,
         major: major,
         degree: degree,
         postgraduate: postgraduate,
