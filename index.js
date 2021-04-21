@@ -44,7 +44,6 @@ function logout(){
   firebase.auth().signOut();
 }
 
-
 function register(){
 
   var userEmail = document.getElementById("email_field").value;

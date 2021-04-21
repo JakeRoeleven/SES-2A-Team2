@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useRef, useContext} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 // Import Private Route
@@ -25,7 +25,7 @@ import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 
 function App() {
-	
+
     const [subjects, setSubjects] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -48,7 +48,7 @@ function App() {
 
 	// Fetch full subject list from API
 	const fetchSubjects = useCallback(async () => {
-		fetch('http://178.128.216.237:8080/api/subjects', {
+		fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
@@ -138,6 +138,7 @@ function App() {
 			</>
 		)
 	}
+
 }
 
 export default App;

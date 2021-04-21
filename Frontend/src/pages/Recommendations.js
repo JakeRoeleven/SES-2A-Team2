@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -28,7 +28,7 @@ function Recommendations() {
     }
 
     const findRecommendations = (student) => {  
-        fetch('http://localhost:8080/api/recommendation', {
+        fetch(`http://${process.env.REACT_APP_SERVER}/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
             headers: {

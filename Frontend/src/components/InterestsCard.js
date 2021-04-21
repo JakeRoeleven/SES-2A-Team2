@@ -1,8 +1,5 @@
-import React, {useState, useEffect, useCallback, useContext} from 'react';
-import {AppContext} from '../AppContext';
-
+import React, {useState } from 'react';
 import {Card, InputBase, Typography, CardActions, CardContent, Button,} from '@material-ui/core';
-import { teal } from '@material-ui/core/colors';
 import FacultyDropdown from './FacultyDropdown';
 
 function InterestsCard(props) {
