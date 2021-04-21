@@ -16,14 +16,7 @@ function Recommendations() {
     const findSubjects = (recommendations) => {
 
         let subject_obj = {};
-
-        //TODO : Replace this to hackey
-        recommendations = recommendations.split(",")
-        let subject_ids = [];
-        recommendations.forEach(elem => {
-            subject_ids.push(elem.replace(/\D/g, ''))
-        })
-
+        let subject_ids = recommendations;
         data.forEach(elem => {
             if (subject_ids.includes(elem._id)) {
                 subject_obj[elem._id] = elem
@@ -34,15 +27,10 @@ function Recommendations() {
 
     }
 
-    const findRecommendations = (recommendations) => {  
-        console.log(recommendations)
+    const findRecommendations = (student) => {  
         fetch('http://localhost:8080/api/recommendation', {
             method: 'POST',
-            body: JSON.stringify({
-                "student": {
-                    "interests": recommendations,
-                }
-            }),
+            body: JSON.stringify({student}),
             headers: {
                 'Content-Type': 'application/json',
             },

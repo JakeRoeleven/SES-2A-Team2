@@ -131,4 +131,5 @@ def main(courses, students, newStudent, K, amount, **keyValuePair):
 
 # Pass system arguments
 data_in = json.loads(sys.stdin.read())
-main(data_in['courses'], data_in['students'], data_in['student'], 2, 6)
+student_faculty = data_in['student']['major']
+main(data_in['courses'], data_in['students'], data_in['student'], 2, 10, faculty=student_faculty)

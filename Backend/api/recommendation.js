@@ -31,9 +31,15 @@ router.get('/random', (req, res) => {
 
 router.post('/recommendation', async (req, res) => {
 
-    let student = req.body.student;
-    student.major = 'Engineering '
+    let student_req = req.body.student;
+    let student = {}
+    
+    student.major = student_req.faculty
+    student.courses_completed = student_req.courses_completed;
 
+    let interests_json = student_req.interests
+
+    console.time('loops')
     const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
     'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
     'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics', 'Games', 'Marketing',
@@ -42,7 +48,7 @@ router.post('/recommendation', async (req, res) => {
     'Design Architecture and Building', 'Education', 'Engineering', 'Health', 'Information Technology', 'International Studies',
     'Law', 'Science', 'Transdisciplinary Innovation']
 
-    let interests_json = student.interests
+    console.time('student_loop')
     let interest_array = [];
     all_interests.forEach(interest => {
         if (interests_json.includes(interest)) {
@@ -51,21 +57,25 @@ router.post('/recommendation', async (req, res) => {
             interest_array.push(0)
         }
     });
-    all_faculties.forEach(fac => {
-        if (student.major == fac) {
-            interest_array.push(1)
-        } else {
-            interest_array.push(0)
-        }
-    })
+    console.timeEnd('student_loop')
+    // all_faculties.forEach(fac => {
+    //     if (student.major == fac) {
+    //         interest_array.push(1)
+    //     } else {
+    //         interest_array.push(0)
+    //     }
+    // })
     student.interests = interest_array;
 
+    console.time('get_students')
     const studentService = new StudentService();
     let student_list = await studentService.getAllStudents();
+    console.timeEnd('get_students')
     let new_student_list = {};
 
+    console.time('all-students-transform')
     // Convert array to python format
-    Object.keys(student_list).forEach(async elem => {
+    Object.keys(student_list).forEach(elem => {
        
         let interest_array = [];
         let interests_json = student_list[elem].interests
@@ -78,26 +88,30 @@ router.post('/recommendation', async (req, res) => {
             }
         });
 
-        all_faculties.forEach(fac => {
-            if (student_list[elem].major == fac) {
-                console.log(fac)
-                interest_array.push(1)
-            } else {
-                interest_array.push(0)
-            }
-        })
+        // all_faculties.forEach(fac => {
+        //     if (student_list[elem].major == fac) {
+        //         interest_array.push(1)
+        //     } else {
+        //         interest_array.push(0)
+        //     }
+        // })
 
         student_list[elem].interests = interest_array;
         new_student_list[(student_list[elem]['_id'])] = student_list[elem]
     });
+    console.timeEnd('all-students-transform')
 
+    console.time('get-courses')
     const courseService = new CourseService();
     let course_list = await courseService.getAllCourses()
+    console.timeEnd('get-courses')
 
+    console.time('courses-transform')
     let new_list = {};
     Object.keys(course_list).forEach((elem, index) => {
         new_list[(course_list[elem]['_id'])] = course_list[elem];
     });
+    console.timeEnd('courses-transform')
 
     python_data = {
         student: student,
@@ -105,6 +119,10 @@ router.post('/recommendation', async (req, res) => {
         students: new_student_list
     }
 
+    console.log(python_data.student)
+
+    console.timeEnd('loops')
+    console.time('python')
     // Python scripts takes arguments in order as main(courses, students, student, k, recommendations)
     try {
         
@@ -114,28 +132,39 @@ router.post('/recommendation', async (req, res) => {
         pyshell.send(JSON.stringify(python_data));
         
         
-        pyshell.on('message', function (message) {
+        pyshell.on('message', function (recommendations) {
             // received a message sent from the Python script (a simple "print" statement)
-            console.log(message)
+
+            recommendations = recommendations.split(",")
+            let subject_ids = [];
+            recommendations.forEach(elem => {
+                subject_ids.push(elem.replace(/\D/g, ''))
+            })
+
+            let subjects = [];
+            subject_ids.forEach(elem => {
+                if (!student.courses_completed.includes(elem)) subjects.push(elem)
+            })
+
             let results = {
-                recommendations: message
+                recommendations: subjects
             }
+
+            console.log(results)
+
             res.status(200).json(results);
 
         });
 
         pyshell.end(function (err, code, signal) {
             if (err) throw err;
-            console.log('The exit code was: ' + code);
-            console.log('The exit signal was: ' + signal);
-            console.log('finished');
         }); 
         
         
     } catch (error) {
         console.log(error)
     }
-
+    console.timeEnd('python')
 });
 
 module.exports = router;
