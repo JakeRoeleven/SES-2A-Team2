@@ -4,6 +4,12 @@ let {PythonShell} = require('python-shell');
 const process = require('process');
 const StudentService = require('../lib/studentService');
 const CourseService = require('../lib/courseService');
+const getAllInterests = require('../lib/InterestHelper').getAllInterests;
+
+function parseHrtimeToSeconds(hrtime) {
+    var seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(3);
+    return seconds;
+}
 
 router.get('/random', (req, res) => {
     let startTime = process.hrtime();
@@ -31,98 +37,73 @@ router.get('/random', (req, res) => {
 
 router.post('/recommendation', async (req, res) => {
 
+    // Begin recording time
+    let startTime = process.hrtime();
+
+    const all_interests = getAllInterests();
+
+    // Get request contents
+    // TODO: Error handeling and validation
     let student_req = req.body.student;
-    let student = {}
     
+    // Set candidate student
+    let student = {}
     student.major = student_req.faculty
     student.courses_completed = student_req.courses_completed;
 
-    let interests_json = student_req.interests
-
-    console.time('loops')
-    const all_interests = ['Programming', 'Maths', 'Statistics', 'Hospitality', 'Fitness', 'Language', 'Art', 'Humanities',
-    'Architecture', 'History', 'Geography', 'Business', 'Economics', 'Education', 'Health', 'Engineering', 'Law', 'Computing',
-    'Physics', 'Chemistry', 'Biology', 'Electronics', 'Medicine', 'Data Analytics', 'Mechanics', 'Games', 'Marketing',
-    'Accounting', 'Writing', 'Communications', 'Music', 'Design'];
-    all_faculties = ['Analytics and Data Science', 'Business', 'Communication', 'Creative Intelligence and Innovation',
-    'Design Architecture and Building', 'Education', 'Engineering', 'Health', 'Information Technology', 'International Studies',
-    'Law', 'Science', 'Transdisciplinary Innovation']
-
-    console.time('student_loop')
+    // Format candidate student
     let interest_array = [];
-    all_interests.forEach(interest => {
-        if (interests_json.includes(interest)) {
+    let interests_json = student_req.interests
+    for (var i = 0, len = all_interests.length; i < len; i++) {    
+        if (interests_json.indexOf(all_interests[i]) > -1) {
             interest_array.push(1)
         } else {
             interest_array.push(0)
         }
-    });
-    console.timeEnd('student_loop')
-    // all_faculties.forEach(fac => {
-    //     if (student.major == fac) {
-    //         interest_array.push(1)
-    //     } else {
-    //         interest_array.push(0)
-    //     }
-    // })
+    }
     student.interests = interest_array;
 
-    console.time('get_students')
+    // Get and format students
     const studentService = new StudentService();
-    let student_list = await studentService.getAllStudents();
-    console.timeEnd('get_students')
-    let new_student_list = {};
+    let student_list = await studentService.getAllKNNStudentsByMajor(student.major);
+    let formatted_student_list = {};
+    for (var i = 0, len = Object.keys(student_list).length; i < len; i++) {   
 
-    console.time('all-students-transform')
-    // Convert array to python format
-    Object.keys(student_list).forEach(elem => {
-       
         let interest_array = [];
-        let interests_json = student_list[elem].interests
-
-        all_interests.forEach(interest => {
-            if (interests_json.includes(interest)) {
+        let interests_json = student_list[i].interests
+        
+        // Loop through interests and transform
+        for (var j = 0, len = all_interests.length; j < len; j++) {    
+            if (interests_json.indexOf(all_interests[j]) > -1) {
                 interest_array.push(1)
             } else {
                 interest_array.push(0)
             }
-        });
+        }
+ 
+        // Add new student with interest as matrix
+        formatted_student_list[(student_list[i]['_id'])] = {
+            courses_completed: student_list[i]['courses_completed'],
+            interests: interest_array
+        }
 
-        // all_faculties.forEach(fac => {
-        //     if (student_list[elem].major == fac) {
-        //         interest_array.push(1)
-        //     } else {
-        //         interest_array.push(0)
-        //     }
-        // })
+    }
 
-        student_list[elem].interests = interest_array;
-        new_student_list[(student_list[elem]['_id'])] = student_list[elem]
-    });
-    console.timeEnd('all-students-transform')
-
-    console.time('get-courses')
+    // Get and format courses
     const courseService = new CourseService();
-    let course_list = await courseService.getAllCourses()
-    console.timeEnd('get-courses')
+    let course_list = await courseService.getAllKNNCourses(false)
+    let formatted_course_list = {};
+    for (var i = 0, len = Object.keys(course_list).length; i < len; i++) {   
+        formatted_course_list[(course_list[i]['_id'])] = course_list[i];
+    }
 
-    console.time('courses-transform')
-    let new_list = {};
-    Object.keys(course_list).forEach((elem, index) => {
-        new_list[(course_list[elem]['_id'])] = course_list[elem];
-    });
-    console.timeEnd('courses-transform')
 
     python_data = {
         student: student,
-        courses: new_list,
-        students: new_student_list
+        courses: formatted_course_list,
+        students: formatted_student_list
     }
 
-    console.log(python_data.student)
-
-    console.timeEnd('loops')
-    console.time('python')
     // Python scripts takes arguments in order as main(courses, students, student, k, recommendations)
     try {
         
@@ -132,25 +113,28 @@ router.post('/recommendation', async (req, res) => {
         pyshell.send(JSON.stringify(python_data));
         
         
-        pyshell.on('message', function (recommendations) {
+        pyshell.on('message', async function (recommendations) {
             // received a message sent from the Python script (a simple "print" statement)
 
             recommendations = recommendations.split(",")
             let subject_ids = [];
-            recommendations.forEach(elem => {
-                subject_ids.push(elem.replace(/\D/g, ''))
-            })
-
-            let subjects = [];
-            subject_ids.forEach(elem => {
-                if (!student.courses_completed.includes(elem)) subjects.push(elem)
-            })
-
-            let results = {
-                recommendations: subjects
+            for (var i = 0, len = recommendations.length; i < len; i++) {   
+                subject_ids.push(recommendations[i].replace(/\D/g, ''));
             }
 
-            console.log(results)
+            let subjects = [];
+            for (var i = 0, len = subject_ids.length; i < len; i++) {   
+                if (student.courses_completed.indexOf(subject_ids[i]) == -1) subjects.push(subject_ids[i])
+            }
+
+            let endTime = await parseHrtimeToSeconds(
+                process.hrtime(startTime)
+            );
+
+            let results = {
+                recommendations: subjects,
+                time: endTime
+            }
 
             res.status(200).json(results);
 
@@ -158,13 +142,15 @@ router.post('/recommendation', async (req, res) => {
 
         pyshell.end(function (err, code, signal) {
             if (err) throw err;
+            res.status(500);
         }); 
         
         
     } catch (error) {
         console.log(error)
+        res.status(500);
     }
-    console.timeEnd('python')
+
 });
 
 module.exports = router;

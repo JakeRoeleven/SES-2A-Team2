@@ -44,6 +44,11 @@ class CourseService {
         return courseRef;
     }
 
+    async getAllKNNCourses(postgraduate) {
+        const courseRef = await Course.find({ postgraduate: postgraduate }, { _id: 1, faculty: 1 }).lean();
+        return courseRef;
+    }
+
     async getCoursesFromName(name) {
         Course.findOne({ course_name: name }, (err, course) => {
             if (err || !course) {

@@ -8,8 +8,6 @@ class StudentService {
 
     async setStudent(id, student) {
 
-        console.log(student)
-        
         const studentObject = new Student({
             _id: id, 
             name: student.name,
@@ -58,6 +56,16 @@ class StudentService {
     async getAllStudents() {
         const studentRef = Student.find().lean();
         return studentRef;
+    }
+
+    async getAllKNNStudentsByMajor(major) {
+        if (major) {
+            const studentRef = await Student.find({ major: major }, { _id: 1 , courses_completed : 1 , interests : 1 , postgraduate : 1, year: 1} ).lean();
+            return studentRef;
+        } else {
+            const studentRef = await Student.find().lean();
+            return studentRef;
+        }
     }
 
     async deleteStudent(id) {
