@@ -6,7 +6,6 @@ import {
     CardContent,
     Button,
     Typography,
-    CardHeader,
     IconButton
 } from '@material-ui/core';
 
@@ -29,8 +28,7 @@ function SubjectCard(props) {
         setTitle(props.subject._id + " - " + props.subject.course_name);
         setFaculty("Faculty of  " + props.subject.faculty)
         setDisplayParagraph(props.subject.description.substring(0, 300).trim())
-    
-    }, [setTitle, setFaculty, setDisplayParagraph]);
+    }, [setTitle, setFaculty, setDisplayParagraph, props]);
 
     const displayFullDescription = () => {
         setDisplayParagraph(props.subject.description)
