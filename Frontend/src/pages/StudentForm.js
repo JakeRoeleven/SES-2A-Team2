@@ -28,7 +28,6 @@ class StudentForm extends Component {
         };
     }
 
-
     handleInputChange = (event) => {
         const { value, name } = event.target;
         this.setState({ [name]: value });
@@ -53,58 +52,60 @@ class StudentForm extends Component {
 		this.setState({ displayed_interests: value });			
 	}
 
-    onSubmit = async (event) => {
-
+	getStudentData = () => {
 		let student = {}
-		let firebaseDetails = await firebase.getCurrentUser()
-
-		console.log(this.state)
+		let firebaseDetails = firebase.getCurrentUser()
 
 		// Push id from firebase
-		student['_id'] = firebaseDetails.l;
-		student['email'] = firebaseDetails.email;
+		student['id'] = firebaseDetails.l;
 
-		student['name'] = this.state.firstname.concat(" ").concat(this.state.lastname)
-		student['major'] = this.state.major;
-		student['year'] = this.state.yearOfDegree;
-		student['postgraduate'] = false;
-		student['interests'] =this.state.current_interests;
+		student["student_data"] = {}
+		student["student_data"]['name'] = this.state.firstname.concat(" ").concat(this.state.lastname)
+		
+        //TODO: Need degree
+        student["student_data"]['degree'] = this.state.major;
+        student["student_data"]['major'] = this.state.major;
+		student["student_data"]['year'] = this.state.yearOfDegree;
+		student["student_data"]['postgraduate'] = false;
+		student["student_data"]['interests'] =this.state.current_interests;
 
-		console.log(student)
+		return student;
+	}
 
-        // this.setState({ loading: true });
-        // event.preventDefault();
-        // fetch('api/user/register', {
-        // 	method: 'POST',
-        // 	body: JSON.stringify(this.state),
-        // 	headers: {
-        // 		'Content-Type': 'application/json'
-        // 	}
-        // })
-        // 	.then(async (res) => {
-        // 		if (res.status === 200) {
-        // 			this.setState({ hidden: true, loading: false });
-        // 			this.props.history.push('/login');
-        // 		} else {
-        // 			const error = JSON.parse(await res.json());
-        // 			this.setState({ hidden: false, loading: false, errorHeading: "Error!", errorMessage: error });
-        // 		}
-        // 	})
-        // 	.catch(err => {
-        // 		this.setState({ hidden: false, loading: false, errorHeading: "Error!", errorMessage: "Check you internet connection and try again!" });
-        // 	})
+    onSubmit = async (event) => {
+		let student = this.getStudentData();
+        this.setState({ loading: true });
+        event.preventDefault();
+        fetch('http://localhost:8080/api/new-student', {
+        	method: 'POST',
+        	body: JSON.stringify(student),
+        	headers: {
+        		'Content-Type': 'application/json'
+        	}
+        })
+        	.then(async (res) => {
+        		if (res.status === 200) {
+        			this.props.history.push('/home');
+        		} else {
+        			const error = JSON.parse(await res.json());
+					alert(error)
+        		}
+        	})
+        	.catch(err => {
+        		alert(err)
+        	})
     };
 
     render() {
         return (
             <Segment color='blue' padded textAlign='center'>
                 <br />
-                <Message
+                {/* <Message
                     hidden={this.state.hidden}
                     error
                     header={this.state.errorHeading}
                     content={this.state.errorMessage}
-                />
+                /> */}
                 <Form size='large' onSubmit={this.onSubmit}>
                     <Form.Input
                         name='firstname'
@@ -140,7 +141,7 @@ class StudentForm extends Component {
                         placeholder={'Select Year Of Study'}
                         onChange={this.handleSelectInputChange}
                     />
-					<MajorSelect />
+					<MajorSelect setMajor={this.setMajor}/>
 					<InterestSelect 
 						displayed_interests={this.state.displayed_interests} 
 						setCurrentInterests={this.setCurrentInterests} 

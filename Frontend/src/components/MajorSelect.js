@@ -7,7 +7,7 @@ function MajorSelect(props) {
 
     const handleSelectInputChange = async (event, ) => {
 		let value = event.value;
-		console.log(value)
+		props.setMajor(value)
     }
 
     const setMajorsDropdownList = (majors_array) => {
@@ -20,7 +20,7 @@ function MajorSelect(props) {
 
     // Fetch full subject list from API
 	const fetchMajors = useCallback(async () => {
-		fetch(`http://localhost:8080/api/interests`, {
+		fetch(`http://localhost:8080/api/majors`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
