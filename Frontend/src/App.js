@@ -23,6 +23,7 @@ import {AppContext} from './AppContext';
 import firebase from './firebase';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import StudentForm from './pages/StudentForm';
 
 function App() {
 
@@ -126,6 +127,7 @@ function App() {
 								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 								<Route exact path="/register" component={Register} />
+								<Route exact path="/student-form" component={StudentForm} />
 								<PrivateRoute authenticated={isAuthenticated} exact path="/home" component={Home} />
 								<PrivateRoute authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
 								<PrivateRoute authenticated={isAuthenticated} exact path="/search" component={Search} />

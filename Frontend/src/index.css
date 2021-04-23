@@ -24,7 +24,6 @@ body {
     font-size: 1.5em;
 }
 
-<<<<<<< HEAD
 .float-right {
     float: right
 }
@@ -34,17 +33,3 @@ body {
     height: 50vh;
     padding-top: 25vh;
 }
-=======
-.App-intro {
-    font-size: large;
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
->>>>>>> 5d9112d91e4d3d211e27b440def42951505a2ce7
