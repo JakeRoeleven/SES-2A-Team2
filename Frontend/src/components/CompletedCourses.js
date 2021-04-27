@@ -60,17 +60,19 @@ function CoursesCompleted(props) {
 			setCourses(props.courses)
 			let subject_obj = {};
 			data.forEach(elem => {
-					if (courses.includes(elem._id)) {
-							subject_obj[elem._id] = elem
-					}
+				if (courses.includes(elem._id)) {
+						subject_obj[elem._id] = elem
+				}
 			})
 			setSubjects(subject_obj);
 		}
 
 		useEffect(() => {
-			if (courses != props.courses) findSubjects()
+			debugger;
+			findSubjects()
 		}, [findSubjects, setCourses, setSubjects]);
 
+		debugger;
 		if (courses.length > 0 && Object.keys(subjects).length > 0) {
 			console.log('hi')
 			console.log(courses)

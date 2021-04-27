@@ -79,8 +79,7 @@ function Account() {
 		student["student_data"] = {}
 		student["student_data"]['name'] = firstname.concat(" ").concat(lastname)
 		
-        //TODO: Need degree
-        debugger;
+        //TODO: Need degrees
         student["student_data"]['degree'] = degree;
         student["student_data"]['major'] = faculty;
 		student["student_data"]['year'] = year;
@@ -118,37 +117,25 @@ function Account() {
 
     // Get student details from database
     const fetchStudent = async () => {
-        
-        let firebaseDetails = null
-
-        firebaseDetails = await Firebase.getCurrentUser();
-
-        if (firebaseDetails !== null) {
-            fetch(`http://localhost:8080/api/student/${firebaseDetails.l}`, {
-                crossDomain: true,
-                mode: 'cors',
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                },
+        let id = sessionStorage.getItem('user_id');
+        fetch(`http://localhost:8080/api/student/${id}`, {
+            crossDomain: true,
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+            .then(async (res) => {
+                let data = await res.json();
+                setDetailsFromFirebase(data);
+                setLoading(false);
             })
-                .then(async (res) => {
-                    let data = await res.json();
-                    setDetailsFromFirebase(data);
-                    setLoading(false);
-                })
-                .catch((err) => {
-                    console.log(err);
-            });
-        } else {
-            setHasDetails(!hasDetails)
-        }
-
+            .catch((err) => {
+                console.log(err);
+        });
     };
-
-    const test = () => {
-    }
 
     useEffect(() => {
         if(userDetails == null) {

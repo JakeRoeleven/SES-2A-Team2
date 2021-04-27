@@ -28,18 +28,16 @@ function Recommendations() {
     }
 
     const findRecommendations = (student) => {  
-        fetch(`http://${process.env.REACT_APP_SERVER}/api/recommendation`, {
+        fetch(`http://localhost:8080/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
             headers: {
                 'Content-Type': 'application/json',
             },
-        })
-        .then(async (res) => {
+        }).then(async (res) => {
             let json = await res.json(res)
             findSubjects(json.recommendations)
-        })
-        .catch((err) => {
+        }).catch((err) => {
             console.log(err)
         });
     }

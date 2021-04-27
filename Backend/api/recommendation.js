@@ -67,25 +67,33 @@ router.post('/recommendation', async (req, res) => {
     const studentService = new StudentService();
     let student_list = await studentService.getAllKNNStudentsByMajor(student.major);
     let formatted_student_list = {};
+
     for (var i = 0, len = Object.keys(student_list).length; i < len; i++) {   
 
         let interest_array = [];
-        let interests_json = student_list[i].interests
+        if (student_list[i]) {
+            let interests_json = student_list[i].interests
         
-        // Loop through interests and transform
-        for (var j = 0, len = all_interests.length; j < len; j++) {    
-            if (interests_json.indexOf(all_interests[j]) > -1) {
-                interest_array.push(1)
-            } else {
-                interest_array.push(0)
+            // Loop through interests and transform
+            for (var j = 0, len = all_interests.length; j < len; j++) {    
+                if (interests_json.indexOf(all_interests[j]) > -1) {
+                    interest_array.push(1)
+                } else {
+                    interest_array.push(0)
+                }
             }
+
+             
+            // Add new student with interest as matrix
+            formatted_student_list[(student_list[i]['_id'])] = {
+                courses_completed: student_list[i]['courses_completed'],
+                interests: interest_array
+            }
+        } else {
+            console.log(i)
         }
  
-        // Add new student with interest as matrix
-        formatted_student_list[(student_list[i]['_id'])] = {
-            courses_completed: student_list[i]['courses_completed'],
-            interests: interest_array
-        }
+
 
     }
 
@@ -140,7 +148,6 @@ router.post('/recommendation', async (req, res) => {
         });
 
         pyshell.end(function (err, code, signal) {
-            if (err) throw err;
             res.status(500);
         }); 
         

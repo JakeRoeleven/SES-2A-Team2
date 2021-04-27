@@ -7,7 +7,6 @@ function MajorSelect(props) {
 
     const handleSelectInputChange = async (event, ) => {
 		let value = event.value;
-        console.log(value)
 		props.setMajor(value)
     }
 
@@ -17,7 +16,6 @@ function MajorSelect(props) {
             majors_obj_array.push({value: elem, label: elem});
         })
         setMajors(majors_obj_array);
-        console.log(majors)
     }
 
     // Fetch full subject list from API

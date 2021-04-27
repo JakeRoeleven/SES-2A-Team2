@@ -36,8 +36,59 @@ function SubjectCard(props) {
         setFavorite(!favorite)
     }
 
-    const toggleComplete = () => {
-        setComplete(!complete)
+    const toggleComplete = async (id) => {
+        
+        setComplete(!complete);
+        let old_student = {};
+
+        let student_id = sessionStorage.getItem('user_id');
+        await fetch(`http://localhost:8080/api/student/${student_id}`, {
+            crossDomain: true,
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        }).then(async (res) => {
+            old_student = await res.json();
+        }).catch((err) => {
+                console.log(err);
+        });
+
+        let completed = old_student['courses_completed'];
+        completed.push(id)
+
+        			// Make the student object
+        let student = {}
+        student['id'] = old_student._id;
+        student["student_data"] = {}
+        student["student_data"]['name'] = old_student.name;
+        student["student_data"]['degree'] = old_student.degree;
+        student["student_data"]['major'] = old_student.major;
+        student["student_data"]['year'] = old_student.year;
+        student["student_data"]['postgraduate'] = old_student.postgraduate;
+        student["student_data"]['interests'] = old_student.interests;
+        student["student_data"]['courses_completed'] = completed;
+
+        fetch('http://localhost:8080/api/update-student', {
+            method: 'POST',
+            body: JSON.stringify(student),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(async (res) => {
+                if (res.status === 200) {
+                    alert("Details updated")
+                } else {
+                    const error = JSON.parse(await res.json());
+                    alert(error)
+                }
+            })
+            .catch(err => {
+                alert(err)
+        });
     }
 
     const FavoriteStar = () => {   
@@ -57,17 +108,17 @@ function SubjectCard(props) {
     }
 
     return (
-        <Card style={{marginBottom: "1%"}}>
+        <Card style={{marginBottom: "1%", overflow: 'visible'}}>
            
            <CardContent style={{display: "flex", paddingBottom: '0px'}}>   
                
                 <Typography color='textPrimary' style={{padding: '12px', paddingLeft: '0px'}}> {title} </Typography> 
 
-                <IconButton aria-label="favorite" style={{marginLeft: "auto"}} onClick={() => toggleComplete()}>
+                <IconButton aria-label="favorite" style={{marginLeft: "auto"}} onClick={() => toggleComplete(props.subject._id)}>
                     <CompleteCircle/>
                 </IconButton>
                 
-                <IconButton aria-label="favorite" onClick={() => toggleFavorite()}>
+                <IconButton aria-label="favorite" onClick={() => toggleFavorite(props.subject._id)}>
                     <FavoriteStar/>
                 </IconButton>
 
