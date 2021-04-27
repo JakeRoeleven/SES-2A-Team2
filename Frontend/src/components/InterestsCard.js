@@ -1,36 +1,17 @@
-import React, {useState } from 'react';
-import {Card, InputBase, Typography, CardActions, CardContent, Button,} from '@material-ui/core';
-import FacultyDropdown from './FacultyDropdown';
+import React, { useEffect, useState } from 'react';
+import {Card, InputBase, Typography, CardContent, Button, Container, CircularProgress} from '@material-ui/core';
+import InterestSelect from '../components/InterestSelects';
+import MajorSelect from '../components/MajorSelect';
+import CoursesCompleted from '../components/CompletedCourses';
 
 function InterestsCard(props) {
 
-    const [interests, setInterests] = useState('');
-    const [interestsInput, setInterestsInput] = useState('');
-    const [completedInput, setCompletedInput] = useState('')
-    const [completedSubjects, setCompletedSubjects] = useState('');
+    const [fetchedStudent, setFetchedStudent] = useState(false)
+    const [loading, setLoading] = useState(true);
+    const [interests, setInterests] = useState([]);
+    const [displayedInterests, setDisplayedInterests] = useState([]);
+    const [completedSubjects, setCompletedSubjects] = useState([]);
     const [faculty, setFaculty] = useState('');
-
-    const onInterestsChange = (event) => {
-        setInterestsInput(event.target.value)
-        let temp_interests = event.target.value.split(",");
-        let interests_array = [];
-        temp_interests.forEach(elem => {
-            console.log(elem)
-            interests_array.push(elem.replace(/\W/g, ''))
-        })
-        setInterests(interests_array);
-    };
-
-    const onCompletedChange = (event) => {
-        setCompletedInput(event.target.value)
-        let temp_interests = event.target.value.split(",");
-        let interests_array = [];
-        temp_interests.forEach(elem => {
-            console.log(elem)
-            interests_array.push(elem.replace(/\W/g, ''))
-        })
-        setCompletedSubjects(interests_array);
-    };
 
     const getStudentObj = () => {
         let student = {
@@ -41,40 +22,78 @@ function InterestsCard(props) {
         return(student)
     }
 
-    return (
-        <Card style={{marginBottom: '1%', padding: '1%'}}>
-            <CardContent>
-                <Typography> Input Your Interests (Comma Separated) </Typography>
-                <br />
+    const setInterestsDropdownList = (interests_array) => {
+        setLoading(false)
+        let interests_obj_array = [];
+        interests_array.forEach(elem => {
+            interests_obj_array.push({value: elem, label: elem});
+        })
+        setDisplayedInterests(interests_obj_array)
+    }
 
-                <InputBase
-                    placeholder='Your Interests...'
-                    inputProps={{'aria-label': 'search'}}
-                    value={interestsInput}
-                    onChange={onInterestsChange}
-                    fullWidth={true}
-                />
-                <br /><br />
-                <Typography> Input Your Faculty </Typography>
-                <FacultyDropdown setFaculty={setFaculty} faculty={faculty}/>
+    const fetchStudent = async () => {
+        let id = sessionStorage.getItem('user_id');
+        fetch(`http://localhost:8080/api/student/${id}`, {
+            crossDomain: true,
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        }).then(async (res) => {
+                let data = await res.json();
+                debugger;
+                setFetchedStudent(data)
+                setInterests(data.interests)
+                setCompletedSubjects(data.courses_completed)
+                setInterestsDropdownList(data.interests)
+                setFaculty(data.major)
+        }).catch((err) => {
+                console.log(err);
+        });
+	};
 
-                <br /><br />
-                <Typography> Input Your Completed Subject Codes (Comma Separated) </Typography>
-                <br />
+    useEffect(() => {
+       if (!fetchedStudent) fetchStudent();
+    }, []);
 
-                <InputBase
-                    placeholder='Completed Subject...'
-                    inputProps={{'aria-label': 'search'}}
-                    value={completedInput}
-                    onChange={onCompletedChange}
-                    fullWidth={true}
-                />
-            </CardContent>
-            <CardActions style={{float: 'right'}}>
-                <Button color='primary' size='small' onClick={() => props.findRecommendations(getStudentObj())}> Find Recommendations </Button>
-            </CardActions>
-        </Card>
-    );
+    if (loading) {
+        return (
+            <>
+            <Container maxWidth={false}>
+                <Card style={{ padding: '1%', overflow: 'visible', textAlign: 'center'}}>
+                    <CircularProgress />
+                </Card>
+            </Container>
+            </>
+        )
+    } else {
+        return (
+            <Card style={{marginBottom: '1%', padding: '1%', overflow: 'visible'}}>
+                <CardContent>
+                    <Typography style={{marginBottom: '0.5%'}}> Your Interests </Typography>
+    
+                    <InterestSelect 
+                        displayed_interests={displayedInterests} 
+                        setCurrentInterests={setInterests} 
+                        setDisplayedInterests={setDisplayedInterests} />
+    
+                    <br />
+
+                    <Typography  style={{marginBottom: '0.5%'}}> Your Faculty </Typography>
+                    <MajorSelect setMajor={setFaculty} major={faculty}/>
+                    <br />
+
+                    <Typography style={{marginBottom: '0.5%'}}> Your Completed Courses </Typography>
+                    <CoursesCompleted courses={completedSubjects} student={fetchedStudent}/>
+
+                    <Button style={{float: 'right'}} color='primary' size='small' onClick={() => props.findRecommendations(getStudentObj())}> Find Recommendations </Button>
+                </CardContent>
+            </Card>
+        );
+    }
+  
 }
 
 export default InterestsCard;

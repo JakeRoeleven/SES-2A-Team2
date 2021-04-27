@@ -8,11 +8,22 @@ router.get('/students', async (req, res) => {
     res.status(200).json(student_list);
 });
 
-router.post('/new-student', async (req, res) => {
+router.get('/student/:id', async (req, res) => {
     
+    let id = req.params.id;
+    
+    const studentService = new StudentService();
+    let student = await studentService.getStudent(id);
+    console.log(await student)
+    
+    res.status(200).json(student);
+    console.log("done")
+
+});
+
+router.post('/new-student', async (req, res) => {
     const student = req.body.student_data;
     const id = req.body.id;
-
     try {
         const studentService = new StudentService();
         await studentService.setStudent(id, student);
@@ -21,7 +32,19 @@ router.post('/new-student', async (req, res) => {
         console.log(e)
         res.status(401).send(e);
     }
+});
 
+router.post('/update-student', async (req, res) => {
+    const student = req.body.student_data;
+    const id = req.body.id;
+    try {
+        const studentService = new StudentService();
+        await studentService.updateStudent(id, student);
+        res.status(200).send("Done");
+    } catch (e) {
+        console.log(e)
+        res.status(401).send(e);
+    }
 });
 
 module.exports = router;

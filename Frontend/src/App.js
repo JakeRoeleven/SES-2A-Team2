@@ -23,6 +23,7 @@ import {AppContext} from './AppContext';
 import firebase from './firebase';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import StudentForm from './pages/StudentForm';
 
 function App() {
 
@@ -34,11 +35,13 @@ function App() {
 	// App Context
 	const { Provider } = AppContext;
 
-	function checkAuthenticated() {
+	async function checkAuthenticated() {
 		if (firebase.getCurrentUsername() == null) {
 			setAuthenticated(false);
 		} else {
 			setAuthenticated(true);
+			let user_id = await firebase.getCurrentUser()
+			if (user_id.l) sessionStorage.setItem('user_id', user_id.l)
 		}		
 	}
 
@@ -121,18 +124,21 @@ function App() {
 			<>
 				<Router>
 					<Switch > 
-						<NavWrapper authenticated={isAuthenticated}>
+					
 							<Provider value={subjects}>
 								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 								<Route exact path="/register" component={Register} />
-								<PrivateRoute authenticated={isAuthenticated} exact path="/home" component={Home} />
-								<PrivateRoute authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
-								<PrivateRoute authenticated={isAuthenticated} exact path="/search" component={Search} />
-								<PrivateRoute authenticated={isAuthenticated} exact path="/account" component={Account} /> 
-								<PrivateRoute authenticated={isAuthenticated} exact path="/liked-courses" component={LikedCourses} /> 
+								<NavWrapper authenticated={isAuthenticated}>
+									<Route exact path="/student-form" component={StudentForm} />
+									<PrivateRoute authenticated={isAuthenticated} exact path="/home" component={Home} />
+									<PrivateRoute authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
+									<PrivateRoute authenticated={isAuthenticated} exact path="/search" component={Search} />
+									<PrivateRoute authenticated={isAuthenticated} exact path="/account" component={Account} /> 
+									<PrivateRoute authenticated={isAuthenticated} exact path="/liked-courses" component={LikedCourses} /> 
+								</NavWrapper>
 							</Provider>
-						</NavWrapper>
+
 					</Switch>
 				</Router>
 			</>

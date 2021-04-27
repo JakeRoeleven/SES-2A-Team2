@@ -59,7 +59,7 @@ class Firebase {
         return this.auth.currentUser && this.auth.currentUser.email;
     }
 
-    getCurrentUser() {
+    async getCurrentUser() {
         return this.auth.currentUser;
     }
 

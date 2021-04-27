@@ -22,7 +22,7 @@ class StudentService {
 
         if (student.courses_completed && student.courses_completed.length > 0) {
             studentObject.courses_completed = student.courses_completed;
-        }
+        } 
 
         if (student.favorite_subjects && student.favorite_subjects.length > 0) {
             studentObject.favorite_subjects = student.favorite_subjects;
@@ -36,21 +36,52 @@ class StudentService {
                     interestsArray.push(interest);
                 }
             })
-            console.log(interestsArray)
             studentObject.interests = interestsArray;
         }
 
         await studentObject.save();
     }
 
+    async updateStudent(id, student) {
+
+        console.log(student)
+
+        let studentObject = await Student.findOne({'_id': id});
+        studentObject.name = student.name,
+        studentObject.major = student.major,
+        studentObject.degree = student.degree,
+        studentObject.postgraduate =  student.postgraduate
+
+        if (student.year) {
+            studentObject.year = student.year;
+        }
+
+        if (student.courses_completed && student.courses_completed.length >= 0) {
+            studentObject.courses_completed = student.courses_completed;
+        }
+
+        if (student.favorite_subjects && student.favorite_subjects.length >= 0) {
+            studentObject.favorite_subjects = student.favorite_subjects;
+        }
+
+
+        if (student.interests && student.interests.length >= 0) {
+            let interestsArray = [];
+            student.interests.forEach(interest => {
+                if (getAllInterests().includes(interest)) {
+                    interestsArray.push(interest);
+                }
+            })
+            studentObject.interests = interestsArray;
+        }
+
+        console.log(studentObject)
+
+        await studentObject.save();
+    }
+
     async getStudent(id) {
-        Student.findOne({ _id: id }, (err, student) => {
-            if (err || !student) {
-                return ({ err: "Could not find course!" });
-            } else {
-                return student;
-            }
-        });
+        return await Student.findOne({ _id: id }).lean();;
     }
 
     async getAllStudents() {

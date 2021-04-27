@@ -34,35 +34,27 @@ export default function AppDrawer(props) {
             }}
         >
             <div className={classes.toolbar}>
-                <IconButton onClick={props.handleDrawerClose}>
-                    {theme.direction === 'rtl' ? (
-                        <ChevronRightIcon />
-                    ) : (
-                        <ChevronLeftIcon />
-                    )}
-                </IconButton>
             </div>
-            <Divider />
             <List>
-                <a href={'/recommendations'}>
+                <a className="unstyled_link" href={'/recommendations'}>
                     <ListItem button>
                         <ListItemIcon><Transform/></ListItemIcon>
                         <ListItemText primary={"Recommendations"} />
                     </ListItem>
                 </a>
-                <a href={'/search'}>
+                <a className="unstyled_link" href={'/search'}>
                     <ListItem button>
                         <ListItemIcon><SearchIcon/></ListItemIcon>
                         <ListItemText primary={"Search"} />
                     </ListItem>
                 </a>
-                <a href={'/account'}>
+                <a className="unstyled_link"  href={'/account'}>
                     <ListItem button>
                         <ListItemIcon><AccountCircle/></ListItemIcon>
                         <ListItemText primary={"Account"} />
                     </ListItem>
                 </a>
-                <a href={'/liked-courses'}>
+                <a className="unstyled_link" href={'/liked-courses'}>
                     <ListItem button>
                         <ListItemIcon><Favorite/></ListItemIcon>
                         <ListItemText primary={"Favorites"} />
