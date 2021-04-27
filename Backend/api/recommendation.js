@@ -97,7 +97,6 @@ router.post('/recommendation', async (req, res) => {
         formatted_course_list[(course_list[i]['_id'])] = course_list[i];
     }
 
-
     python_data = {
         student: student,
         courses: formatted_course_list,

@@ -1,14 +1,21 @@
-import React, {useState } from 'react';
+import React, {useEffect, useState, useCallback } from 'react';
 import {Card, InputBase, Typography, CardActions, CardContent, Button,} from '@material-ui/core';
 import FacultyDropdown from './FacultyDropdown';
+import InterestSelect from '../components/InterestSelects';
+import firebase from './../firebase';
 
 function InterestsCard(props) {
 
-    const [interests, setInterests] = useState('');
+    const [interests, setInterests] = useState([]);
+    const [displayedInterests, setDisplayedInterests] = useState([]);
+
     const [interestsInput, setInterestsInput] = useState('');
     const [completedInput, setCompletedInput] = useState('')
     const [completedSubjects, setCompletedSubjects] = useState('');
     const [faculty, setFaculty] = useState('');
+
+    const [firebaseID, setFirebaseID] = useState(null);
+    const [userDetails, setUserDetails] = useState(null)
 
     const onInterestsChange = (event) => {
         setInterestsInput(event.target.value)
@@ -41,29 +48,61 @@ function InterestsCard(props) {
         return(student)
     }
 
+    const setInterestsDropdownList = (interests_array) => {
+        let interests_obj_array = [];
+        interests_array.forEach(elem => {
+            interests_obj_array.push({value: elem, label: elem});
+        })
+        setDisplayedInterests(interests_obj_array)
+    }
+
+    const fetchStudent = async () => {
+        if (firebaseID) {
+            fetch(`http://localhost:8080/api/student/${firebaseID}`, {
+                crossDomain: true,
+                mode: 'cors',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            }).then(async (res) => {
+                let data = await res.json();
+                setUserDetails(data);
+                console.log(data.interests)
+                setInterestsDropdownList(data.interests)
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
+	};
+
+    useEffect(() => {
+        let firebaseDetails = firebase.getCurrentUser()
+        if (firebaseDetails) setFirebaseID(firebaseDetails.l)
+        fetchStudent();
+    }, [fetchStudent, firebase, setFirebaseID]);
+
     return (
         <Card style={{marginBottom: '1%', padding: '1%'}}>
             <CardContent>
-                <Typography> Input Your Interests (Comma Separated) </Typography>
+                <Typography> Input Your Interests </Typography>
                 <br />
 
-                <InputBase
-                    placeholder='Your Interests...'
-                    inputProps={{'aria-label': 'search'}}
-                    value={interestsInput}
-                    onChange={onInterestsChange}
-                    fullWidth={true}
-                />
-                <br /><br />
-                <Typography> Input Your Faculty </Typography>
-                <FacultyDropdown setFaculty={setFaculty} faculty={faculty}/>
+                <InterestSelect 
+						displayed_interests={displayedInterests} 
+						setCurrentInterests={setInterests} 
+						setDisplayedInterests={setDisplayedInterests} />
 
-                <br /><br />
+                <br />
+                {/* <Typography> Input Your Faculty </Typography>
+                <FacultyDropdown setFaculty={setFaculty} faculty={faculty}/> */}
+
                 <Typography> Input Your Completed Subject Codes (Comma Separated) </Typography>
                 <br />
 
                 <InputBase
-                    placeholder='Completed Subject...'
+                    placeholder='Completed Subjects...'
                     inputProps={{'aria-label': 'search'}}
                     value={completedInput}
                     onChange={onCompletedChange}

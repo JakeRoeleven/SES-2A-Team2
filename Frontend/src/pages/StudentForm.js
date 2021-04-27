@@ -15,6 +15,8 @@ const degreeYearOptions = [
 ]
 
 class StudentForm extends Component {
+
+    // TODO: Postgrad, DEgree Name, Redirect if already have details, for validation
     
 	constructor(props) {
         super(props);
@@ -93,7 +95,7 @@ class StudentForm extends Component {
         	})
         	.catch(err => {
         		alert(err)
-        	})
+        });
     };
 
     render() {

@@ -4,6 +4,7 @@ import Select from 'react-select';
 function MajorSelect(props) {
 
     const [majors, setMajors] = useState([]);
+    const major = 'Engineering'
 
     const handleSelectInputChange = async (event, ) => {
 		let value = event.value;
@@ -36,6 +37,8 @@ function MajorSelect(props) {
 	}, []);
 
     useEffect(() => {
+        console.log("Loaded")
+        console.log(props)
         fetchMajors()
     }, [fetchMajors]);
 
@@ -44,8 +47,10 @@ function MajorSelect(props) {
             name='majors'
             required
             options={majors}
-            defaultValue={majors}
-            placeholder={'Select Faculty...'}
+            defaultValue={''}
+
+            value={major}
+
             onChange={(e) => handleSelectInputChange(e)}
         />
     );
