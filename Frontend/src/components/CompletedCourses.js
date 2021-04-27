@@ -34,7 +34,7 @@ function CoursesCompleted(props) {
 
 			console.log(student)
 
-			fetch('http://localhost:8080/api/update-student', {
+			fetch('http://${process.env.REACT_APP_SERVER}/api/update-student', {
 				method: 'POST',
 				body: JSON.stringify(student),
 				headers: {

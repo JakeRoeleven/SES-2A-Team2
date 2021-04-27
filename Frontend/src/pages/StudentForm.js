@@ -78,7 +78,7 @@ class StudentForm extends Component {
 		let student = this.getStudentData();
         this.setState({ loading: true });
         event.preventDefault();
-        fetch('http://localhost:8080/api/new-student', {
+        fetch('http://${process.env.REACT_APP_SERVER}/api/new-student', {
         	method: 'POST',
         	body: JSON.stringify(student),
         	headers: {
