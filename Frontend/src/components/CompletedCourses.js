@@ -14,7 +14,7 @@ function CoursesCompleted(props) {
 			// Delete subject from array
 			const index = courses.indexOf(subject_code);
 			let new_courses = courses
-			if (courses.length == 0) {
+			if (courses.length == 1) {
 				new_courses = []
 			} else if (index > -1) {
 				new_courses = courses.splice(index, 1);
@@ -31,6 +31,8 @@ function CoursesCompleted(props) {
 			student["student_data"]['postgraduate'] = props.student.postgraduate;
 			student["student_data"]['interests'] = props.student.interests;
 			student["student_data"]['courses_completed'] = new_courses;
+
+			console.log(student)
 
 			fetch('http://localhost:8080/api/update-student', {
 				method: 'POST',

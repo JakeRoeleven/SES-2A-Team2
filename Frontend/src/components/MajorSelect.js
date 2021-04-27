@@ -4,10 +4,10 @@ import Select from 'react-select';
 function MajorSelect(props) {
 
     const [majors, setMajors] = useState([]);
-    const major = 'Engineering'
 
     const handleSelectInputChange = async (event, ) => {
 		let value = event.value;
+        console.log(value)
 		props.setMajor(value)
     }
 
@@ -16,7 +16,8 @@ function MajorSelect(props) {
         majors_array.forEach(elem => {
             majors_obj_array.push({value: elem, label: elem});
         })
-        setMajors(majors_obj_array)
+        setMajors(majors_obj_array);
+        console.log(majors)
     }
 
     // Fetch full subject list from API
@@ -37,8 +38,6 @@ function MajorSelect(props) {
 	}, []);
 
     useEffect(() => {
-        console.log("Loaded")
-        console.log(props)
         fetchMajors()
     }, [fetchMajors]);
 
@@ -46,11 +45,8 @@ function MajorSelect(props) {
         <Select
             name='majors'
             required
+            placeholder={props.major}
             options={majors}
-            defaultValue={''}
-
-            value={major}
-
             onChange={(e) => handleSelectInputChange(e)}
         />
     );

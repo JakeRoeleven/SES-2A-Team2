@@ -80,6 +80,7 @@ function Account() {
 		student["student_data"]['name'] = firstname.concat(" ").concat(lastname)
 		
         //TODO: Need degree
+        debugger;
         student["student_data"]['degree'] = degree;
         student["student_data"]['major'] = faculty;
 		student["student_data"]['year'] = year;
@@ -104,6 +105,7 @@ function Account() {
         	.then(async (res) => {
         		if (res.status === 200) {
                     alert("Details updated")
+                    fetchStudent()
         		} else {
         			const error = JSON.parse(await res.json());
 					alert(error)
@@ -239,13 +241,13 @@ function Account() {
     
                             <br /><br />
                             <Typography style={{ fontSize: '1.2em', marginBottom: '10px' }}  variant='h6'>Your Faculty</Typography>
-                            <MajorSelect setMajor={setFaculty} major={"Engineering"}/>
+                            <MajorSelect setMajor={setFaculty} major={faculty}/>
                             <br />
                             <Typography style={{ fontSize: '1.2em', marginBottom: '10px' }}  variant='h6'>Your Interests</Typography>
                             <InterestSelect 
                                 displayed_interests={displayed_interests} 
-                                setCurrentInterests={test()} 
-                                setDisplayedInterests={test()} />
+                                setCurrentInterests={setInterests} 
+                                setDisplayedInterests={setDisplayedInterests} />
                         </Form>
                         <br /><br />
                         <Button style={{ float: 'right' }} onClick={() => submitAccountUpdate()}> Update Account </Button>

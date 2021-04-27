@@ -1,6 +1,5 @@
 import React, {useEffect, useState, useCallback } from 'react';
 import {Card, InputBase, Typography, CardActions, CardContent, Button,} from '@material-ui/core';
-import FacultyDropdown from './FacultyDropdown';
 import InterestSelect from '../components/InterestSelects';
 import firebase from './../firebase';
 
