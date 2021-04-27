@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Card, InputBase, Typography, CardContent, Button, Container, CircularProgress} from '@material-ui/core';
+import {Card, Typography, CardContent, Button, Container, CircularProgress} from '@material-ui/core';
 import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
 import CoursesCompleted from '../components/CompletedCourses';
@@ -56,7 +56,7 @@ function InterestsCard(props) {
 
     useEffect(() => {
        if (!fetchedStudent) fetchStudent();
-    }, []);
+    }, [fetchStudent, fetchStudent]);
 
     if (loading) {
         return (

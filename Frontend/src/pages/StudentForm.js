@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Segment, Button, Message} from 'semantic-ui-react';
+import {Form, Segment, Button } from 'semantic-ui-react';
 import Select from 'react-select';
 import InterestSelect from '../components/InterestSelects';
 import firebase from './../firebase';

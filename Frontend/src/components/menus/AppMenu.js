@@ -1,9 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Image } from 'semantic-ui-react';
+
 // Material UI Imports
-import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import { AppBar, Toolbar, Typography} from '@material-ui/core';
+
 
 function AppMenu(props) {
 

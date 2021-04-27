@@ -14,7 +14,7 @@ function CoursesCompleted(props) {
 			// Delete subject from array
 			const index = courses.indexOf(subject_code);
 			let new_courses = courses
-			if (courses.length == 1) {
+			if (courses.length === 1) {
 				new_courses = []
 			} else if (index > -1) {
 				new_courses = courses.splice(index, 1);
@@ -68,11 +68,9 @@ function CoursesCompleted(props) {
 		}
 
 		useEffect(() => {
-			debugger;
 			findSubjects()
-		}, [findSubjects, setCourses, setSubjects]);
+		}, [findSubjects]);
 
-		debugger;
 		if (courses.length > 0 && Object.keys(subjects).length > 0) {
 			console.log('hi')
 			console.log(courses)

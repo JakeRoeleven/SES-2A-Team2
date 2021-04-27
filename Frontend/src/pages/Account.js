@@ -14,7 +14,6 @@ import {
     CircularProgress
 } from '@material-ui/core';
 import {Form} from 'semantic-ui-react';
-import Firebase from './../firebase';
 
 import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
@@ -22,7 +21,6 @@ import CoursesCompleted from '../components/CompletedCourses';
 
 function Account() {
 
-    const [hasDetails, setHasDetails] = useState(false);
     const [loading, setLoading] = useState(true);
     
     // User Details
@@ -38,7 +36,6 @@ function Account() {
 
     const setDetailsFromFirebase = async (details) => {
         if (details != null) {
-            setHasDetails(true)
             setUserDetails(details)
 
             // Courses Completed
@@ -143,7 +140,7 @@ function Account() {
         } else {
             setLoading(false);
         }
-    }, [fetchStudent, setLoading]);
+    }, [fetchStudent, setLoading, userDetails]);
 
     if (loading) {
         return (
