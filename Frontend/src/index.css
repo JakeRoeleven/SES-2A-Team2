@@ -33,3 +33,8 @@ body {
     height: 50vh;
     padding-top: 25vh;
 }
+
+.unstyled_link {
+    text-decoration: none !important;
+    color: inherit;
+}

@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'none',
     },
     drawer: {
+        marginTop: '150px',
         width: drawerWidth,
         flexShrink: 0,
         whiteSpace: 'nowrap',
@@ -65,13 +66,13 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-    },
+    }
 }));
 
 function NavWrapper(props) {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
         console.log('called');
@@ -91,7 +92,7 @@ function NavWrapper(props) {
                     <AppMenu
                         handleDrawerOpen={handleDrawerOpen}
                         styles={classes}
-                        open={open}
+                        open={false}
                     />
                     <AppDrawer
                         handleDrawerClose={handleDrawerClose}
