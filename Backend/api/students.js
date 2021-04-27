@@ -21,7 +21,6 @@ router.get('/student/:id', async (req, res) => {
 
 });
 
-
 router.post('/new-student', async (req, res) => {
     const student = req.body.student_data;
     const id = req.body.id;

@@ -10,17 +10,22 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem
+    MenuItem,
+    CircularProgress
 } from '@material-ui/core';
 import {Form} from 'semantic-ui-react';
 import Firebase from './../firebase';
 
 import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
+import CoursesCompleted from '../components/CompletedCourses';
 
 function Account() {
 
     const [hasDetails, setHasDetails] = useState(false);
+    const [loading, setLoading] = useState(true);
+    
+    // User Details
     const [userDetails, setUserDetails] = useState(null);
     const [lastname, setLastName] = useState('Last Name');
     const [firstname, setFirstName] = useState('Last Name');
@@ -29,12 +34,15 @@ function Account() {
     const [faculty, setFaculty] = useState('Your Faculty');
     const [interests, setInterests] = useState([]);
     const [displayed_interests, setDisplayedInterests] = useState([]);
-    const [coursesCompleted, setCoursesCompleted] = useState('Last Name');
+    const [coursesCompleted, setCoursesCompleted] = useState([]);
 
     const setDetailsFromFirebase = async (details) => {
         if (details != null) {
             setHasDetails(true)
             setUserDetails(details)
+
+            // Courses Completed
+            setCoursesCompleted(details['courses_completed']);
             
             // Name stuff
             let name = details['name'].split(' ');
@@ -56,7 +64,8 @@ function Account() {
             details['interests'].forEach(elem => {
                 interests_obj_array.push({value: elem, label: elem});
             })
-            setDisplayedInterests(interests_obj_array)
+            setDisplayedInterests(interests_obj_array);
+
         }
     }
 
@@ -82,9 +91,12 @@ function Account() {
 
     // Post student details to database
     const submitAccountUpdate = () => {
+
+        let student_data = getStudentData()
+
         fetch('http://localhost:8080/api/update-student', {
         	method: 'POST',
-        	body: JSON.stringify(getStudentData()),
+        	body: JSON.stringify(student_data),
         	headers: {
         		'Content-Type': 'application/json'
         	}
@@ -122,6 +134,7 @@ function Account() {
                 .then(async (res) => {
                     let data = await res.json();
                     setDetailsFromFirebase(data);
+                    setLoading(false);
                 })
                 .catch((err) => {
                     console.log(err);
@@ -136,12 +149,16 @@ function Account() {
     }
 
     useEffect(() => {
-        // TODO: Find something less hacky
-        if(userDetails == null) fetchStudent();
-    }, [fetchStudent]);
+        if(userDetails == null) {
+            fetchStudent();
+        } else {
+            setLoading(false);
+        }
+    }, [fetchStudent, setLoading]);
 
-    return (
-        <>
+    if (loading) {
+        return (
+            <>
             <CssBaseline />
             <Container maxWidth={false}>
                 <Grid container spacing={3}>
@@ -153,67 +170,95 @@ function Account() {
                     </Grid>
                 </Grid>
                 <br />
-                <Card style={{ padding: '2%', overflow: 'visible'}}>
-                    <Form>
-
-                        <TextField
-                            id="outlined-disabled"
-                            label="First Name"
-                            defaultValue={firstname}
-                            value={firstname}
-                            onChange={(event) => setFirstName(event.target.value)}
-                            variant="outlined"
-                            style={{ marginRight: '2%' }}
-                        />
-
-                        <TextField
-                            id="outlined-disabled"
-                            label="Last Name"
-                            defaultValue={lastname}
-                            value={lastname}
-                            onChange={(event) => setLastName(event.target.value)}
-                            variant="outlined"
-                            style={{ marginRight: '2%' }}
-                        />
-
-                        <FormControl variant="outlined" style={{ minWidth: '120px' }}>
-                            <InputLabel htmlFor="outlined-age-native-simple">Degree Year</InputLabel>
-                            <Select defaultValue={year} value={year} onChange={(e) => setYear(e.target.value)} label="Degree Year">
-                                <MenuItem value={1}>1</MenuItem>
-                                <MenuItem value={2}>2</MenuItem>
-                                <MenuItem value={3}>3</MenuItem>
-                                <MenuItem value={4}>4</MenuItem>
-                                <MenuItem value={5}>5</MenuItem>
-                                <MenuItem value={6}>6</MenuItem>   
-                            </Select>
-                        </FormControl>
-
-                        <br /><br />
-
-                        <TextField
-                            id="outlined-disabled"
-                            label="Degree"
-                            defaultValue={degree}
-                            value={degree}
-                            fullWidth="true"
-                            onChange={(event) => setDegree(event.target.value)}
-                            variant="outlined"
-                        />
-
-                        <br /><br />
-                        <MajorSelect setMajor={setFaculty} major={"Engineering"}/>
-                        <br />
-                        <InterestSelect 
-                            displayed_interests={displayed_interests} 
-                            setCurrentInterests={test()} 
-                            setDisplayedInterests={test()} />
-                    </Form>
-                    <br /><br />
-                    <Button onClick={() => submitAccountUpdate()}> Update Account </Button>
+                <Card style={{ padding: '2%', overflow: 'visible', textAlign: 'center'}}>
+                    <CircularProgress />
                 </Card>
             </Container>
-        </>
-    );
+            </>
+        )
+    } else {
+        return (
+            <>
+                <CssBaseline />
+                <Container maxWidth={false}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={8}>
+                            <Typography variant='h5'>
+                                {' '}
+                                Edit Your Account{' '}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <br />
+                    <Card style={{ padding: '2%', overflow: 'visible'}}>
+                        <Form>
+    
+                            <TextField
+                                id="outlined-disabled"
+                                label="First Name"
+                                defaultValue={firstname}
+                                value={firstname}
+                                onChange={(event) => setFirstName(event.target.value)}
+                                variant="outlined"
+                                style={{ marginRight: '2%' }}
+                            />
+    
+                            <TextField
+                                id="outlined-disabled"
+                                label="Last Name"
+                                defaultValue={lastname}
+                                value={lastname}
+                                onChange={(event) => setLastName(event.target.value)}
+                                variant="outlined"
+                                style={{ marginRight: '2%' }}
+                            />
+    
+                            <FormControl variant="outlined" style={{ minWidth: '120px' }}>
+                                <InputLabel htmlFor="outlined-age-native-simple">Degree Year</InputLabel>
+                                <Select defaultValue={year} value={year} onChange={(e) => setYear(e.target.value)} label="Degree Year">
+                                    <MenuItem value={1}>1</MenuItem>
+                                    <MenuItem value={2}>2</MenuItem>
+                                    <MenuItem value={3}>3</MenuItem>
+                                    <MenuItem value={4}>4</MenuItem>
+                                    <MenuItem value={5}>5</MenuItem>
+                                    <MenuItem value={6}>6</MenuItem>   
+                                </Select>
+                            </FormControl>
+    
+                            <br /><br />
+    
+                            <TextField
+                                id="outlined-disabled"
+                                label="Degree"
+                                defaultValue={degree}
+                                value={degree}
+                                fullWidth="true"
+                                onChange={(event) => setDegree(event.target.value)}
+                                variant="outlined"
+                            />
+    
+                            <br /><br />
+                            <Typography style={{ fontSize: '1.2em', marginBottom: '10px' }}  variant='h6'>Your Faculty</Typography>
+                            <MajorSelect setMajor={setFaculty} major={"Engineering"}/>
+                            <br />
+                            <Typography style={{ fontSize: '1.2em', marginBottom: '10px' }}  variant='h6'>Your Interests</Typography>
+                            <InterestSelect 
+                                displayed_interests={displayed_interests} 
+                                setCurrentInterests={test()} 
+                                setDisplayedInterests={test()} />
+                        </Form>
+                        <br /><br />
+                        <Button style={{ float: 'right' }} onClick={() => submitAccountUpdate()}> Update Account </Button>
+                        <br /><br />
+                        <Typography style={{ fontSize: '1.2em' }}  variant='h6'>Courses You Have Completed</Typography>
+                        <br />
+                        <CoursesCompleted courses={coursesCompleted} student={userDetails}/>
+                    </Card>
+                </Container>
+            </>
+        );
+    }
+
 }
 
 export default Account;

@@ -22,8 +22,6 @@ function SubjectCard(props) {
     const [favorite, setFavorite] = useState(false);
     const [complete, setComplete] = useState(false);
 
-    console.log(props)
-
     useEffect(() => {
         setTitle(props.subject._id + " - " + props.subject.course_name);
         setFaculty("Faculty of  " + props.subject.faculty)
