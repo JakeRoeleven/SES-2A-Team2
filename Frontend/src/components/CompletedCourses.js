@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import Chip from '@material-ui/core/Chip';
 import { AppContext } from '../AppContext';
 
@@ -59,7 +59,7 @@ function CoursesCompleted(props) {
 
 		}
 
-		const findSubjects = () => {
+		const findSubjects = useCallback(() => {
 			setCourses(props.courses)
 			let subject_obj = {};
 			data.forEach(elem => {
@@ -68,7 +68,7 @@ function CoursesCompleted(props) {
 				}
 			})
 			setSubjects(subject_obj);
-		}
+		}, [courses, data, props.courses]);
 
 		useEffect(() => {
 			findSubjects()
