@@ -22,7 +22,7 @@ function CoursesCompleted(props) {
 
 			// Make the student object
 			let student = {}
-			student['id'] = props.student._id;
+			student['id'] =  sessionStorage.getItem('user_id');
 			student["student_data"] = {}
 			student["student_data"]['name'] = props.student.name;
 			student["student_data"]['degree'] = props.student.degree;
@@ -34,7 +34,10 @@ function CoursesCompleted(props) {
 
 			console.log(student)
 
-			fetch('http://${process.env.REACT_APP_SERVER}/api/update-student', {
+			let url = 'http://localhost:8080/api/update-student'
+			if (props.student == null) url = 'http://localhost:8080/api/new-student'
+
+			fetch(url, {
 				method: 'POST',
 				body: JSON.stringify(student),
 				headers: {

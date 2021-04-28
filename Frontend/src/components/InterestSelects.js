@@ -35,7 +35,7 @@ function InterestSelect(props) {
 
     // Fetch full subject list from API
 	const fetchInterests = useCallback(async () => {
-		fetch(`http://${process.env.REACT_APP_SERVER}/api/interests`, {
+		fetch(`http://localhost:8080/api/interests`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',

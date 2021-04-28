@@ -41,7 +41,13 @@ function App() {
 		} else {
 			setAuthenticated(true);
 			let user_id = await firebase.getCurrentUser()
-			if (user_id.X) sessionStorage.setItem('user_id', user_id.X)
+			debugger;
+			if (user_id.X) {
+				let id = user_id['X']['X'];
+				console.log(id)
+				console.log(typeof id)
+				sessionStorage.setItem('user_id', id)
+			} 
 		}		
 	}
 
@@ -51,7 +57,7 @@ function App() {
 
 	// Fetch full subject list from API
 	const fetchSubjects = useCallback(async () => {
-		fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
+		fetch(`http://localhost:8080/api/subjects`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',

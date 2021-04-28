@@ -71,7 +71,9 @@ function Account() {
 		let student = {}
 
 		// Push id from firebase
-		student['id'] = userDetails._id;
+        let id = sessionStorage.getItem('user_id');
+
+		student['id'] = id
 
 		student["student_data"] = {}
 		student["student_data"]['name'] = firstname.concat(" ").concat(lastname)
@@ -91,7 +93,10 @@ function Account() {
 
         let student_data = getStudentData()
 
-        fetch('http://${process.env.REACT_APP_SERVER}/api/update-student', {
+        let url = 'http://localhost:8080/api/update-student'
+        if (userDetails == null) url = 'http://localhost:8080/api/new-student'
+
+        fetch(url, {
         	method: 'POST',
         	body: JSON.stringify(student_data),
         	headers: {
@@ -114,24 +119,31 @@ function Account() {
 
     // Get student details from database
     const fetchStudent = async () => {
+        debugger;
         let id = sessionStorage.getItem('user_id');
-        fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
-            crossDomain: true,
-            mode: 'cors',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        })
-            .then(async (res) => {
-                let data = await res.json();
-                setDetailsFromFirebase(data);
-                setLoading(false);
+        if (id != null) {
+            fetch(`http://localhost:8080/api/student/${id}`, {
+                crossDomain: true,
+                mode: 'cors',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
             })
-            .catch((err) => {
-                console.log(err);
-        });
+                .then(async (res) => {
+                    debugger;
+                    let data = await res.json();
+                    setDetailsFromFirebase(data);
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    debugger;
+                    console.log(err);
+                    setLoading(false);
+            });
+        }
+
     };
 
     useEffect(() => {

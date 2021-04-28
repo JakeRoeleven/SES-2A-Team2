@@ -20,7 +20,7 @@ function MajorSelect(props) {
 
     // Fetch full subject list from API
 	const fetchMajors = useCallback(async () => {
-		fetch(`http://${process.env.REACT_APP_SERVER}/api/majors`, {
+		fetch(`http://localhost:8080/api/majors`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
