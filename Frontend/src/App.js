@@ -41,7 +41,7 @@ function App() {
 		} else {
 			setAuthenticated(true);
 			let user_id = await firebase.getCurrentUser()
-			if (user_id.l) sessionStorage.setItem('user_id', user_id.l)
+			if (user_id.X) sessionStorage.setItem('user_id', user_id.X)
 		}		
 	}
 
