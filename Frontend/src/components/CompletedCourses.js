@@ -75,11 +75,9 @@ function CoursesCompleted(props) {
 		}, [findSubjects]);
 
 		if (courses.length > 0 && Object.keys(subjects).length > 0) {
-			console.log('hi')
-			console.log(courses)
 			return (
 				Object.keys(courses).map((index) => (
-						<Chip label={courses[index] + " - " + subjects[courses[index]]['course_name']}  onDelete={() => deleteSubject(courses[index])} color="primary" style={{ marginRight: '0.5%' }} />
+						<Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index] + " - " + subjects[courses[index]]['course_name']}  onDelete={() => deleteSubject(courses[index])} color="primary" />
 				))
 			);
 		} else {

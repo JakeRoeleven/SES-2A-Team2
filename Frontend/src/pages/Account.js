@@ -1,18 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {
-    Grid,
-    Container,
-    CssBaseline,
-    Typography,
-    Card,
-    TextField,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    CircularProgress,
-} from '@material-ui/core';
+import {Grid, Container, CssBaseline, Typography, Card, TextField, Button, FormControl, InputLabel, Select, MenuItem, CircularProgress} from '@material-ui/core';
 
 import {Form} from 'semantic-ui-react';
 import InterestSelect from '../components/InterestSelects';
@@ -21,7 +8,6 @@ import CoursesCompleted from '../components/CompletedCourses';
 import Alert from '../components/Alert';
 
 function Account() {
-
     // UI related state
     const [loading, setLoading] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
@@ -38,12 +24,9 @@ function Account() {
     const [displayed_interests, setDisplayedInterests] = useState([]);
     const [coursesCompleted, setCoursesCompleted] = useState([]);
 
-
     // Convert User Data to State on load
     const convertDetails = async (details) => {
-        
         if (details != null) {
-            
             setUserDetails(details);
 
             // Courses Completed
@@ -71,7 +54,6 @@ function Account() {
             });
 
             setDisplayedInterests(interests_obj_array);
-        
         }
     };
 
@@ -87,65 +69,62 @@ function Account() {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
                 },
-            }).then(async (res) => {
-                let data = await res.json();
-                convertDetails(data);
-                setLoading(false);
-            }).catch(() => {
-                setAlertMessage('Error: We could not find your account details, please try again!')
-                setShowAlert(true)
-                setLoading(false);
-            });
+            })
+                .then(async (res) => {
+                    let data = await res.json();
+                    convertDetails(data);
+                    setLoading(false);
+                })
+                .catch(() => {
+                    setAlertMessage('Error: We could not find your account details, please try again!');
+                    setShowAlert(true);
+                    setLoading(false);
+                });
         }
     }, []);
 
     // Validate and Format Student Data
     const getFormattedStudentData = () => {
-        
         let student = {};
         let id = sessionStorage.getItem('user_id');
 
         // Validation checks
         // TODO: SOmething nicer
         if (firstname.length < 1) {
-            setAlertMessage("Warning: First Name cannot be empty!")
-            setShowAlert(true)
-            return false
+            setAlertMessage('Warning: First Name cannot be empty!');
+            setShowAlert(true);
+            return false;
         }
 
         if (lastname.length < 1) {
-            setAlertMessage("Warning: Last Name cannot be empty!")
-            setShowAlert(true)
-            return false
+            setAlertMessage('Warning: Last Name cannot be empty!');
+            setShowAlert(true);
+            return false;
         }
 
         if (degree.length < 1) {
-            setAlertMessage("Warning: Degree cannot be empty!")
-            setShowAlert(true)
-            return false
+            setAlertMessage('Warning: Degree cannot be empty!');
+            setShowAlert(true);
+            return false;
         }
 
         if (faculty.length < 1) {
-            setAlertMessage("Warning: Please choose a faculty!")
-            setShowAlert(true)
-            return false
+            setAlertMessage('Warning: Please choose a faculty!');
+            setShowAlert(true);
+            return false;
         }
 
-        
         if (interests.length < 1) {
-            setAlertMessage("Warning: Please choose at least one interest!")
-            setShowAlert(true)
-            return false
+            setAlertMessage('Warning: Please choose at least one interest!');
+            setShowAlert(true);
+            return false;
         }
 
         if (year === null) {
-            setAlertMessage("Warning: Year cannot be empty!")
-            setShowAlert(true)
-            return false
+            setAlertMessage('Warning: Year cannot be empty!');
+            setShowAlert(true);
+            return false;
         }
-        
-        
-        
 
         student['id'] = id;
         student['student_data'] = {};
@@ -157,11 +136,10 @@ function Account() {
         student['student_data']['interests'] = interests;
 
         return student;
-    
     };
 
     // Post updated student details to database
-    const submitAccountUpdate = () => {     
+    const submitAccountUpdate = () => {
         // Get the correctly formatted student data
         let student_data = getFormattedStudentData();
         if (student_data !== false) {
@@ -175,20 +153,22 @@ function Account() {
                 body: JSON.stringify(student_data),
                 headers: {
                     'Content-Type': 'application/json',
-                }
-            }).then(async (res) => {
+                },
+            })
+                .then(async (res) => {
                     if (res.status === 200) {
-                        setAlertMessage('Success: Your account details were updated!')
-                        setShowAlert(true)
+                        setAlertMessage('Success: Your account details were updated!');
+                        setShowAlert(true);
                         fetchStudent();
                     } else {
-                        setAlertMessage("Error: We failed to update your account!")
-                        setShowAlert(true)
+                        setAlertMessage('Error: We failed to update your account!');
+                        setShowAlert(true);
                     }
-            }).catch((err) => {
-                setAlertMessage("Error: We failed to update your account!")
-                setShowAlert(true)
-            });
+                })
+                .catch((err) => {
+                    setAlertMessage('Error: We failed to update your account!');
+                    setShowAlert(true);
+                });
         }
     };
 
@@ -208,18 +188,15 @@ function Account() {
                 <Container maxWidth={false}>
                     <Grid container spacing={3}>
                         <Grid item xs={8}>
-                            <Typography variant='h5'>
-                                {' '}
-                                Edit Your Account{' '}
-                            </Typography>
+                            <Typography variant='h5'> Edit Your Account </Typography>
                         </Grid>
                     </Grid>
                     <br />
-                    <Card style={{padding: '2%',overflow: 'visible', textAlign: 'center'}}>
+                    <Card style={{padding: '2%', overflow: 'visible', textAlign: 'center'}}>
                         <CircularProgress />
                     </Card>
                 </Container>
-                <Alert open={showAlert} close={setShowAlert} message={alertMessage}/>
+                <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
             </>
         );
     } else {
@@ -229,52 +206,28 @@ function Account() {
                 <Container maxWidth={false}>
                     <Grid container spacing={3}>
                         <Grid item xs={8}>
-                            <Typography variant='h5'>
-                                {' '}
-                                Edit Your Account{' '}
-                            </Typography>
+                            <Typography variant='h5'> Edit Your Account </Typography>
                         </Grid>
                     </Grid>
                     <br />
                     <Card style={{padding: '2%', overflow: 'visible'}}>
                         <Form>
-                            <TextField
-                                id='outlined-disabled'
-                                label='First Name'
-                                defaultValue={firstname}
-                                value={firstname}
-                                onChange={(event) =>
-                                    setFirstName(event.target.value)
-                                }
-                                variant='outlined'
-                                style={{marginRight: '2%'}}
-                            />
-
-                            <TextField
-                                id='outlined-disabled'
-                                label='Last Name'
-                                defaultValue={lastname}
-                                value={lastname}
-                                onChange={(event) =>
-                                    setLastName(event.target.value)
-                                }
-                                variant='outlined'
-                                style={{marginRight: '2%'}}
-                            />
-
-                            <FormControl
-                                variant='outlined'
-                                style={{minWidth: '120px'}}
+                            <Typography
+                                style={{
+                                    fontSize: '1.2em',
+                                    marginBottom: '15px',
+                                }}
+                                variant='h6'
                             >
-                                <InputLabel htmlFor='outlined-age-native-simple'>
-                                    Degree Year
-                                </InputLabel>
-                                <Select
-                                    defaultValue={year}
-                                    value={year}
-                                    onChange={(e) => setYear(e.target.value)}
-                                    label='Degree Year'
-                                >
+                                Your Details
+                            </Typography>
+                            <TextField id='outlined-disabled' label='First Name' defaultValue={firstname} value={firstname} onChange={(event) => setFirstName(event.target.value)} variant='outlined' style={{marginRight: '2%'}} />
+
+                            <TextField id='outlined-disabled' label='Last Name' defaultValue={lastname} value={lastname} onChange={(event) => setLastName(event.target.value)} variant='outlined' style={{marginRight: '2%'}} />
+
+                            <FormControl variant='outlined' style={{minWidth: '120px'}}>
+                                <InputLabel htmlFor='outlined-age-native-simple'>Degree Year</InputLabel>
+                                <Select defaultValue={year} value={year} onChange={(e) => setYear(e.target.value)} label='Degree Year'>
                                     <MenuItem value={1}>1</MenuItem>
                                     <MenuItem value={2}>2</MenuItem>
                                     <MenuItem value={3}>3</MenuItem>
@@ -287,17 +240,7 @@ function Account() {
                             <br />
                             <br />
 
-                            <TextField
-                                id='outlined-disabled'
-                                label='Degree'
-                                defaultValue={degree}
-                                value={degree}
-                                fullWidth='true'
-                                onChange={(event) =>
-                                    setDegree(event.target.value)
-                                }
-                                variant='outlined'
-                            />
+                            <TextField id='outlined-disabled' label='Degree' defaultValue={degree} value={degree} fullWidth='true' onChange={(event) => setDegree(event.target.value)} variant='outlined' />
 
                             <br />
                             <br />
@@ -310,10 +253,7 @@ function Account() {
                             >
                                 Your Faculty
                             </Typography>
-                            <MajorSelect
-                                setMajor={setFaculty}
-                                major={faculty}
-                            />
+                            <MajorSelect setMajor={setFaculty} major={faculty} />
                             <br />
                             <Typography
                                 style={{
@@ -324,18 +264,11 @@ function Account() {
                             >
                                 Your Interests
                             </Typography>
-                            <InterestSelect
-                                displayed_interests={displayed_interests}
-                                setCurrentInterests={setInterests}
-                                setDisplayedInterests={setDisplayedInterests}
-                            />
+                            <InterestSelect displayed_interests={displayed_interests} setCurrentInterests={setInterests} setDisplayedInterests={setDisplayedInterests} />
                         </Form>
                         <br />
                         <br />
-                        <Button
-                            style={{float: 'right'}}
-                            onClick={() => submitAccountUpdate()}
-                        >
+                        <Button style={{float: 'right'}} onClick={() => submitAccountUpdate()}>
                             {' '}
                             Update Account{' '}
                         </Button>
@@ -345,18 +278,14 @@ function Account() {
                             Courses You Have Completed
                         </Typography>
                         <br />
-                        <CoursesCompleted
-                            courses={coursesCompleted}
-                            student={userDetails}
-                        />
+                        <CoursesCompleted courses={coursesCompleted} student={userDetails} />
                     </Card>
                 </Container>
 
-                <Alert open={showAlert} close={setShowAlert} message={alertMessage}/>
+                <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
             </>
         );
     }
-
 }
 
 export default Account;
