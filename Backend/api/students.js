@@ -44,6 +44,34 @@ router.post('/new-student', async (req, res) => {
     }
 });
 
+router.post('/student/add-favorite', async (req, res) => {
+    const id = req.body.id;
+    const code = req.body.subject_code;
+    
+    try {
+        const studentService = new StudentService();
+        await studentService.addFavoriteToStudent(id, code);
+        res.status(200).send("Done");
+    } catch (e) {
+        console.log(e)
+        res.status(401).send(e);
+    }
+});
+
+router.post('/student/remove-favorite', async (req, res) => {
+    const id = req.body.id;
+    const code = req.body.subject_code;
+    
+    try {
+        const studentService = new StudentService();
+        await studentService.removeFavoriteFromStudent(id, code);
+        res.status(200).send("Done");
+    } catch (e) {
+        console.log(e)
+        res.status(401).send(e);
+    }
+});
+
 router.post('/update-student', async (req, res) => {
     const student = req.body.student_data;
     const id = req.body.id;
