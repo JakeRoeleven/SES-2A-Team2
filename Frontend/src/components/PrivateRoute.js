@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 const PrivateRoute = ({ component: Component, authenticated, signupComplete, ...rest}) => {
 
-    debugger;
     if (!authenticated) {
         return <Redirect to="/login" />
     } else if (authenticated && !signupComplete) {

@@ -91,6 +91,7 @@ function NavWrapper(props) {
                         handleDrawerOpen={handleDrawerOpen}
                         styles={classes}
                         open={false}
+                        setAuthenticated={props.setAuthenticated}
                     />
                     <AppDrawer
                         handleDrawerClose={handleDrawerClose}
