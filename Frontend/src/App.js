@@ -10,7 +10,7 @@ import Recommendations from './pages/Recommendations';
 import NavWrapper from './components/MenuSystem';
 import Search from './pages/Search';
 import Account from './pages/Account';
-import LikedCourses from './pages/LikedCourses';
+import LikedCourses from './pages/Favorites';
 
 // Material UI
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -31,24 +31,66 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 	const [isAuthenticated, setAuthenticated] = useState(true);
+	const [signupComplete, setSignupComplete] = useState(true);
 
 	// App Context
 	const { Provider } = AppContext;
 
-	async function checkAuthenticated() {
+	const checkSignupComplete = useCallback(async(id) => {
+		await fetch(`http://localhost:8080/api/student/signup_complete/${id}`, {
+			crossDomain: true,
+			mode: 'cors',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			},
+		}).then(async (res) => {
+			let data = await res.json();
+			setSignupComplete(data);
+			checkUserDetails(id);
+		}).catch((err) => {
+			console.log(err)
+		}).then(() => {
+			setLoading(false);
+		});
+	}, []);
+
+	const checkAuthenticated = useCallback(async () => {
 		if (firebase.getCurrentUsername() == null) {
 			setAuthenticated(false);
+			setSignupComplete(false);
 		} else {
 			setAuthenticated(true);
 			let user_id = await firebase.getCurrentUser()
-			debugger;
 			if (user_id.X) {
 				let id = user_id['X']['X'];
-				console.log(id)
-				console.log(typeof id)
-				sessionStorage.setItem('user_id', id)
+				sessionStorage.setItem('user_id', id);
+				checkSignupComplete(id)
 			} 
 		}		
+	}, [checkSignupComplete]);
+
+
+
+	async function checkUserDetails(id) {
+		await fetch(`http://localhost:8080/api/student/${id}`, {
+			crossDomain: true,
+			mode: 'cors',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			},
+		}).then(async (res) => {
+			let data = await res.json();
+			sessionStorage.setItem('favorites', data.favorite_subjects);
+			sessionStorage.setItem('courses_completed', data.courses_completed)
+		}).catch((err) => {
+			console.log(err)
+		}).then(() => {
+			setLoading(false);
+		});
 	}
 
 	function setAuth(val) {
@@ -68,7 +110,6 @@ function App() {
 		}).then(async (res) => {
 			let data = await res.json();
 			setSubjects(data);
-			setLoading(false);
 
 			// Record the current date for local storage
 			let currentTime = new Date();
@@ -86,7 +127,8 @@ function App() {
 
     // Check if Firebase is initialized
     useEffect(() => {
-        firebase.isInitialized().then((val) => {
+
+        firebase.isInitialized().then(() => {
 			checkAuthenticated();
 		});
 
@@ -103,7 +145,7 @@ function App() {
 		} else {
 			setSubjects(subjects)
 		}
-    }, [fetchSubjects, setSubjects]);
+    }, [fetchSubjects, setSubjects, checkAuthenticated]);
 
 	if (loading) {
         return (
@@ -129,23 +171,23 @@ function App() {
 		return ( 
 			<>
 				<Router>
-					<Switch > 
-					
+			
+					<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete}>
 							<Provider value={subjects}>
-								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-								<Route exact path="/register" component={Register} />
-								<NavWrapper authenticated={isAuthenticated}>
-									<Route exact path="/student-form" component={StudentForm} />
-									<PrivateRoute authenticated={isAuthenticated} exact path="/home" component={Home} />
-									<PrivateRoute authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
-									<PrivateRoute authenticated={isAuthenticated} exact path="/search" component={Search} />
-									<PrivateRoute authenticated={isAuthenticated} exact path="/account" component={Account} /> 
-									<PrivateRoute authenticated={isAuthenticated} exact path="/liked-courses" component={LikedCourses} /> 
-								</NavWrapper>
+								<Switch > 
+									<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+									<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+									<Route exact path="/register" component={Register} />
+									<Route exact path="/new/student" component={StudentForm} />
+									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/home" component={Home} />
+									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
+									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/search" component={Search} />
+									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/account" component={Account} /> 
+									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/favorites" component={LikedCourses} /> 
+								</Switch>
 							</Provider>
-
-					</Switch>
+							</NavWrapper>
+>
 				</Router>
 			</>
 		)

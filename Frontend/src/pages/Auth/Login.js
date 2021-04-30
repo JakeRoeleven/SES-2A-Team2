@@ -8,7 +8,6 @@ function Login(props) {
 	const [password, setPassword] = useState('');
 	
     async function login() {
-        console.log(props)
         try {
             await firebase.login(email, password).then(()=> {
                 props.setAuthenticated(true);

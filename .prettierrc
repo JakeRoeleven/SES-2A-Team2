@@ -4,7 +4,7 @@
     "semi": true,
     "tabs": true,
     "singleQuote": true,
-    "printWidth": 80,
+    "printWidth": 380,
     "jsxSingleQuote": true,
     "bracketSpacing": false,
     "arrowParens": "always",
