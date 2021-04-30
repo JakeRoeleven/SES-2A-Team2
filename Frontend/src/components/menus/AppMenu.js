@@ -17,6 +17,7 @@ function AppMenu(props) {
     const handleLogout = async () => {
         await firebase.logout();
         props.setAuthenticated(false)
+        debugger;
         history.push("/login");
     } 
 
@@ -33,7 +34,7 @@ function AppMenu(props) {
                             <AccountCircle />
                         </IconButton>
                     </a>
-                    <IconButton color="inherit" onClick={handleLogout}>
+                    <IconButton color="inherit" onClick={() => handleLogout}>
                         <ExitToAppIcon />
                     </IconButton>
                 </div>

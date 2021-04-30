@@ -36,21 +36,7 @@ function App() {
 	// App Context
 	const { Provider } = AppContext;
 
-	async function checkAuthenticated() {
-		if (firebase.getCurrentUsername() == null) {
-			setAuthenticated(false);
-		} else {
-			setAuthenticated(true);
-			let user_id = await firebase.getCurrentUser()
-			if (user_id.X) {
-				let id = user_id['X']['X'];
-				sessionStorage.setItem('user_id', id);
-				checkSignupComplete(id)
-			} 
-		}		
-	}
-
-	async function checkSignupComplete(id) {
+	const checkSignupComplete = useCallback(async(id) => {
 		await fetch(`http://localhost:8080/api/student/signup_complete/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
@@ -64,11 +50,28 @@ function App() {
 			setSignupComplete(data);
 			checkUserDetails(id);
 		}).catch((err) => {
-			setError(err);
+			console.log(err)
 		}).then(() => {
 			setLoading(false);
 		});
-	}
+	}, []);
+
+	const checkAuthenticated = useCallback(async () => {
+		if (firebase.getCurrentUsername() == null) {
+			setAuthenticated(false);
+			setSignupComplete(false);
+		} else {
+			setAuthenticated(true);
+			let user_id = await firebase.getCurrentUser()
+			if (user_id.X) {
+				let id = user_id['X']['X'];
+				sessionStorage.setItem('user_id', id);
+				checkSignupComplete(id)
+			} 
+		}		
+	}, [checkSignupComplete]);
+
+
 
 	async function checkUserDetails(id) {
 		await fetch(`http://localhost:8080/api/student/${id}`, {
@@ -84,7 +87,7 @@ function App() {
 			sessionStorage.setItem('favorites', data.favorite_subjects);
 			sessionStorage.setItem('courses_completed', data.courses_completed)
 		}).catch((err) => {
-			setError(err);
+			console.log(err)
 		}).then(() => {
 			setLoading(false);
 		});
@@ -124,7 +127,8 @@ function App() {
 
     // Check if Firebase is initialized
     useEffect(() => {
-        firebase.isInitialized().then((val) => {
+
+        firebase.isInitialized().then(() => {
 			checkAuthenticated();
 		});
 
@@ -141,7 +145,7 @@ function App() {
 		} else {
 			setSubjects(subjects)
 		}
-    }, [fetchSubjects, setSubjects]);
+    }, [fetchSubjects, setSubjects, checkAuthenticated]);
 
 	if (loading) {
         return (
@@ -167,23 +171,23 @@ function App() {
 		return ( 
 			<>
 				<Router>
-					<Switch > 
-					
+			
+					<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete}>
 							<Provider value={subjects}>
-								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-								<Route exact path="/register" component={Register} />
-								<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete}>
+								<Switch > 
+									<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+									<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+									<Route exact path="/register" component={Register} />
 									<Route exact path="/new/student" component={StudentForm} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/home" component={Home} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/search" component={Search} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/account" component={Account} /> 
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/favorites" component={LikedCourses} /> 
-								</NavWrapper>
+								</Switch>
 							</Provider>
-
-					</Switch>
+							</NavWrapper>
+>
 				</Router>
 			</>
 		)

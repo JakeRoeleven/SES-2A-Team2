@@ -73,7 +73,7 @@ function Favorites() {
         let code = subject['code'];
         let subject_obj = {}
         data.forEach(elem => {
-            if (code == elem._id) {
+            if (code === elem._id) {
                 subject_obj = elem
             }
         })

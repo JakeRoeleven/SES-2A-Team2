@@ -3,7 +3,6 @@ import {Form, Segment} from 'semantic-ui-react';
 import {Button, TextField, Container, Grid, Typography} from '@material-ui/core';
 import Select from 'react-select';
 import InterestSelect from '../components/InterestSelects';
-import firebase from './../firebase';
 import MajorSelect from '../components/MajorSelect';
 
 const degreeYearOptions = [
@@ -57,6 +56,8 @@ class StudentForm extends Component {
     getStudentData = () => {
        
         let student = {};
+
+        // TODO use Clalabakc to fix this???
         let id = sessionStorage.getItem('user_id');
 
         // Push id from firebase
