@@ -16,6 +16,8 @@ class StudentService {
             postgraduate: student.postgraduate
         });
 
+        console.log(studentObject)
+
         if (student.year) {
             studentObject.year = student.year;
         }
@@ -38,6 +40,8 @@ class StudentService {
             })
             studentObject.interests = interestsArray;
         }
+
+        console.log(studentObject)
 
         await studentObject.save();
     }
@@ -81,9 +85,20 @@ class StudentService {
     }
 
     async getStudent(id) {
-        return await Student.findOne({ _id: id }).lean();;
+        return await Student.findOne({ _id: id }).lean();
     }
 
+    async signupComplete(id) {
+        let student =  await Student.findOne({ _id: id }).lean();
+        console.log(student)
+        console.log(id)
+        if (student == null) {
+            return false;
+        } else {
+            return true
+        }
+    }
+    
     async getAllStudents() {
         const studentRef = Student.find().lean();
         return studentRef;

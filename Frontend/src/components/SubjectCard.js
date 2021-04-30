@@ -53,7 +53,7 @@ function SubjectCard(props) {
         }).then(async (res) => {
             old_student = await res.json();
         }).catch((err) => {
-                console.log(err);
+            console.log(err);
         });
 
         let completed = old_student['courses_completed'];
@@ -83,7 +83,7 @@ function SubjectCard(props) {
         })
             .then(async (res) => {
                 if (res.status === 200) {
-                    alert("Details updated")
+                    props.coursesUpdated()
                 } else {
                     const error = JSON.parse(await res.json());
                     alert(error)

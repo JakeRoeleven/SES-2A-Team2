@@ -21,6 +21,16 @@ router.get('/student/:id', async (req, res) => {
 
 });
 
+router.get('/student/signup_complete/:id', async (req, res) => {
+    
+    let id = req.params.id;
+    
+    const studentService = new StudentService();
+    let student = await studentService.signupComplete(id);
+    res.status(200).json(student);
+
+});
+
 router.post('/new-student', async (req, res) => {
     const student = req.body.student_data;
     const id = req.body.id;

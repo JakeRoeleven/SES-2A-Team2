@@ -49,7 +49,7 @@ export default function AppDrawer(props) {
                         <ListItemText primary={"Account"} />
                     </ListItem>
                 </a>
-                <a className="unstyled_link" href={'/liked-courses'}>
+                <a className="unstyled_link" href={'/favorites'}>
                     <ListItem button>
                         <ListItemIcon><Favorite/></ListItemIcon>
                         <ListItemText primary={"Favorites"} />

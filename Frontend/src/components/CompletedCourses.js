@@ -32,7 +32,6 @@ function CoursesCompleted(props) {
 			student["student_data"]['interests'] = props.student.interests;
 			student["student_data"]['courses_completed'] = new_courses;
 
-			console.log(student)
 
 			let url = 'http://localhost:8080/api/update-student'
 			if (props.student == null) url = 'http://localhost:8080/api/new-student'
@@ -64,7 +63,7 @@ function CoursesCompleted(props) {
 			let subject_obj = {};
 			data.forEach(elem => {
 				if (courses.includes(elem._id)) {
-						subject_obj[elem._id] = elem
+					subject_obj[elem._id] = elem
 				}
 			})
 			setSubjects(subject_obj);
