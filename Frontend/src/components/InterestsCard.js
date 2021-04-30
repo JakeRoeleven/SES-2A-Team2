@@ -43,7 +43,6 @@ function InterestsCard(props) {
             },
         }).then(async (res) => {
                 let data = await res.json();
-                debugger;
                 setFetchedStudent(data)
                 setInterests(data.interests)
                 setCompletedSubjects(data.courses_completed)
