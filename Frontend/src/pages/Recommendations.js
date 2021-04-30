@@ -11,11 +11,9 @@ import InterestsCard from '../components/InterestsCard';
 function Recommendations() {  
     
     const data = useContext(AppContext);
-    const [results, setResults] = useState({});
-    const [toggle, setToggle] = useState(false);
+    const [results, setResults] = useState({}); 
    
     const findSubjects = (recommendations) => {
-
         let subject_obj = {};
         let subject_ids = recommendations;
         data.forEach(elem => {
@@ -23,9 +21,7 @@ function Recommendations() {
                 subject_obj[elem._id] = elem
             }
         })
-
         setResults(subject_obj);
-
     }
 
     const findRecommendations = (student) => {  

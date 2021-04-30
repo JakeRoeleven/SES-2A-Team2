@@ -60,8 +60,10 @@ function SubjectCard(props) {
                 .then(async (res) => {
                     if (res.status === 200) {
                         setFavorite(!favorite)
-                        setFavorites(await res.json())
-                        sessionStorage.setItem('favorites', await res.json())
+
+                        let fav_res = await res.json()
+                        setFavorites(await fav_res)
+                        sessionStorage.setItem('favorites', await fav_res)
                     } else {
                         const error = JSON.parse(await res.json());
                         alert(error)

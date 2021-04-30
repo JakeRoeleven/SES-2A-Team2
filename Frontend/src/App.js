@@ -10,7 +10,7 @@ import Recommendations from './pages/Recommendations';
 import NavWrapper from './components/MenuSystem';
 import Search from './pages/Search';
 import Account from './pages/Account';
-import LikedCourses from './pages/LikedCourses';
+import LikedCourses from './pages/Favorites';
 
 // Material UI
 import Skeleton from '@material-ui/lab/Skeleton';
