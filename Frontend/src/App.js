@@ -62,6 +62,27 @@ function App() {
 		}).then(async (res) => {
 			let data = await res.json();
 			setSignupComplete(data);
+			checkUserDetails(id);
+		}).catch((err) => {
+			setError(err);
+		}).then(() => {
+			setLoading(false);
+		});
+	}
+
+	async function checkUserDetails(id) {
+		await fetch(`http://localhost:8080/api/student/${id}`, {
+			crossDomain: true,
+			mode: 'cors',
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+			},
+		}).then(async (res) => {
+			let data = await res.json();
+			sessionStorage.setItem('favorites', data.favorite_subjects);
+			sessionStorage.setItem('courses_completed', data.courses_completed)
 		}).catch((err) => {
 			setError(err);
 		}).then(() => {

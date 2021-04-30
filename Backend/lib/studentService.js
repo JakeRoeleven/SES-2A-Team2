@@ -81,33 +81,26 @@ class StudentService {
     }
 
     
-    async addFavoriteToStudent(id, subject_code) {
-
-        let studentObject = await Student.findOne({'_id': id});
-        let favorites = studentObject.favorite_subjects
-
-        if (!favorites.includes(subject_code)) favorites.push(subject_code)
-        studentObject.favorite_subjects = favorites;
-  
-        await studentObject.save();
-
-    }
-
-    async removeFavoriteFromStudent(id, subject_code) {
+    async toggleStudentFavorite(id, subject_code) {
 
         let studentObject = await Student.findOne({'_id': id});
         let favorites = studentObject.favorite_subjects
         let new_favorites = []
 
-        for (let i = 0, length = favorites.length; i < length; i++) {
-            if (favorites[i] != subject_code) {
-                new_favorites.push(favorites[i])
+        if (!favorites.includes(subject_code)) {
+            new_favorites = studentObject.favorite_subjects;
+            new_favorites.push(subject_code)
+        } else {
+            for (let i = 0, length = favorites.length; i < length; i++) {
+                if (favorites[i] != subject_code) {
+                    new_favorites.push(favorites[i])
+                }
             }
         }
 
         studentObject.favorite_subjects = new_favorites;
         await studentObject.save();
-
+        return(studentObject.favorite_subjects)
     }
 
     async getStudent(id) {
