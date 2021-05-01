@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useCallback} from 'react';
 import Chip from '@material-ui/core/Chip';
 import { AppContext } from '../AppContext';
 
@@ -32,7 +32,6 @@ function CoursesCompleted(props) {
 			student["student_data"]['interests'] = props.student.interests;
 			student["student_data"]['courses_completed'] = new_courses;
 
-			console.log(student)
 
 			let url = 'http://localhost:8080/api/update-student'
 			if (props.student == null) url = 'http://localhost:8080/api/new-student'
@@ -59,27 +58,25 @@ function CoursesCompleted(props) {
 
 		}
 
-		const findSubjects = () => {
+		const findSubjects = useCallback(() => {
 			setCourses(props.courses)
 			let subject_obj = {};
 			data.forEach(elem => {
 				if (courses.includes(elem._id)) {
-						subject_obj[elem._id] = elem
+					subject_obj[elem._id] = elem
 				}
 			})
 			setSubjects(subject_obj);
-		}
+		}, [courses, data, props.courses]);
 
 		useEffect(() => {
 			findSubjects()
 		}, [findSubjects]);
 
 		if (courses.length > 0 && Object.keys(subjects).length > 0) {
-			console.log('hi')
-			console.log(courses)
 			return (
 				Object.keys(courses).map((index) => (
-						<Chip label={courses[index] + " - " + subjects[courses[index]]['course_name']}  onDelete={() => deleteSubject(courses[index])} color="primary" style={{ marginRight: '0.5%' }} />
+						<Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index] + " - " + subjects[courses[index]]['course_name']}  onDelete={() => deleteSubject(courses[index])} color="primary" />
 				))
 			);
 		} else {

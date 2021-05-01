@@ -16,24 +16,65 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 
 function SubjectCard(props) {
 
+    const [code, setCode] = useState('');
     const [title, setTitle] = useState('');
     const [faculty, setFaculty] = useState('');
     const [displayParagraph, setDisplayParagraph] = useState('');
+   
     const [favorite, setFavorite] = useState(false);
     const [complete, setComplete] = useState(false);
 
+    const [favorites, setFavorites] = useState([])
+
     useEffect(() => {
+
+        let favorites = sessionStorage.getItem('favorites');
+        if (favorites) setFavorites(favorites)
+
+        setCode(props.subject._id)
         setTitle(props.subject._id + " - " + props.subject.course_name);
         setFaculty("Faculty of  " + props.subject.faculty)
-        setDisplayParagraph(props.subject.description.substring(0, 300).trim())
+        setDisplayParagraph(props.subject.description.substring(0, 300).trim());
     }, [setTitle, setFaculty, setDisplayParagraph, props]);
 
     const displayFullDescription = () => {
         setDisplayParagraph(props.subject.description)
     }
 
-    const toggleFavorite = () => {
-        setFavorite(!favorite)
+    const toggleFavorite = async (code) => {
+
+        let url = 'http://localhost:8080/api/student/favorites'
+        let id = sessionStorage.getItem('user_id');
+    
+        if (id && code) {
+            await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({
+                    "subject_code": code ,
+                    "id": id
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(async (res) => {
+                    if (res.status === 200) {
+                        setFavorite(!favorite)
+
+                        let fav_res = await res.json()
+                        setFavorites(await fav_res)
+                        sessionStorage.setItem('favorites', await fav_res)
+                    } else {
+                        const error = JSON.parse(await res.json());
+                        alert(error)
+                    }
+                })
+                .catch(err => {
+                    alert(err)
+            });
+        } else {
+            alert('error')
+        }
     }
 
     const toggleComplete = async (id) => {
@@ -53,7 +94,7 @@ function SubjectCard(props) {
         }).then(async (res) => {
             old_student = await res.json();
         }).catch((err) => {
-                console.log(err);
+            console.log(err);
         });
 
         let completed = old_student['courses_completed'];
@@ -83,7 +124,7 @@ function SubjectCard(props) {
         })
             .then(async (res) => {
                 if (res.status === 200) {
-                    alert("Details updated")
+                    props.coursesUpdated()
                 } else {
                     const error = JSON.parse(await res.json());
                     alert(error)
@@ -95,7 +136,7 @@ function SubjectCard(props) {
     }
 
     const FavoriteStar = () => {   
-        if (favorite) {
+        if (favorites.includes(code)) {
             return <Star style={{ color: '#ffc107' }}/>
         } else {
             return  <StarOutline/>

@@ -75,7 +75,6 @@ function NavWrapper(props) {
     const [open, setOpen] = React.useState(true);
 
     const handleDrawerOpen = () => {
-        console.log('called');
         setOpen(true);
     };
 
@@ -83,8 +82,7 @@ function NavWrapper(props) {
         setOpen(false);
     };
 
-    console.log(props);
-    if (props.authenticated) {
+    if (props.authenticated && props.signupComplete) {
         return (
             <>
                 <div className={classes.root}>
@@ -93,12 +91,30 @@ function NavWrapper(props) {
                         handleDrawerOpen={handleDrawerOpen}
                         styles={classes}
                         open={false}
+                        setAuthenticated={props.setAuthenticated}
                     />
                     <AppDrawer
                         handleDrawerClose={handleDrawerClose}
                         styles={classes}
                         open={open}
                         theme={theme}
+                    />
+                    <div className={classes.content}>
+                        <div className={classes.toolbar} />
+                        {props.children}
+                    </div>
+                </div>
+            </>
+        );
+    } else if (props.authenticated) {
+        return (
+            <>
+                <div className={classes.root}>
+                    <CssBaseline />
+                    <AppMenu
+                        handleDrawerOpen={handleDrawerOpen}
+                        styles={classes}
+                        open={false}
                     />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
