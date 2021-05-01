@@ -59,6 +59,7 @@ function Account() {
 
     // Get student details from database
     const fetchStudent = useCallback(async () => {
+
         let id = sessionStorage.getItem('user_id');
         if (id != null) {
             fetch(`http://localhost:8080/api/student/${id}`, {
