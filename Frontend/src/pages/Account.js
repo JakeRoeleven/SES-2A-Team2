@@ -93,8 +93,8 @@ function Account() {
 
         let student_data = getStudentData()
 
-        let url = 'http://${process.env.REACT_APP_SERVER}/api/update-student'
-        if (userDetails == null) url = 'http://${process.env.REACT_APP_SERVER}/api/new-student'
+        let url = 'http://localhost:8080/api/update-student'
+        if (userDetails == null) url = 'http://localhost:8080/api/new-student'
 
         fetch(url, {
         	method: 'POST',
@@ -119,10 +119,10 @@ function Account() {
 
     // Get student details from database
     const fetchStudent = async () => {
-        debugger;
+
         let id = sessionStorage.getItem('user_id');
         if (id != null) {
-            fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
+            fetch(`http://localhost:8080/api/student/${id}`, {
                 crossDomain: true,
                 mode: 'cors',
                 method: 'GET',

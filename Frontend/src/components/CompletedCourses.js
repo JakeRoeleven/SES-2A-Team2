@@ -34,8 +34,8 @@ function CoursesCompleted(props) {
 
 			console.log(student)
 
-			let url = 'http://${process.env.REACT_APP_SERVER}/api/update-student'
-			if (props.student == null) url = 'http://${process.env.REACT_APP_SERVER}/api/new-student'
+			let url = 'http://localhost:8080/api/update-student'
+			if (props.student == null) url = 'http://localhost:8080/api/new-student'
 
 			fetch(url, {
 				method: 'POST',
