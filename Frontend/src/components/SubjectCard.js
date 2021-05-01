@@ -42,7 +42,7 @@ function SubjectCard(props) {
         let old_student = {};
 
         let student_id = sessionStorage.getItem('user_id');
-        await fetch(`http://localhost:8080/api/student/${student_id}`, {
+        await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${student_id}`, {
             crossDomain: true,
             mode: 'cors',
             method: 'GET',
@@ -71,8 +71,8 @@ function SubjectCard(props) {
         student["student_data"]['interests'] = old_student.interests;
         student["student_data"]['courses_completed'] = completed;
 
-        let url = 'http://localhost:8080/api/update-student'
-		if (old_student == null) url = 'http://localhost:8080/api/new-student'
+        let url = 'http://${process.env.REACT_APP_SERVER}/api/update-student'
+		if (old_student == null) url = 'http://${process.env.REACT_APP_SERVER}/api/new-student'
 
         fetch(url, {
             method: 'POST',

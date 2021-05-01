@@ -57,7 +57,7 @@ function App() {
 
 	// Fetch full subject list from API
 	const fetchSubjects = useCallback(async () => {
-		fetch(`http://localhost:8080/api/subjects`, {
+		fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',

@@ -28,7 +28,7 @@ function Recommendations() {
     }
 
     const findRecommendations = (student) => {  
-        fetch(`http://localhost:8080/api/recommendation`, {
+        fetch(`http://${process.env.REACT_APP_SERVER}/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
             headers: {
