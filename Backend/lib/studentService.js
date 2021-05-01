@@ -16,6 +16,8 @@ class StudentService {
             postgraduate: student.postgraduate
         });
 
+        console.log(studentObject)
+
         if (student.year) {
             studentObject.year = student.year;
         }
@@ -39,12 +41,12 @@ class StudentService {
             studentObject.interests = interestsArray;
         }
 
+        console.log(studentObject)
+
         await studentObject.save();
     }
 
     async updateStudent(id, student) {
-
-        console.log(student)
 
         let studentObject = await Student.findOne({'_id': id});
         studentObject.name = student.name,
@@ -75,15 +77,47 @@ class StudentService {
             studentObject.interests = interestsArray;
         }
 
-        console.log(studentObject)
-
         await studentObject.save();
     }
 
-    async getStudent(id) {
-        return await Student.findOne({ _id: id }).lean();;
+    
+    async toggleStudentFavorite(id, subject_code) {
+
+        let studentObject = await Student.findOne({'_id': id});
+        let favorites = studentObject.favorite_subjects
+        let new_favorites = []
+
+        if (!favorites.includes(subject_code)) {
+            new_favorites = studentObject.favorite_subjects;
+            new_favorites.push(subject_code)
+        } else {
+            for (let i = 0, length = favorites.length; i < length; i++) {
+                if (favorites[i] != subject_code) {
+                    new_favorites.push(favorites[i])
+                }
+            }
+        }
+
+        studentObject.favorite_subjects = new_favorites;
+        await studentObject.save();
+        return(studentObject.favorite_subjects)
     }
 
+    async getStudent(id) {
+        return await Student.findOne({ _id: id }).lean();
+    }
+
+    async signupComplete(id) {
+        let student =  await Student.findOne({ _id: id }).lean();
+        console.log(student)
+        console.log(id)
+        if (student == null) {
+            return false;
+        } else {
+            return true
+        }
+    }
+    
     async getAllStudents() {
         const studentRef = Student.find().lean();
         return studentRef;

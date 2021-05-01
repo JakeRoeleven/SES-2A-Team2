@@ -21,6 +21,16 @@ router.get('/student/:id', async (req, res) => {
 
 });
 
+router.get('/student/signup_complete/:id', async (req, res) => {
+    
+    let id = req.params.id;
+    
+    const studentService = new StudentService();
+    let student = await studentService.signupComplete(id);
+    res.status(200).json(student);
+
+});
+
 router.post('/new-student', async (req, res) => {
     const student = req.body.student_data;
     const id = req.body.id;
@@ -33,6 +43,21 @@ router.post('/new-student', async (req, res) => {
         res.status(401).send(e);
     }
 });
+
+router.post('/student/favorites', async (req, res) => {
+    const id = req.body.id;
+    const code = req.body.subject_code;
+    
+    try {
+        const studentService = new StudentService();
+        let favorites  = await studentService.toggleStudentFavorite(id, code);
+        res.status(200).send(favorites);
+    } catch (e) {
+        console.log(e)
+        res.status(401).send(e);
+    }
+});
+
 
 router.post('/update-student', async (req, res) => {
     const student = req.body.student_data;

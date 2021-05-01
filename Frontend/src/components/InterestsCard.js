@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {Card, Typography, CardContent, Button, Container, CircularProgress} from '@material-ui/core';
 import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
@@ -31,7 +31,7 @@ function InterestsCard(props) {
         setDisplayedInterests(interests_obj_array)
     }
 
-    const fetchStudent = async () => {
+    const fetchStudent = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
         fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
             crossDomain: true,
@@ -43,7 +43,6 @@ function InterestsCard(props) {
             },
         }).then(async (res) => {
                 let data = await res.json();
-                debugger;
                 setFetchedStudent(data)
                 setInterests(data.interests)
                 setCompletedSubjects(data.courses_completed)
@@ -52,11 +51,11 @@ function InterestsCard(props) {
         }).catch((err) => {
                 console.log(err);
         });
-	};
+	}, []);
 
     useEffect(() => {
        if (!fetchedStudent) fetchStudent();
-    }, [fetchStudent, fetchStudent]);
+    }, [fetchStudent, fetchedStudent]);
 
     if (loading) {
         return (

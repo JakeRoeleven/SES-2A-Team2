@@ -56,7 +56,6 @@ class CourseForm extends Component {
 			.then(async (res) => {
 				if (res.status === 200) {
 					this.setState({ hidden: true, loading: false });
-					this.props.history.push('/login');
 				} else {
 					const error = JSON.parse(await res.json());
 					this.setState({ hidden: false, loading: false, errorHeading: "Error!", errorMessage: error });

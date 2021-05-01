@@ -50,6 +50,8 @@ function InterestSelect(props) {
 		});
 	}, []);
 
+    
+
     useEffect(() => {
         fetchInterests()
     }, [fetchInterests]);
