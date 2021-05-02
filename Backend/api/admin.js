@@ -18,4 +18,19 @@ router.post('/set-admin', async (req, res) => {
 
 });
 
+router.get('/admin/:id', async (req, res) => {
+
+    let id = req.params.id;
+
+    const adminService = new AdminService();
+    try {
+        let setAdmin = await adminService.isAdmin(id)
+        res.status(200).json(setAdmin);
+    } catch (e) {
+        console.log(e)
+        res.status(400);
+    }
+
+});
+
 module.exports = router;

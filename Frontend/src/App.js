@@ -38,7 +38,11 @@ function App() {
 	const { Provider } = AppContext;
 
 	const checkSignupComplete = useCallback(async(id) => {
-		await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/signup_complete/${id}`, {
+
+		let is_admin = false 
+
+		debugger;
+		await fetch(`http://localhost:8080/api/admin/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
@@ -47,14 +51,36 @@ function App() {
 				'Access-Control-Allow-Origin': '*',
 			},
 		}).then(async (res) => {
-			let data = await res.json();
-			setSignupComplete(data);
-			checkUserDetails(id);
-		}).catch((err) => {
-			console.log(err)
-		}).then(() => {
-			setLoading(false);
-		});
+			is_admin = await res.json();
+
+			if (is_admin) {
+				console.log("Admin")
+				setLoading(false);
+				alert('admin')
+			}
+
+		})
+
+		if (!is_admin) {
+			await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/signup_complete/${id}`, {
+				crossDomain: true,
+				mode: 'cors',
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+				},
+			}).then(async (res) => {
+				let data = await res.json();
+				setSignupComplete(data);
+				checkUserDetails(id);
+			}).catch((err) => {
+				console.log(err)
+			}).then(() => {
+				setLoading(false);
+			});
+		}
+
 	}, []);
 
 	const checkAuthenticated = useCallback(async () => {
@@ -73,9 +99,8 @@ function App() {
 		}		
 	}, [checkSignupComplete]);
 
-
-
 	async function checkUserDetails(id) {
+		
 		await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
@@ -95,6 +120,8 @@ function App() {
 		}).then(() => {
 			setLoading(false);
 		});
+		
+
 	}
 
 	function setAuth(val) {
