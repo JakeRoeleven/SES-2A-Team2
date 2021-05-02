@@ -58,6 +58,20 @@ router.post('/student/favorites', async (req, res) => {
     }
 });
 
+router.post('/student/completed', async (req, res) => {
+    const id = req.body.id;
+    const code = req.body.subject_code;
+    
+    try {
+        const studentService = new StudentService();
+        let favorites  = await studentService.toggleStudentCoursesCompleted(id, code);
+        res.status(200).send(favorites);
+    } catch (e) {
+        console.log(e)
+        res.status(401).send(e);
+    }
+});
+
 
 router.post('/update-student', async (req, res) => {
     const student = req.body.student_data;

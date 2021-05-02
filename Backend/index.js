@@ -16,6 +16,7 @@ const subjects = require("./api/subjects");
 const students = require("./api/students");
 const interests = require("./api/interests");
 const faculties = require("./api/faculties");
+const admin = require("./api/admin");
 
 //Connect to Mongo Database
 mongoose.connect('mongodb://root:password@165.232.165.231:27017', {useNewUrlParser: true, useUnifiedTopology: true, 
@@ -35,6 +36,7 @@ app.use("/api", subjects);
 app.use("/api", students);
 app.use("/api", interests);
 app.use("/api", faculties);
+app.use("/api", admin);
 
 // Start server
 app.listen(PORT, () => {
@@ -42,10 +44,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
-
-// TODO: Add cors, helmet security ect
-// TODO: Define routes
-// TODO: Spawn example python process 
-// TODO: Nodemon!
-// TODO: Mocha test examples!
 
