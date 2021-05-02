@@ -25,6 +25,7 @@ function Login(props) {
                 <input type='email' placeholder='Email...' id='email_field'  onChange={(e) => setEmail(e.target.value)}/><br /><br />
                 <input type='password' placeholder='Password...' id='password_field'  onChange={(e) => setPassword(e.target.value)}/><br /><br />
                 <button onClick={() => login()}>Login to Account</button><br />  
+                <p> <a href="/forgot-password" > Forgot Password? </a></p>   
                 <p> Need an account <a href='/register'> Sign Up </a></p>   
                 </center>
             </div>

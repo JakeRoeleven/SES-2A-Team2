@@ -43,7 +43,7 @@ function SubjectCard(props) {
 
     const toggleFavorite = async (code) => {
 
-        let url = 'http://localhost:8080/api/student/favorites'
+        let url =  `http://${process.env.REACT_APP_SERVER}/api/student/favorites`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {
@@ -112,8 +112,8 @@ function SubjectCard(props) {
         student["student_data"]['interests'] = old_student.interests;
         student["student_data"]['courses_completed'] = completed;
 
-        let url = 'http://${process.env.REACT_APP_SERVER}/api/update-student'
-		if (old_student == null) url = 'http://${process.env.REACT_APP_SERVER}/api/new-student'
+        let url = `http://${process.env.REACT_APP_SERVER}/api/update-student`
+		if (old_student == null) url = `http://${process.env.REACT_APP_SERVER}/api/new-student`
 
         fetch(url, {
             method: 'POST',

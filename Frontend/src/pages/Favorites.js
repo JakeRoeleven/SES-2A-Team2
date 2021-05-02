@@ -13,7 +13,7 @@ function Favorites() {
 
     const checkUserDetails = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
-		await fetch(`http://localhost:8080/api/student/${id}`, {
+		await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
@@ -32,7 +32,7 @@ function Favorites() {
 	}, []);
 
     const removeFavorite = async (code) => {
-        let url = 'http://localhost:8080/api/student/favorites'
+        let url = `http://${process.env.REACT_APP_SERVER}/api/student/favorites`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {

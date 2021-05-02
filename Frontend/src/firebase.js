@@ -41,8 +41,8 @@ class Firebase {
         return this.auth.signOut();
     }
 
-    resetPassword() {
-        return this.auth.resetPassword();
+    resetPassword(email) {
+        return this.auth.sendPasswordResetEmail(email)
     }
 
     async register(email, password) {

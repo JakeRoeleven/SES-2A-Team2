@@ -11,6 +11,7 @@ import NavWrapper from './components/MenuSystem';
 import Search from './pages/Search';
 import Account from './pages/Account';
 import LikedCourses from './pages/Favorites';
+import ForgotPassword from './pages/Auth/ForgotPassword';
 
 // Material UI
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -37,7 +38,7 @@ function App() {
 	const { Provider } = AppContext;
 
 	const checkSignupComplete = useCallback(async(id) => {
-		await fetch(`http://localhost:8080/api/student/signup_complete/${id}`, {
+		await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/signup_complete/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
@@ -60,6 +61,7 @@ function App() {
 		if (firebase.getCurrentUsername() == null) {
 			setAuthenticated(false);
 			setSignupComplete(false);
+			setLoading(false)
 		} else {
 			setAuthenticated(true);
 			let user_id = await firebase.getCurrentUser()
@@ -74,7 +76,7 @@ function App() {
 
 
 	async function checkUserDetails(id) {
-		await fetch(`http://localhost:8080/api/student/${id}`, {
+		await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
@@ -86,8 +88,10 @@ function App() {
 			let data = await res.json();
 			sessionStorage.setItem('favorites', data.favorite_subjects);
 			sessionStorage.setItem('courses_completed', data.courses_completed)
+			setLoading(false)
 		}).catch((err) => {
 			console.log(err)
+			setLoading(false)
 		}).then(() => {
 			setLoading(false);
 		});
@@ -178,6 +182,7 @@ function App() {
 									<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 									<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
 									<Route exact path="/register" component={Register} />
+									<Route exact path="/forgot-password" component={ForgotPassword} />
 									<Route exact path="/new/student" component={StudentForm} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/home" component={Home} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
@@ -187,7 +192,6 @@ function App() {
 								</Switch>
 							</Provider>
 							</NavWrapper>
->
 				</Router>
 			</>
 		)
