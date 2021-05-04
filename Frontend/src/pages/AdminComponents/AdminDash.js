@@ -1,21 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { DataGrid } from '@material-ui/data-grid';
-import { Link } from 'react-router';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(1),
-  },
-}));
+import { Link } from 'react-router-dom';
 
 const columns = [
     { field: 'id', headerName: 'CID', width: 150 },
@@ -32,9 +19,22 @@ const rows = [
 ];
 
 export default function AdminDash() {
-  const classes = useStyles();
+
+  function handleAdd() {
+    console.log("add");
+    <Link to='/addcourse'>Add Course</Link>
+  }
+
+  function handleEdit() {
+    console.log("edit");
+  }
+
+  function handleDelete() {
+    console.log("delete");
+  }
+
   return (
-    <div className={classes.root}>
+    <div>
       <div>
         <center><header><strong>Admin Dashboard</strong></header></center>
       </div>
@@ -42,15 +42,17 @@ export default function AdminDash() {
           <DataGrid rows={rows} columns={columns} checkboxSelection />
       </div>
       <div>
-        <Fab color="primary" aria-label="add"><AddIcon/></Fab>
-        <Fab color="secondary" aria-label="edit"><EditIcon/></Fab>
+        <ButtonGroup variant="contained">
+          <Link to='/addcourse' onClick={handleAdd}>Add Course</Link>
+          <Button onClick={handleEdit}>Edit Course</Button>
+          <Button onClick={handleDelete}>Delete Course</Button>
+        </ButtonGroup>
       </div>
     </div>
   );
 }
 
-/*
-import React from 'react';
+/* import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -59,6 +61,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 const useStyles = makeStyles({
   table: {
@@ -80,6 +84,19 @@ const rows = [
 
 export default function BasicTable() {
   const classes = useStyles();
+
+  function handleAdd() {
+    console.log("add");
+  }
+
+  function handleEdit() {
+    console.log("edit");
+  }
+
+  function handleDelete() {
+    console.log("delete");
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table">
@@ -104,8 +121,11 @@ export default function BasicTable() {
           ))}
         </TableBody>
       </Table>
-      <input type="button" onClick="./AddCourse.js"></input>
+      <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
+        <Button onClick={handleAdd}>Add Course</Button>
+        <Button onClick={handleEdit}>Edit Course</Button>
+        <Button onClick={handleDelete}>Delete Course</Button>
+      </ButtonGroup>
     </TableContainer>
   );
-}
-*/
+} */

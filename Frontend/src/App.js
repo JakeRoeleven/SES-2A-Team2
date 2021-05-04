@@ -9,6 +9,7 @@ import Search from './pages/Search';
 import Account from './pages/Account';
 import LikedCourses from './pages/LikedCourses';
 import AdminDash from './pages/AdminComponents/AdminDash';
+import AddCourse from './pages/AdminComponents/AddCourse';
 
 function App() {
 	
@@ -19,6 +20,7 @@ function App() {
 					<Route exact path="/" component={Home} />
 					<Route exact path="/recommendations" component={Recommendations} />
 					<Route exact path="/admindash" component={AdminDash} />
+					<Route exact path="/addcourse" component={AddCourse} />
 					<NavWrapper>
 						<Route exact path="/" component={Home} />
 						<Route exact path="/recommendations" component={Recommendations} />
