@@ -80,7 +80,6 @@ class StudentService {
         await studentObject.save();
     }
 
-    
     async toggleStudentFavorite(id, subject_code) {
 
         let studentObject = await Student.findOne({'_id': id});
