@@ -1,131 +1,126 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { DataGrid } from '@material-ui/data-grid';
-import { Link } from 'react-router-dom';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 
-const columns = [
-    { field: 'id', headerName: 'CID', width: 150 },
-    { field: 'cname', headerName: 'Course Name', width: 400 },
-    { field: 'crequirements', headerName: 'Course Requirements', width: 400 },
-    { field: 'ctype', headerName: 'Course Type', width: 400 },
-];
-  
-const rows = [
-    { id: 1, cname: 'MM2', crequirements: 'MM1', ctype: Math },
-    { id: 2, cname: 'MM2', crequirements: 'MM1', ctype: Math },
-    { id: 3, cname: 'MM2', crequirements: 'MM1', ctype: Math },
-    { id: 4, cname: 'MM2', crequirements: 'MM1', ctype: Math },
-];
+import CourseGrid from './CourseGrid';
+import {AppContext} from '../../AppContext';
+import CourseEditButtons from './CourseEditButtons';
+
+import Button from '@material-ui/core/Button'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+
+import Alert from '../../components/Alert';
 
 export default function AdminDash() {
+    
+	const data = useContext(AppContext);
+    const [courses, setCourses] = useState([]);
+    const [current, setCurrentSelected] = useState([]);
+    const [showDelete, setShowDelete] = useState(true);
+	
+	const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState(false)
 
-  function handleAdd() {
-    console.log("add");
-    <Link to='/addcourse'>Add Course</Link>
-  }
+    // Convert to a formate useable in the rows
+    const dataToRows = useCallback(() => {
+        let rows = [];
 
-  function handleEdit() {
-    console.log("edit");
-  }
+        for (let i = 0, length = data.length; i < length; i++) {
+            let course = data[i];
+            course['id'] = course._id;
+            rows[i] = course;
+        }
 
-  function handleDelete() {
-    console.log("delete");
-  }
+        setCourses(rows);
+    }, [data, setCourses]);
 
-  return (
-    <div>
-      <div>
-        <center><header><strong>Admin Dashboard</strong></header></center>
-      </div>
-      <div style={{ height: 600, width: '99%' }}>
-          <DataGrid rows={rows} columns={columns} checkboxSelection />
-      </div>
-      <div>
-        <ButtonGroup variant="contained">
-          <Link to='/addcourse' onClick={handleAdd}>Add Course</Link>
-          <Button onClick={handleEdit}>Edit Course</Button>
-          <Button onClick={handleDelete}>Delete Course</Button>
-        </ButtonGroup>
-      </div>
-    </div>
-  );
+    // Runs on page load
+    useEffect(() => {
+        dataToRows();
+    }, [dataToRows]);
+
+    const handleSelected = (grid_selected) => {
+        let selected = grid_selected;
+        setCurrentSelected(selected);	
+        setShowDelete(true);
+    };
+
+    function handleAdd() {
+        console.log('add');
+        <Link to='/addcourse'>Add Course</Link>;
+    }
+
+    function handleEdit() {
+        console.log('edit');
+    }
+
+    const handleDelete = () => {
+	    setShowDelete(false);
+    };
+	
+    const confirmDelete = () => {
+
+		// Remove from courses
+		let rows = [];
+        for (let i = 0, length = courses.length; i < length; i++) {
+            let course = courses[i];
+			if (course && !current.includes(course._id)) {
+				course['id'] = course._id;
+				rows[i] = course;
+			}
+        }
+        setCourses(rows);
+
+		// Post to server
+
+		// Alert
+		setAlertMessage('Course(s) Deleted')
+		setShowAlert(true);
+
+        let selected = [];
+        setCurrentSelected(selected);	
+
+	    setShowDelete(true);
+    };
+
+    return (
+        <>
+            <div>
+                <div>
+                    <center>
+                        <header>
+                            <strong>Admin Dashboard</strong>
+                        </header>
+                    </center>
+                </div>
+                <br />
+
+                <div style={{paddingBottom: '10px', textAlign: 'right'}}>
+                    <CourseEditButtons current={current} handleDelete={handleDelete} />
+                </div>
+
+                <br />
+                <Card variant='outlined' hidden={showDelete}>
+                    <CardContent style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                        <p> Please confirm you wish to delete: </p>
+                        <ul>
+                            {current.map((code, key) => (
+                                <li key={key}> Subject: {code} </li>
+                            ))}
+                        </ul>
+                    </CardContent>
+                    <CardActions>
+                        <Button size='small' onClick={() => setShowDelete(true)}>Cancel</Button>
+                        <Button size='small' onClick={() => confirmDelete()}>Confirm Delete</Button>
+                    </CardActions>
+                </Card>
+                <br />
+
+                <CourseGrid rows={courses} handleSelected={handleSelected} />
+
+				<Alert open={showAlert} close={setShowAlert} message={alertMessage} />
+            </div>
+        </>
+    );
 }
-
-/* import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
-
-function createData(cid, cname, creqs, ctype) {
-  return { cid, cname, creqs, ctype };
-}
-
-const rows = [
-  createData(1, 'MM2', 'MM1', 'Math'),
-  createData(1, 'MM2', 'MM1', 'Math'),
-  createData(1, 'MM2', 'MM1', 'Math'),
-  createData(1, 'MM2', 'MM1', 'Math'),
-  createData(1, 'MM2', 'MM1', 'Math'),
-];
-
-export default function BasicTable() {
-  const classes = useStyles();
-
-  function handleAdd() {
-    console.log("add");
-  }
-
-  function handleEdit() {
-    console.log("edit");
-  }
-
-  function handleDelete() {
-    console.log("delete");
-  }
-
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Course ID</TableCell>
-            <TableCell>Course Name</TableCell>
-            <TableCell>Course Requirements</TableCell>
-            <TableCell>Course Type</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.cid}>
-              <TableCell component="th" scope="row">
-                {row.cid}
-              </TableCell>
-              <TableCell>{row.cname}</TableCell>
-              <TableCell>{row.creqs}</TableCell>
-              <TableCell>{row.ctype}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
-        <Button onClick={handleAdd}>Add Course</Button>
-        <Button onClick={handleEdit}>Edit Course</Button>
-        <Button onClick={handleDelete}>Delete Course</Button>
-      </ButtonGroup>
-    </TableContainer>
-  );
-} */

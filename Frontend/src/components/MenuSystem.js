@@ -82,7 +82,26 @@ function NavWrapper(props) {
         setOpen(false);
     };
 
-    if (props.authenticated && props.signupComplete) {
+    
+    if (props.isAdminPage) {
+        return (
+            <>
+                <div className={classes.root}>
+                    <CssBaseline />
+                    <AppMenu
+                        handleDrawerOpen={handleDrawerOpen}
+                        styles={classes}
+                        open={false}
+                        setAuthenticated={props.setAuthenticated}
+                    />
+                    <div className={classes.content}>
+                        <div className={classes.toolbar} />
+                        {props.children}
+                    </div>
+                </div>
+            </>
+        );
+    } else if (props.authenticated && props.signupComplete) {
         return (
             <>
                 <div className={classes.root}>

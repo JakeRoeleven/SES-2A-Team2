@@ -87,7 +87,7 @@ function InterestsCard(props) {
                     <Typography style={{marginBottom: '0.5%'}}> Your Completed Courses </Typography>
                     <CoursesCompleted courses={completedSubjects} student={fetchedStudent}/>
 
-                    <Button style={{float: 'right'}} color='primary' size='small' onClick={() => props.findRecommendations(getStudentObj())}> Find Recommendations </Button>
+                    <Button variant="contained" style={{float: 'right'}} color='primary' size='small' onClick={() => props.findRecommendations(getStudentObj())}> Find Recommendations </Button>
                 </CardContent>
             </Card>
         );

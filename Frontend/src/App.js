@@ -12,6 +12,7 @@ import Search from './pages/Search';
 import Account from './pages/Account';
 import LikedCourses from './pages/Favorites';
 import ForgotPassword from './pages/Auth/ForgotPassword';
+import AdminDash from './pages/AdminComponents/AdminDash';
 
 // Material UI
 import Skeleton from '@material-ui/lab/Skeleton';
@@ -33,6 +34,7 @@ function App() {
     const [error, setError] = useState(false);
 	const [isAuthenticated, setAuthenticated] = useState(true);
 	const [signupComplete, setSignupComplete] = useState(true);
+	const [isAdminPage, setIsAdminPage] = useState(true);
 
 	// App Context
 	const { Provider } = AppContext;
@@ -41,7 +43,6 @@ function App() {
 
 		let is_admin = false 
 
-		debugger;
 		await fetch(`http://localhost:8080/api/admin/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
@@ -56,7 +57,6 @@ function App() {
 			if (is_admin) {
 				console.log("Admin")
 				setLoading(false);
-				alert('admin')
 			}
 
 		})
@@ -175,6 +175,7 @@ function App() {
 			fetchSubjects();
 		} else {
 			setSubjects(subjects)
+		
 		}
     }, [fetchSubjects, setSubjects, checkAuthenticated]);
 
@@ -203,7 +204,7 @@ function App() {
 			<>
 				<Router>
 			
-					<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete}>
+					<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete} isAdminPage={isAdminPage}>
 							<Provider value={subjects}>
 								<Switch > 
 									<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
@@ -211,6 +212,7 @@ function App() {
 									<Route exact path="/register" component={Register} />
 									<Route exact path="/forgot-password" component={ForgotPassword} />
 									<Route exact path="/new/student" component={StudentForm} />
+									<Route exact path="/admin" component={AdminDash} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/home" component={Home} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/search" component={Search} />
@@ -218,7 +220,7 @@ function App() {
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/favorites" component={LikedCourses} /> 
 								</Switch>
 							</Provider>
-							</NavWrapper>
+						</NavWrapper>
 				</Router>
 			</>
 		)
