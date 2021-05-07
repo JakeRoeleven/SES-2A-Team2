@@ -25,8 +25,9 @@ function AppMenu(props) {
     return (
         <AppBar position="fixed"  className={clsx(classes.appBar, {  [classes.appBarShift]: props.open, })}>
             <Toolbar>
+                <img src={window.location.origin + '/small-light-logo.png'} style={{ width: '2vw', marginRight: '10px'}}></img>
                 <Typography variant='h6' className={classes.title}>
-                    Course Recommendation System
+                    Course Recommender
                 </Typography>
                 <div style={{marginLeft:'auto'}}>
                     <a href="/account" style={{ color: "inherit" }}>

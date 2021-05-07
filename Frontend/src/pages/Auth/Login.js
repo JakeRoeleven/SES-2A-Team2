@@ -21,6 +21,7 @@ function Login(props) {
         return (
             <div style={{padding: '2%'}}>
                 <center>
+                <img src={window.location.origin + '/course-logo.png'} style={{ width: '10vw', marginRight: '10px'}}></img>
                 <h3>Login to Course Recommender</h3>
                 <input type='email' placeholder='Email...' id='email_field'  onChange={(e) => setEmail(e.target.value)}/><br /><br />
                 <input type='password' placeholder='Password...' id='password_field'  onChange={(e) => setPassword(e.target.value)}/><br /><br />
