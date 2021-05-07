@@ -62,22 +62,22 @@ export default function CourseEditButtons(props) {
     if (empty) {
         return (
             <>
-                <Button className={classes.button}>Add Course</Button>
+                <Button className={classes.button} onClick={() => props.handleAdd()}>Add Course</Button>
                 <Button className={classes.buttonDisabled} disabled>Delete Course</Button>
             </>
         );
     } else if (single){
         return (
             <>
-                <Button className={classes.button}>Add Course</Button>
+                <Button className={classes.button} onClick={() => props.handleAdd()}>Add Course</Button>
                 <Button className={classes.buttonDelete} onClick={() => props.handleDelete()}>Delete Course</Button>
-				<Button className={classes.button}>Edit Course: {props.current}</Button>
+				<Button className={classes.button} onClick={() => props.handleEdit()}>Edit Course: {props.current}</Button>
             </>
         );
 	} else {
         return (
             <>
-                <Button className={classes.button}>Add Course</Button>
+                <Button className={classes.button} onClick={() => props.handleAdd()}>Add Course</Button>
                 <Button className={classes.buttonDelete} onClick={() => props.handleDelete()}>Delete Courses</Button>
             </>
         );

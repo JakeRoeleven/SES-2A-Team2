@@ -12,8 +12,12 @@ import CardContent from '@material-ui/core/CardContent';
 
 import Alert from '../../components/Alert';
 
+import { useHistory } from "react-router-dom";
+
 export default function AdminDash() {
     
+    let history = useHistory();
+
 	const data = useContext(AppContext);
     const [courses, setCourses] = useState([]);
     const [current, setCurrentSelected] = useState([]);
@@ -47,14 +51,14 @@ export default function AdminDash() {
     };
 
     function handleAdd() {
-        console.log('add');
-        <Link to='/addcourse'>Add Course</Link>;
+        history.push("/admin/add/course");
     }
 
     function handleEdit() {
-        console.log('edit');
+        history.push(`/admin/edit/course?id=${current}`);
     }
 
+    // Delete Functions
     const handleDelete = () => {
 	    setShowDelete(false);
     };
@@ -97,7 +101,7 @@ export default function AdminDash() {
                 <br />
 
                 <div style={{paddingBottom: '10px', textAlign: 'right'}}>
-                    <CourseEditButtons current={current} handleDelete={handleDelete} />
+                    <CourseEditButtons current={current} handleDelete={handleDelete} handleAdd={handleAdd} handleEdit={handleEdit}/>
                 </div>
 
                 <br />

@@ -42,16 +42,19 @@ router.get('/set_all_subjects', async (req, res) => {
 });
 
 router.post('/new-subject', async (req, res) => {
-    const course = req.body.course_data;
-    const id = req.body.id;
-    try {
-        const courseService = new courseService();
-        await courseService.setCourse(id, course);
-        res.status(200).send("Done");
-    } catch (e) {
-        console.log(e)
-        res.status(401).send(e);
-    }
+
+    console.log(req.body)
+
+    // const course = req.body.course_data;
+    // const id = req.body.id;
+    // try {
+    //     const courseService = new courseService();
+    //     await courseService.setCourse(id, course);
+    //     res.status(200).send("Done");
+    // } catch (e) {
+    //     console.log(e)
+    //     res.status(401).send(e);
+    // }
 });
 
 router.post('/update-course', async (req, res) => {

@@ -26,6 +26,8 @@ import firebase from './firebase';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import StudentForm from './pages/StudentForm';
+import AddCourse from './pages/AdminComponents/AddCourse';
+import EditCourse from './pages/AdminComponents/EditCourse';
 
 function App() {
 
@@ -213,6 +215,8 @@ function App() {
 									<Route exact path="/forgot-password" component={ForgotPassword} />
 									<Route exact path="/new/student" component={StudentForm} />
 									<Route exact path="/admin" component={AdminDash} />
+									<Route exact path="/admin/add/course" component={AddCourse} />
+									<Route exact path="/admin/edit/course" component={EditCourse} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/home" component={Home} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
 									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/search" component={Search} />
