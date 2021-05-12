@@ -7,6 +7,7 @@ function CoursesCompleted(props) {
 		const data = useContext(AppContext);
 
 		const [courses, setCourses] = useState([]);
+		const [courseName, setCourseNames] = useState([]);
 		const [subjects, setSubjects] = useState({});
 
 		const deleteSubject = (subject_code) => {
@@ -33,8 +34,8 @@ function CoursesCompleted(props) {
 			student["student_data"]['courses_completed'] = new_courses;
 
 
-			let url = 'http://${process.env.REACT_APP_SERVER}/api/update-student'
-			if (props.student == null) url = 'http://${process.env.REACT_APP_SERVER}/api/new-student'
+			let url = `http://${process.env.REACT_APP_SERVER}/api/update-student`
+			if (props.student == null) url = `http://${process.env.REACT_APP_SERVER}/api/new-student`
 
 			fetch(url, {
 				method: 'POST',
@@ -66,7 +67,8 @@ function CoursesCompleted(props) {
 					subject_obj[elem._id] = elem
 				}
 			})
-			setSubjects(subject_obj);
+
+			setSubjects(subject_obj);	
 		}, [courses, data, props.courses]);
 
 		useEffect(() => {
@@ -76,7 +78,7 @@ function CoursesCompleted(props) {
 		if (courses.length > 0 && Object.keys(subjects).length > 0) {
 			return (
 				Object.keys(courses).map((index) => (
-						<Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index] + " - " + subjects[courses[index]]['course_name']}  onDelete={() => deleteSubject(courses[index])} color="primary" />
+					<Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index]} onDelete={() => deleteSubject(courses[index])} color="primary" />
 				))
 			);
 		} else {

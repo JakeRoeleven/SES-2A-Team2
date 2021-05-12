@@ -25,35 +25,35 @@ function EditCourse(props) {
     const [courseDescription, setCourseDescription] = useState('');
 
     const editCourse = async () => {
-        fetch(`http://localhost:8080/api/new-subject`, {
-            crossDomain: true,
-            mode: 'cors',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-            body: JSON.stringify({
-                id: courseID,
-                courseData: {
-                    course_name: courseName,
-                    credit_points: creditPoints,
-                    'pre-requisites': coursePrerequisites,
-                    'anti-requisites': courseAntirequisites,
-                    postgraduate: postgraduate,
-                    faculty: faculty,
-                    description: courseDescription,
-                    link: '#',
-                },
-            }),
-        })
-            .then(async (res) => {
-                let data = await res.json();
-                console.log(data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        // fetch(`http://localhost:8080/api/new-subject`, {
+        //     crossDomain: true,
+        //     mode: 'cors',
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Access-Control-Allow-Origin': '*',
+        //     },
+        //     body: JSON.stringify({
+        //         id: courseID,
+        //         courseData: {
+        //             course_name: courseName,
+        //             credit_points: creditPoints,
+        //             'pre-requisites': coursePrerequisites,
+        //             'anti-requisites': courseAntirequisites,
+        //             postgraduate: postgraduate,
+        //             faculty: faculty,
+        //             description: courseDescription,
+        //             link: '#',
+        //         },
+        //     }),
+        // })
+        //     .then(async (res) => {
+        //         let data = await res.json();
+        //         console.log(data);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
     };
 
     useEffect(() => {

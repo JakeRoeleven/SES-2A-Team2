@@ -27,7 +27,6 @@ router.get('/admin/:id', async (req, res) => {
         let setAdmin = await adminService.isAdmin(id)
         res.status(200).json(setAdmin);
     } catch (e) {
-        console.log(e)
         res.status(400);
     }
 });

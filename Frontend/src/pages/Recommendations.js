@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import SubjectCard from '../components/SubjectCard';
+import Button from '@material-ui/core/Button';
 
 import { AppContext } from '../AppContext';
 import InterestsCard from '../components/InterestsCard';
@@ -39,21 +40,43 @@ function Recommendations() {
         });
     }
 
+    const ResetButton = () => {
+        if (Object.keys(results).length > 0) {
+           return <Button variant="contained" style={{ float: 'right' }} onClick={() => setResults({})}> Reset Recommendations</Button>
+        } else {
+           return null;
+        }
+    }
+
+    const Results = () => {
+        if (Object.keys(results).length > 0) {
+            return (
+                Object.keys(results).slice(0, 5).map((subject, key) => (
+                    <SubjectCard coursesUpdated={() => console.log('test')} key={key} subject={results[subject]} />
+                ))
+            )
+         } else {
+            return <p style={{ textAlign:'center' }}> Click find results to begin your search... </p>;
+         }
+    }
+
     return (
         <>
             <CssBaseline />
             <Container maxWidth={false}>
                 <Grid container spacing={3}>
-                    <Grid item xs={8}>
+                    <Grid item xs={6}>
                         <Typography variant='h5'> Course Recommendations </Typography>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <ResetButton />
                     </Grid>
                 </Grid>
                 <br />
                 <InterestsCard findRecommendations={findRecommendations}></InterestsCard>
                 <br />
-                {Object.keys(results).slice(0, 5).map((subject, key) => (
-                    <SubjectCard coursesUpdated={() => console.log('test')} key={key} subject={results[subject]} />
-                ))}
+                <Results />
             </Container>
         </>
     );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Switch, Route,  Redirect } from 'react-router-dom';
 
 // Import Private Route
 import PrivateRoute from './components/PrivateRoute';
@@ -31,12 +31,14 @@ import EditCourse from './pages/AdminComponents/EditCourse';
 
 function App() {
 
+
     const [subjects, setSubjects] = useState({});
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 	const [isAuthenticated, setAuthenticated] = useState(true);
 	const [signupComplete, setSignupComplete] = useState(true);
-	const [isAdminPage, setIsAdminPage] = useState(true);
+	const [isAdminPage, setIsAdminPage] = useState(false);
+	const [isAdmin, setIsAdmin] = useState(false)
 
 	// App Context
 	const { Provider } = AppContext;
@@ -44,7 +46,6 @@ function App() {
 	const checkSignupComplete = useCallback(async(id) => {
 
 		let is_admin = false 
-
 		await fetch(`http://localhost:8080/api/admin/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
@@ -55,16 +56,16 @@ function App() {
 			},
 		}).then(async (res) => {
 			is_admin = await res.json();
-
 			if (is_admin) {
-				console.log("Admin")
+				setIsAdminPage(true)
+				setIsAdmin(true)
 				setLoading(false);
+				return <Redirect to="/admin" />
 			}
-
 		})
 
 		if (!is_admin) {
-			await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/signup_complete/${id}`, {
+			await fetch(`http://localhost:8080/api/student/signup_complete/${id}`, {
 				crossDomain: true,
 				mode: 'cors',
 				method: 'GET',
@@ -161,10 +162,6 @@ function App() {
     // Check if Firebase is initialized
     useEffect(() => {
 
-        firebase.isInitialized().then(() => {
-			checkAuthenticated();
-		});
-
 		const hasLoaded = localStorage.getItem('hasLoaded');
 		const subjects = JSON.parse(localStorage.getItem('subjects'));
 		const cachedTime = localStorage.getItem('cacheTime');
@@ -176,9 +173,14 @@ function App() {
 			setLoading(true);
 			fetchSubjects();
 		} else {
-			setSubjects(subjects)
-		
+			setSubjects(subjects)	
 		}
+
+		firebase.isInitialized().then(() => {
+			checkAuthenticated();
+		});
+
+
     }, [fetchSubjects, setSubjects, checkAuthenticated]);
 
 	if (loading) {
@@ -201,7 +203,29 @@ function App() {
                 </Container>
             </>
         );
-    } else {
+    } else if (isAdmin) {
+		return ( 
+		<>
+		<Router>
+				<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete} isAdminPage={isAdminPage}>
+						<Provider value={subjects}>
+							<Switch > 
+								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
+								<Route exact path="/register" component={Register} />
+								<Route exact path="/forgot-password" component={ForgotPassword} />
+								<Route exact path="/new/student" component={StudentForm} />
+								<Route exact path="/home" component={AdminDash} />
+								<Route exact path="/admin" component={AdminDash} />
+								<Route exact path="/admin/add/course" component={AddCourse} />
+								<Route exact path="/admin/edit/course" component={EditCourse} />
+							</Switch>
+						</Provider>
+					</NavWrapper>
+			</Router>
+		</>	
+		)
+	} else {
 		return ( 
 			<>
 				<Router>

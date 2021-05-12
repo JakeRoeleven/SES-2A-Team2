@@ -17,7 +17,6 @@ class AdminService {
     }
 
     async isAdmin(id) {
-
         let admin = await Admin.findOne({ _id: id }).lean();
         if (admin == null) {
             return false;

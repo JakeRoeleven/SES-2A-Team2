@@ -47,7 +47,6 @@ router.post('/new-student', async (req, res) => {
 router.post('/student/favorites', async (req, res) => {
     const id = req.body.id;
     const code = req.body.subject_code;
-    
     try {
         const studentService = new StudentService();
         let favorites  = await studentService.toggleStudentFavorite(id, code);

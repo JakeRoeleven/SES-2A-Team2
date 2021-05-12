@@ -76,7 +76,7 @@ function Account() {
                     convertDetails(data);
                     setLoading(false);
                 })
-                .catch(() => {
+                .catch((e) => {
                     setAlertMessage('Error: We could not find your account details, please try again!');
                     setShowAlert(true);
                     setLoading(false);

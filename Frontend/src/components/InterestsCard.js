@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Card, Typography, CardContent, Button, Container, CircularProgress} from '@material-ui/core';
 import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
@@ -6,7 +6,7 @@ import CoursesCompleted from '../components/CompletedCourses';
 
 function InterestsCard(props) {
 
-    const [fetchedStudent, setFetchedStudent] = useState(false)
+    const [fetchedStudent, setFetchedStudent] = useState(false);
     const [loading, setLoading] = useState(true);
     const [interests, setInterests] = useState([]);
     const [displayedInterests, setDisplayedInterests] = useState([]);
@@ -17,19 +17,19 @@ function InterestsCard(props) {
         let student = {
             interests: interests,
             faculty: faculty,
-            courses_completed: completedSubjects
-        }
-        return(student)
-    }
+            courses_completed: completedSubjects,
+        };
+        return student;
+    };
 
     const setInterestsDropdownList = (interests_array) => {
-        setLoading(false)
+        setLoading(false);
         let interests_obj_array = [];
-        interests_array.forEach(elem => {
+        interests_array.forEach((elem) => {
             interests_obj_array.push({value: elem, label: elem});
-        })
-        setDisplayedInterests(interests_obj_array)
-    }
+        });
+        setDisplayedInterests(interests_obj_array);
+    };
 
     const fetchStudent = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
@@ -42,57 +42,56 @@ function InterestsCard(props) {
                 'Access-Control-Allow-Origin': '*',
             },
         }).then(async (res) => {
-                let data = await res.json();
-                setFetchedStudent(data)
-                setInterests(data.interests)
-                setCompletedSubjects(data.courses_completed)
-                setInterestsDropdownList(data.interests)
-                setFaculty(data.major)
+            let data = await res.json();
+            setFetchedStudent(data);
+            setInterests(data.interests);
+            setCompletedSubjects(data.courses_completed);
+            setInterestsDropdownList(data.interests);
+            setFaculty(data.major);
         }).catch((err) => {
-                console.log(err);
+            console.log(err);
         });
-	}, []);
+    }, []);
 
     useEffect(() => {
-       if (!fetchedStudent) fetchStudent();
+        if (!fetchedStudent) fetchStudent();
     }, [fetchStudent, fetchedStudent]);
 
     if (loading) {
         return (
             <>
-            <Container maxWidth={false}>
-                <Card style={{ padding: '1%', overflow: 'visible', textAlign: 'center'}}>
-                    <CircularProgress />
-                </Card>
-            </Container>
+                <Container maxWidth={false}>
+                    <Card elevation={24} style={{padding: '1%', overflow: 'visible', textAlign: 'center'}}>
+                        <CircularProgress />
+                    </Card>
+                </Container>
             </>
-        )
+        );
     } else {
         return (
-            <Card style={{marginBottom: '1%', padding: '1%', overflow: 'visible'}}>
+            <Card elevation={6} style={{marginBottom: '1%', padding: '1%', overflow: 'visible'}}>
                 <CardContent>
                     <Typography style={{marginBottom: '0.5%'}}> Your Interests </Typography>
-    
-                    <InterestSelect 
-                        displayed_interests={displayedInterests} 
-                        setCurrentInterests={setInterests} 
-                        setDisplayedInterests={setDisplayedInterests} />
-    
+
+                    <InterestSelect displayed_interests={displayedInterests} setCurrentInterests={setInterests} setDisplayedInterests={setDisplayedInterests} />
+
                     <br />
 
-                    <Typography  style={{marginBottom: '0.5%'}}> Your Faculty </Typography>
-                    <MajorSelect setMajor={setFaculty} major={faculty}/>
+                    <Typography style={{marginBottom: '0.5%'}}> Your Faculty </Typography>
+                    <MajorSelect setMajor={setFaculty} major={faculty} />
                     <br />
 
                     <Typography style={{marginBottom: '0.5%'}}> Your Completed Courses </Typography>
-                    <CoursesCompleted courses={completedSubjects} student={fetchedStudent}/>
+                    <CoursesCompleted courses={completedSubjects} student={fetchedStudent} />
 
-                    <Button variant="contained" style={{float: 'right'}} color='primary' size='small' onClick={() => props.findRecommendations(getStudentObj())}> Find Recommendations </Button>
+                    <Button variant='contained' style={{float: 'right'}} color='primary' size='small' onClick={() => props.findRecommendations(getStudentObj())}>
+                        Find Recommendations
+                    </Button>
+                    <br />
                 </CardContent>
             </Card>
         );
     }
-  
 }
 
 export default InterestsCard;
