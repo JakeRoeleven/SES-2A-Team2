@@ -17,6 +17,7 @@ const students = require("./api/students");
 const interests = require("./api/interests");
 const faculties = require("./api/faculties");
 const admin = require("./api/admin");
+const user = require("./api/user");
 
 //Connect to Mongo Database
 mongoose.connect('mongodb://root:password@165.232.165.231:27017', {useNewUrlParser: true, useUnifiedTopology: true, 
@@ -37,6 +38,7 @@ app.use("/api", students);
 app.use("/api", interests);
 app.use("/api", faculties);
 app.use("/api", admin);
+app.use("/api", user);
 
 // Start server
 app.listen(PORT, () => {

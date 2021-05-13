@@ -18,6 +18,7 @@ function Login(props) {
         try {
             await firebase.login(email, password).then(() => {
                 props.setAuthenticated(true);
+                props.checkUserDetails();
             });
         } catch (error) {
             setAlertMessage("Please check your email and password and try again")
@@ -59,6 +60,7 @@ function Login(props) {
     } else {
         return <Redirect to='/home' />;
     }
+    
 }
 
 export default Login;

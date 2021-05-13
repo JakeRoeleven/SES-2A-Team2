@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function NavWrapper(props) {
+function StudentMenu(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
@@ -82,21 +82,8 @@ function NavWrapper(props) {
     };
 
     console.log(props)
-
-    if (props.isAdminPage && props.authenticated) {
-        return (
-            <>
-                <div className={classes.root}>
-                    <CssBaseline />
-                    <AppMenu handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} setAuthenticated={props.setAuthenticated} />
-                    <div className={classes.content}>
-                        <div className={classes.toolbar} />
-                        {props.children}
-                    </div>
-                </div>
-            </>
-        );
-    } else if (props.authenticated && props.signupComplete) {
+    
+    if (props.authenticated && props.signupComplete) {
         return (
             <>
                 <div className={classes.root}>
@@ -136,4 +123,4 @@ function NavWrapper(props) {
     }
 }
 
-export default NavWrapper;
+export default StudentMenu;

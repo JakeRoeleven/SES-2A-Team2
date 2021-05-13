@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import firebase from '../../firebase';
 import {Button, TextField, Typography, Paper} from '@material-ui/core';
-
+import {Redirect} from 'react-router-dom';
 import Alert from '../../components/Alert';
 
 function Register(props) {
@@ -18,7 +18,9 @@ function Register(props) {
     async function login() {
         try {
             await firebase.login(email, password).then(() => {
-                props.history.replace('/home');
+                props.setAuthenticated(true);
+                props.checkUserDetails();
+                props.history.replace('/new/student');
             });
         } catch (error) {
             alert(error);
@@ -40,6 +42,9 @@ function Register(props) {
             setShowAlert(true)
         }
     }
+
+    console.log(props)
+
 
     return (
         <div className={'animateBackground'}>
@@ -73,6 +78,8 @@ function Register(props) {
                 <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
         </div>
     );
+
+    
 }
 
 export default Register;

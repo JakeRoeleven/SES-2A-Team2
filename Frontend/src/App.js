@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import {BrowserRouter as Router, Switch, Route,  Redirect } from 'react-router-dom';
+import React, {useState, useEffect, useCallback} from 'react';
+import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
 
 // Import Private Route
 import PrivateRoute from './components/PrivateRoute';
@@ -30,42 +30,33 @@ import AddCourse from './pages/AdminComponents/AddCourse';
 import EditCourse from './pages/AdminComponents/EditCourse';
 
 function App() {
-
+    // App Context
+    const {Provider} = AppContext;
 
     const [subjects, setSubjects] = useState({});
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
-	const [isAuthenticated, setAuthenticated] = useState(true);
-	const [signupComplete, setSignupComplete] = useState(true);
-	const [isAdminPage, setIsAdminPage] = useState(false);
-	const [isAdmin, setIsAdmin] = useState(false)
 
-	// App Context
-	const { Provider } = AppContext;
+    const [isAuthenticated, setAuth] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [signupComplete, setSignupComplete] = useState(true);
 
-	const checkSignupComplete = useCallback(async(id) => {
 
-		let is_admin = false 
-		await fetch(`http://localhost:8080/api/admin/${id}`, {
-			crossDomain: true,
-			mode: 'cors',
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-			},
-		}).then(async (res) => {
-			is_admin = await res.json();
-			if (is_admin) {
-				setIsAdminPage(true)
-				setIsAdmin(true)
-				setLoading(false);
-				return <Redirect to="/admin" />
-			}
-		})
+    const checkUserDetails = useCallback(async () => {
 
-		if (!is_admin) {
-			await fetch(`http://localhost:8080/api/student/signup_complete/${id}`, {
+		console.log("Checking details")
+		
+		if (firebase.getCurrentUsername() !== null) {
+            setAuth(true);
+            let user_id = await firebase.getCurrentUser();
+			setLoading(true)
+            if (user_id.X) {
+                let id = user_id['X']['X'];
+				console.log("setting id")
+                sessionStorage.setItem('user_id', id);
+            }
+			await fetch(`http://localhost:8080/api/user/${user_id}`, {
 				crossDomain: true,
 				mode: 'cors',
 				method: 'GET',
@@ -75,73 +66,44 @@ function App() {
 				},
 			}).then(async (res) => {
 				let data = await res.json();
-				setSignupComplete(data);
-				checkUserDetails(id);
+				setLoading(false)
+				console.log('user')
+				if (data.AccountType === 'admin') {
+					setIsAdmin(true);
+				} else {
+					console.log(data)
+					if (data.signupComplete) {
+
+						setSignupComplete(true);
+						sessionStorage.setItem('favorites', data.favorite_subjects);
+						sessionStorage.setItem('courses_completed', data.courses_completed);
+					}
+				}
 			}).catch((err) => {
-				console.log(err)
-			}).then(() => {
-				setLoading(false);
+				setError(true);
+				setLoading(false)
 			});
+        } else {
+			if (sessionStorage.getItem('user_id') === null) {
+				setAuth(false)
+				setLoading(false)
+			}
 		}
 
-	}, []);
+ 
+    }, [setAuth, setSignupComplete, setIsAdmin]);
 
-	const checkAuthenticated = useCallback(async () => {
-		if (firebase.getCurrentUsername() == null) {
-			setAuthenticated(false);
-			setSignupComplete(false);
-			setLoading(false)
-		} else {
-			setAuthenticated(true);
-			let user_id = await firebase.getCurrentUser()
-			if (user_id.X) {
-				let id = user_id['X']['X'];
-				sessionStorage.setItem('user_id', id);
-				checkSignupComplete(id)
-			} 
-		}		
-	}, [checkSignupComplete]);
-
-	async function checkUserDetails(id) {
-		
-		await fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
-			crossDomain: true,
-			mode: 'cors',
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-			},
-		}).then(async (res) => {
-			let data = await res.json();
-			sessionStorage.setItem('favorites', data.favorite_subjects);
-			sessionStorage.setItem('courses_completed', data.courses_completed)
-			setLoading(false)
-		}).catch((err) => {
-			console.log(err)
-			setLoading(false)
-		}).then(() => {
-			setLoading(false);
-		});
-		
-
-	}
-
-	function setAuth(val) {
-		setAuthenticated(val);
-	}
-
-	// Fetch full subject list from API
-	const fetchSubjects = useCallback(async () => {
-		fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
-			crossDomain: true,
-			mode: 'cors',
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-			},
-		}).then(async (res) => {
+    // Fetch full subject list from API
+    const fetchSubjects = useCallback(async () => {
+        fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
+            crossDomain: true,
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        }).then(async (res) => {
 			let data = await res.json();
 			setSubjects(data);
 
@@ -150,38 +112,38 @@ function App() {
 			let cachedTime = currentTime.setHours(currentTime.getHours() + 2);
 
 			// Persist the state in local storage
-			localStorage.setItem('hasLoaded', true)
+			localStorage.setItem('hasLoaded', true);
 			localStorage.setItem('subjects', JSON.stringify(data));
-			localStorage.setItem('cacheTime', cachedTime)
-		}).catch((err) => {
-			console.log(err);
-			setError(err);
-		});
-	}, []);
+			localStorage.setItem('cacheTime', cachedTime);
+        }).catch((err) => {
+            setError(err);
+        });
+    }, [setSubjects, setError]);
 
     // Check if Firebase is initialized
     useEffect(() => {
 
-		const hasLoaded = localStorage.getItem('hasLoaded');
-		const subjects = JSON.parse(localStorage.getItem('subjects'));
-		const cachedTime = localStorage.getItem('cacheTime');
-
-		if (cachedTime < new Date()) {
-			setLoading(true);
-			fetchSubjects();
-		} else if (!hasLoaded && typeof subject !== 'undefined' && subjects.length > 10) {
-			setLoading(true);
-			fetchSubjects();
+		if (sessionStorage.getItem('user_id') === null) {
+			setAuth(false)
+			setSignupComplete(false)
 		} else {
-			setSubjects(subjects)	
+			const hasLoaded = localStorage.getItem('hasLoaded');
+			const subjects = JSON.parse(localStorage.getItem('subjects'));
+			const cachedTime = localStorage.getItem('cacheTime');
+	
+			if (cachedTime < new Date()) {
+				fetchSubjects();
+			} else if (!hasLoaded && typeof subject !== 'undefined' && subjects.length > 10) {
+				fetchSubjects();
+			} else {
+				setSubjects(subjects);
+			}
 		}
 
-		firebase.isInitialized().then(() => {
-			checkAuthenticated();
-		});
-
-
-    }, [fetchSubjects, setSubjects, checkAuthenticated]);
+        // Check user is logged in with firebase
+	    checkUserDetails();
+		
+    }, [fetchSubjects, setSubjects, checkUserDetails, setSignupComplete]);
 
 	if (loading) {
         return (
@@ -194,66 +156,52 @@ function App() {
                 </Container>
             </>
         );
-    } else if (error) {
+	} else if (isAdmin) {
         return (
             <>
-                <Skeleton variant='rect' width={'100%'} height={64} />
-                <Container maxWidth={false} className={'loadingContainer'}>
-					<Typography color='textPrimary'>{'Failed to load Application'}</Typography>
-                </Container>
+                <Router>
+                    <NavWrapper setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
+                        <Provider value={subjects}>
+                            <Switch>
+                                <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
+                                <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails} />} />
+                                <Route exact path='/register' component={Register} />
+                                <Route exact path='/forgot-password' component={ForgotPassword} />
+                                <Route exact path='/new/student' component={StudentForm} />
+                                <Route exact path='/home' component={AdminDash} />
+                                <Route exact path='/admin' component={AdminDash} />
+                                <Route exact path='/admin/add/course' component={AddCourse} />
+                                <Route exact path='/admin/edit/course' component={EditCourse} />
+                            </Switch>
+                        </Provider>
+                    </NavWrapper>
+                </Router>
             </>
         );
-    } else if (isAdmin) {
-		return ( 
-		<>
-		<Router>
-				<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete} isAdminPage={isAdminPage}>
-						<Provider value={subjects}>
-							<Switch > 
-								<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-								<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-								<Route exact path="/register" component={Register} />
-								<Route exact path="/forgot-password" component={ForgotPassword} />
-								<Route exact path="/new/student" component={StudentForm} />
-								<Route exact path="/home" component={AdminDash} />
-								<Route exact path="/admin" component={AdminDash} />
-								<Route exact path="/admin/add/course" component={AddCourse} />
-								<Route exact path="/admin/edit/course" component={EditCourse} />
-							</Switch>
-						</Provider>
-					</NavWrapper>
-			</Router>
-		</>	
-		)
-	} else {
-		return ( 
-			<>
-				<Router>
-			
-					<NavWrapper setAuthenticated={setAuthenticated} authenticated={isAuthenticated} signupComplete={signupComplete} isAdminPage={isAdminPage}>
-							<Provider value={subjects}>
-								<Switch > 
-									<Route exact path="/" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-									<Route exact path="/login" component={(props) => ( <Login {...props}  authenticated={isAuthenticated} setAuthenticated={setAuth} /> )} />
-									<Route exact path="/register" component={Register} />
-									<Route exact path="/forgot-password" component={ForgotPassword} />
-									<Route exact path="/new/student" component={StudentForm} />
-									<Route exact path="/admin" component={AdminDash} />
-									<Route exact path="/admin/add/course" component={AddCourse} />
-									<Route exact path="/admin/edit/course" component={EditCourse} />
-									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/home" component={Home} />
-									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/recommendations" component={Recommendations} />
-									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/search" component={Search} />
-									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/account" component={Account} /> 
-									<PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path="/favorites" component={LikedCourses} /> 
-								</Switch>
-							</Provider>
-						</NavWrapper>
-				</Router>
-			</>
-		)
-	}
-
+    } else {
+        return (
+            <>
+                <Router>
+                    <NavWrapper setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
+                        <Provider value={subjects}>
+                            <Switch>
+                                <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
+                                <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth}  checkUserDetails={checkUserDetails}/>} />
+                                <Route exact path='/register' component={(props) => <Register {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails}/>} />
+                                <Route exact path='/forgot-password' component={ForgotPassword} />
+                                <Route exact path='/new/student' component={StudentForm} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/home' component={Home} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/recommendations' component={Recommendations} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/search' component={Search} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/account' component={Account} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/favorites' component={LikedCourses} />
+                            </Switch>
+                        </Provider>
+                    </NavWrapper>
+                </Router>
+            </>
+        );
+    }
 }
 
 export default App;
