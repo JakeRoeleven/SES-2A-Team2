@@ -43,7 +43,7 @@ function Login(props) {
             <>
             <div className={'animateBackground'}>
                 <div style={{marginTop: '10%', textAlign: 'center'}}>
-                    <img src={window.location.origin + '/small-light-logo.png'} style={{width: '15vw', marginRight: '10px'}}></img>
+                    <img src={window.location.origin + '/small-light-logo.png'} style={{width: '15vw', marginRight: '10px'}} alt=''></img>
           
                     <Paper elevation={24} style={{ padding: '1%', width: '400px', marginLeft: 'auto', marginRight: 'auto', marginTop: '2%'}}>
        

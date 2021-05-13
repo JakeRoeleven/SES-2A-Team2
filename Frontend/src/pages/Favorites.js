@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Star from '@material-ui/icons/Star';
 import {AppContext} from '../AppContext';
 import Alert from '../components/Alert';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { useHistory } from "react-router-dom";
 
 function Favorites() {  
@@ -15,6 +16,8 @@ function Favorites() {
     
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+
+    const [loading, setLoading] = useState(true);
 
     const checkUserDetails = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
@@ -31,9 +34,11 @@ function Favorites() {
             let favs = await student_obj.favorite_subjects;
 			sessionStorage.setItem('favorites', favs);
 			setFavorites(favs)
+            setLoading(false)
 		}).catch(() => {
             setShowAlert(true)
             setAlertMessage('Failed to load favorites')
+            setLoading(false)
         })
 	}, []);
 
@@ -84,6 +89,12 @@ function Favorites() {
         checkUserDetails()
     }, [checkUserDetails])
 
+    const FakeFavoriteCard = () => {
+        return (
+            <Skeleton variant="rect" width={'auto'} height={'6vh'} style={{marginBottom: '10px'}} />
+        );
+    }
+
     const FavoriteCard = (subject) => {
         
         let code = subject['code'];
@@ -109,7 +120,22 @@ function Favorites() {
         );
     }
 
-    if (Object.keys(favorites).length < 1) {
+    if (loading) {
+        return (
+            <>
+            <Container maxWidth={false}>
+                <Typography variant='h5' style={{ paddingTop: '10px' }}> Favorite Subject List </Typography>
+                <br />
+                <ul style={{listStyleType: 'none', paddingLeft: '0px'}}>
+                    <FakeFavoriteCard />
+                    <FakeFavoriteCard />
+                    <FakeFavoriteCard />
+                </ul>
+            </Container>
+            <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
+            </>
+        )
+    } else if (Object.keys(favorites).length < 1) {
         return (
             <>
             <Container maxWidth={false}>

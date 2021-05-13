@@ -60,7 +60,7 @@ function Recommendations() {
 
     const ResetButton = () => {
         if (Object.keys(results).length > 0) {
-           return <Button variant="contained" startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => setResults({})}> Clear Recommendations</Button>
+           return <Button startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => setResults({})}> Clear Recommendations</Button>
         } else {
            return null;
         }

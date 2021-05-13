@@ -28,7 +28,7 @@ function AppMenu(props) {
 
         <AppBar position="fixed"  className={clsx(classes.appBar, {  [classes.appBarShift]: props.open, })}>
             <Toolbar>
-                <img src={window.location.origin + '/small-light-logo.png'} style={{ cursor: 'pointer', width: '2vw', marginRight: '10px'}} onClick={() => history.push('/home')} ></img>
+                <img alt='' src={window.location.origin + '/small-light-logo.png'} style={{ cursor: 'pointer', width: '2vw', marginRight: '10px'}} onClick={() => history.push('/home')} ></img>
                 <Typography variant='h6' className={classes.title}  style={{ cursor: 'pointer' }} onClick={() => history.push('/home')} >
                     Course Recommender
                 </Typography>

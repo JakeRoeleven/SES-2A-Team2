@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 // Import Private Route
 import PrivateRoute from './components/PrivateRoute';
@@ -10,12 +10,10 @@ import Recommendations from './pages/Recommendations';
 import NavWrapper from './components/MenuSystem';
 import Search from './pages/Search';
 import Account from './pages/Account';
-import Fav from './pages/Favorites';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import AdminDash from './pages/AdminComponents/AdminDash';
 
 // Material UI
-import Skeleton from '@material-ui/lab/Skeleton';
 import {CircularProgress, Typography} from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 
@@ -47,6 +45,39 @@ function App() {
     const [signupComplete, setSignupComplete] = useState(false);
 
     const [showProgress, setShowProgress] = useState(false);
+   
+    // Fetch full subject list from API
+    const fetchSubjects = useCallback(async (withLoading) => {
+
+        if (withLoading) setLoading(true)
+
+        fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
+            crossDomain: true,
+            mode: 'cors',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        }).then(async (res) => {
+			let data = await res.json();
+			setSubjects(data);
+            if (withLoading) setLoading(false)
+
+			// Record the current date for local storage
+			let currentTime = new Date();
+			let cachedTime = currentTime.setHours(currentTime.getHours() + 2);
+
+			// Persist the state in local storage
+			localStorage.setItem('hasLoaded', true);
+			localStorage.setItem('subjects', JSON.stringify(data));
+			localStorage.setItem('cacheTime', cachedTime);
+
+        }).catch((err) => {
+            setError(err);
+            if (withLoading) setLoading(false)
+        });
+    }, [setSubjects, setError]);
 
     const checkUserDetails = useCallback(async () => {
 
@@ -98,40 +129,7 @@ function App() {
 		}
 
  
-    }, [setAuth, setSignupComplete, setIsAdmin]);
-
-    // Fetch full subject list from API
-    const fetchSubjects = useCallback(async (withLoading) => {
-
-        if (withLoading) setLoading(true)
-
-        fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
-            crossDomain: true,
-            mode: 'cors',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        }).then(async (res) => {
-			let data = await res.json();
-			setSubjects(data);
-            if (withLoading) setLoading(false)
-
-			// Record the current date for local storage
-			let currentTime = new Date();
-			let cachedTime = currentTime.setHours(currentTime.getHours() + 2);
-
-			// Persist the state in local storage
-			localStorage.setItem('hasLoaded', true);
-			localStorage.setItem('subjects', JSON.stringify(data));
-			localStorage.setItem('cacheTime', cachedTime);
-
-        }).catch((err) => {
-            setError(err);
-            if (withLoading) setLoading(false)
-        });
-    }, [setSubjects, setError]);
+    }, [setAuth, fetchSubjects, setSignupComplete, setIsAdmin]);
 
     // Check if Firebase is initialized
     useEffect(() => {
@@ -160,11 +158,19 @@ function App() {
 	if (loading) {
         return (
             <>
-                <Skeleton variant='rect' width={'100%'} height={64} />
                 <Container maxWidth={false} className={'loadingContainer'}>
                     <CircularProgress size={50} color={'primary'} />
                     <br /><br />
                     <Typography color='textPrimary'>{'Loading Application'}</Typography>
+                </Container>
+            </>
+        );
+	} if (error) {
+        return (
+            <>
+                <Container maxWidth={false} className={'loadingContainer'}>
+                    <br /><br />
+                    <Typography color='textPrimary'>{'Application Error'}</Typography>
                 </Container>
             </>
         );

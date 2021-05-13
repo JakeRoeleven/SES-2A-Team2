@@ -35,7 +35,7 @@ export default function AppDrawer(props) {
         if (location.includes('favorites')) setFavActive(true)
         if (location.includes('completed')) setCompActive(true)
 
-    }, [window]);
+    }, []);
 
     return (
         <Drawer

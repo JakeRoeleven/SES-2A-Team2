@@ -15,14 +15,14 @@ function Subject(props) {
             let value = search.split('=')[1]
             for (let i = 0, length = data.length; i < length; i++) {
                 let course = data[i];
-                if (value == course._id) {
+                if (value === course._id) {
                     setSubject(course)
                 }
             }
         } else {
             history.push("/search");
         }
-    }, [data]);
+    }, [data, history, props]);
 
     // "Component that displays results or error messages"
     const ResultsDisplay = (results) => {

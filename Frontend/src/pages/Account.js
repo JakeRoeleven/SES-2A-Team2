@@ -4,7 +4,6 @@ import {Grid, Container, CssBaseline, Typography, Card, TextField, Button, FormC
 import {Form} from 'semantic-ui-react';
 import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
-import CoursesCompleted from '../components/CompletedCourses';
 import Alert from '../components/Alert';
 
 function Account() {
@@ -22,15 +21,12 @@ function Account() {
     const [faculty, setFaculty] = useState('');
     const [interests, setInterests] = useState([]);
     const [displayed_interests, setDisplayedInterests] = useState([]);
-    const [coursesCompleted, setCoursesCompleted] = useState([]);
+
 
     // Convert User Data to State on load
     const convertDetails = async (details) => {
         if (details != null) {
             setUserDetails(details);
-
-            // Courses Completed
-            setCoursesCompleted(details['courses_completed']);
 
             // Name stuff
             let name = details['name'].split(' ');
@@ -192,10 +188,10 @@ function Account() {
                             <Typography variant='h5'> Edit Your Account </Typography>
                         </Grid>
                     </Grid>
-                    <br />
-                    <Card style={{padding: '2%', overflow: 'visible', textAlign: 'center'}}>
+                    <br /><br /><br /><br />
+                    <div style={{ textAlign: 'center'}} >
                         <CircularProgress />
-                    </Card>
+                    </div>
                 </Container>
                 <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
             </>
@@ -211,7 +207,7 @@ function Account() {
                         </Grid>
                     </Grid>
                     <br />
-                    <Card style={{padding: '2%', overflow: 'visible'}}>
+                    <Card style={{padding: '2%', overflow: 'visible', borderRadius: '10px'}} elevation={8}>
                         <Form>
                             <Typography
                                 style={{
@@ -269,17 +265,12 @@ function Account() {
                         </Form>
                         <br />
                         <br />
-                        <Button style={{float: 'right'}} onClick={() => submitAccountUpdate()}>
+                        <Button style={{float: 'right'}} onClick={() => submitAccountUpdate()} color="primary" variant='contained'>
                             {' '}
                             Update Account{' '}
                         </Button>
                         <br />
                         <br />
-                        <Typography style={{fontSize: '1.2em'}} variant='h6'>
-                            Courses You Have Completed
-                        </Typography>
-                        <br />
-                        <CoursesCompleted courses={coursesCompleted} student={userDetails} />
                     </Card>
                 </Container>
 

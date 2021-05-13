@@ -60,7 +60,6 @@ function Search(props) {
     const [alertMessage, setAlertMessage] = useState('');
 
     const searchSubjects = async () => {
-
         if (searchValue.length > 1) {
             setLoading(true)
             setError(false)

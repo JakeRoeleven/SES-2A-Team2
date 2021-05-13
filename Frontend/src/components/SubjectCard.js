@@ -7,8 +7,7 @@ import {
     Button,
     Typography,
     IconButton,
-    Chip,
-    StepConnector
+    Chip
 } from '@material-ui/core';
 
 import StarOutline from '@material-ui/icons/StarOutline';

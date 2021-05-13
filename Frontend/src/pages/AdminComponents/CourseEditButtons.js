@@ -55,7 +55,7 @@ export default function CourseEditButtons(props) {
 			setMultiple(true)
         }
 
-    }, [props.current]);
+    }, [props]);
 
     const classes = useStyles();
 
@@ -66,7 +66,7 @@ export default function CourseEditButtons(props) {
                 <Button className={classes.buttonDisabled} disabled>Delete Course</Button>
             </>
         );
-    } else if (single){
+    } else if (single && !multiple) {
         return (
             <>
                 <Button className={classes.button} onClick={() => props.handleAdd()}>Add Course</Button>

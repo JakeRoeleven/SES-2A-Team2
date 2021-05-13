@@ -2,11 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 
 import {Grid, Container, CssBaseline, Typography, Card, TextField, Button, FormControl, InputLabel, Select, MenuItem, FormControlLabel} from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
-import {Form, Label, StepDescription} from 'semantic-ui-react';
+import {Form, Label} from 'semantic-ui-react';
 import MajorSelect from '../../components/MajorSelect';
 
 import {useHistory} from 'react-router-dom';
-
 import {AppContext} from '../../AppContext';
 
 
@@ -64,7 +63,7 @@ function EditCourse(props) {
             let value = search.split('=')[1]
             for (let i = 0, length = data.length; i < length; i++) {
                 let course = data[i];
-                if (value == course._id) {
+                if (value === course._id) {
                     console.log(course)
                     setCourseID(course._id)
                     setCourseName(course.course_name)
@@ -80,7 +79,7 @@ function EditCourse(props) {
         } else {
             history.push("/admin");
         }
-    });
+    }, [data, history, props]);
 
     return (
         <>

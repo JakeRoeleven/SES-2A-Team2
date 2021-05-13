@@ -5,12 +5,14 @@ import {AppContext} from '../AppContext';
 import Alert from '../components/Alert';
 import { useHistory } from "react-router-dom";
 import CheckCircle from '@material-ui/icons/CheckCircle';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 function Completed() {  
 
     let history = useHistory();
     const data = useContext(AppContext);
 
+    const [loading, setLoading] = useState(true);
     const [completed, setCompleted] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -30,9 +32,11 @@ function Completed() {
             let complete = await student_obj.courses_completed;
 			sessionStorage.setItem('complete', complete);
 			setCompleted(complete)
+            setLoading(false)
 		}).catch(() => {
             setShowAlert(true)
             setAlertMessage('Failed to load completed courses')
+            setLoading(false)
         })
 	}, []);
 
@@ -83,6 +87,12 @@ function Completed() {
         checkUserDetails()
     }, [checkUserDetails])
 
+    const FakeCompletedCard = () => {
+        return (
+            <Skeleton variant="rect" width={'auto'} height={'6vh'} style={{marginBottom: '10px'}} />
+        );
+    }
+
     const CompletedCard = (subject) => {
         
         let code = subject['code'];
@@ -107,8 +117,23 @@ function Completed() {
             </li>
         );
     }
-
-    if (Object.keys(completed).length < 1) {
+   
+    if (loading) {
+        return (
+            <>
+            <Container maxWidth={false}>
+                <Typography variant='h5' style={{ paddingTop: '10px' }}> Completed Subject List </Typography>
+                <br />
+                <ul style={{listStyleType: 'none', paddingLeft: '0px'}}>
+                    <FakeCompletedCard />
+                    <FakeCompletedCard />
+                    <FakeCompletedCard />
+                </ul>
+            </Container>
+            <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
+            </>
+        )
+    } else if (Object.keys(completed).length < 1) {
         return (
             <>
             <Container maxWidth={false}>
