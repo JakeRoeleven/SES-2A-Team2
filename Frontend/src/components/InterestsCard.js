@@ -54,9 +54,11 @@ function InterestsCard(props) {
     }, []);
 
     useEffect(() => {
-        console.log(props)
+        if (props.completed !== false) {
+            setCompletedSubjects(props.completed)
+        } 
         if (!fetchedStudent) fetchStudent();
-    }, [fetchStudent, fetchedStudent]);
+    }, [fetchStudent, fetchedStudent, setCompletedSubjects, completedSubjects, props]);
 
     if (loading) {
         return (

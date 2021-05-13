@@ -24,8 +24,9 @@ function CoursesCompleted(props) {
     }, [courses, data, props.courses]);
 
     useEffect(() => {
+        if (props.courses) setSubjects(props.courses)
         findSubjects();
-    }, [findSubjects]);
+    }, [findSubjects, props]);
 
     let limit = Object.keys(subjects).length;
     if (props.limit) limit = props.limit;
@@ -38,6 +39,7 @@ function CoursesCompleted(props) {
                     .map((index) => (
                         <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index]} color='primary'/>
                     ))}
+                <p style={{ display: 'none' }}> {props.courses} </p>
                 <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={'Show All'} onClick={() => history.push('/completed')} />
             </>
         );
@@ -49,6 +51,7 @@ function CoursesCompleted(props) {
                     .map((index) => (
                         <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index]} color='primary'/>
                     ))}
+                      <p style={{ display: 'none' }}> {props.courses} </p>
                 <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={'More Details'} onClick={() => history.push('/completed')} />
             </>
         );

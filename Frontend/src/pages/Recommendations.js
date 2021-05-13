@@ -5,7 +5,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import SubjectCard from '../components/SubjectCard';
 import Button from '@material-ui/core/Button';
-
+import ReplayIcon from '@material-ui/icons/Replay';
 import { AppContext } from '../AppContext';
 import InterestsCard from '../components/InterestsCard';
 
@@ -60,7 +60,7 @@ function Recommendations() {
 
     const ResetButton = () => {
         if (Object.keys(results).length > 0) {
-           return <Button variant="contained" style={{ float: 'right' }} onClick={() => setResults({})}> Reset Recommendations</Button>
+           return <Button variant="contained" startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => setResults({})}> Clear Recommendations</Button>
         } else {
            return null;
         }

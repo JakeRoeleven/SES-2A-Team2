@@ -33,6 +33,18 @@
     color: inherit;
 }
 
+.active_link div {
+    color: white;
+}
+
+.active_link div:last-child {
+    background: linear-gradient(-45deg, #6c05a8, #4d3ce7, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 5s ease infinite;
+    color: white;
+}
+
+
 .homeGrid {
     padding-top: 3%;
     place-content: center;

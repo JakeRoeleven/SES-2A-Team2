@@ -127,7 +127,9 @@ function SubjectCard(props) {
                         setShowAlert(true)
 
                         if (props.callback) {
-                            props.callback(await courses)
+                            setTimeout(() => {
+                                props.callback(courses)
+                            }, 1000)
                         }
 
                     } else {

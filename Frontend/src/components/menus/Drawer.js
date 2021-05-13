@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -14,6 +14,28 @@ import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
 export default function AppDrawer(props) {
    
     const classes = props.styles;
+
+    console.log(window.location.pathname)
+
+    const [recommendationsActive, setRecommendations] = useState(false)
+    const [accountActive, setAccountActive] = useState(false)
+    const [searchActive, setSearchActive] = useState(false)
+    const [favActive, setFavActive] = useState(false)
+    const [compActive, setCompActive] = useState(false)
+
+
+
+
+    useEffect(() => {
+        let location = window.location.pathname
+
+        if (location.includes('recommendations')) setRecommendations(true)
+        if (location.includes('account')) setAccountActive(true)
+        if (location.includes('search')) setSearchActive(true)
+        if (location.includes('favorites')) setFavActive(true)
+        if (location.includes('completed')) setCompActive(true)
+
+    }, [window]);
 
     return (
         <Drawer
@@ -31,32 +53,32 @@ export default function AppDrawer(props) {
         >
             <div className={classes.toolbar}>
             </div>
-            <List>
-                <a className="unstyled_link" href={'/recommendations'}>
+            <List style={{paddingTop: '0px'}}>
+                <a className={"unstyled_link " + (recommendationsActive ? 'active_link' : '')}  href={'/recommendations'}>
                     <ListItem button>
                         <ListItemIcon><Transform/></ListItemIcon>
                         <ListItemText primary={"Recommendations"} />
                     </ListItem>
                 </a>
-                <a className="unstyled_link" href={'/search'}>
+                <a className={"unstyled_link " + (searchActive ? 'active_link' : '')}  href={'/search'}>
                     <ListItem button>
                         <ListItemIcon><SearchIcon/></ListItemIcon>
                         <ListItemText primary={"Search"} />
                     </ListItem>
                 </a>
-                <a className="unstyled_link"  href={'/account'}>
+                <a className={"unstyled_link " + (accountActive ? 'active_link' : '')}  href={'/account'}>
                     <ListItem button>
                         <ListItemIcon><AccountCircle/></ListItemIcon>
                         <ListItemText primary={"Account"} />
                     </ListItem>
                 </a>
-                <a className="unstyled_link" href={'/favorites'}>
+                <a className={"unstyled_link " + (favActive ? 'active_link' : '')}  href={'/favorites'}>
                     <ListItem button>
                         <ListItemIcon><Star/></ListItemIcon>
                         <ListItemText primary={"Favorites"} />
                     </ListItem>
                 </a>
-                <a className="unstyled_link" href={'/completed'}>
+                <a className={"unstyled_link " + (compActive ? 'active_link' : '')}  href={'/completed'}>
                     <ListItem button>
                         <ListItemIcon><CheckCircleOutline/></ListItemIcon>
                         <ListItemText primary={"Completed"} />
