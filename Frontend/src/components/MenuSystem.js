@@ -88,7 +88,7 @@ function StudentMenu(props) {
             <>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppMenu handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} setAuthenticated={props.setAuthenticated} />
+                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} setAuthenticated={props.setAuthenticated} />
                     <AppDrawer handleDrawerClose={handleDrawerClose} styles={classes} open={open} theme={theme} />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
@@ -102,7 +102,7 @@ function StudentMenu(props) {
             <>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppMenu handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} />
+                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
                         {props.children}

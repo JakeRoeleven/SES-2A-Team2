@@ -11,6 +11,7 @@ import SubjectCard from '../components/SubjectCard';
 import CircularProgress from  '@material-ui/core/CircularProgress';
 
 import {AppContext} from '../AppContext';
+import Pagination from '@material-ui/lab/Pagination';
 
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
@@ -39,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Search() {
+function Search(props) {
 
     const data = useContext(AppContext);
     const classes = useStyles();
@@ -52,6 +53,7 @@ function Search() {
     
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [page, setPage]= useState(1);
 
     // ALert related state
     const [showAlert, setShowAlert] = useState(false);
@@ -107,15 +109,21 @@ function Search() {
 
             )
         }
-        
+
+        let start = (0 + (page - 1) * 5)
+        let end = (5 + (page - 1) * 5)
+        let count = parseInt(Object.keys(results).length / 5);
 
         if (Object.keys(results).length < 1) {
             return  <p style={{textAlign: 'center'}}> Use the search bar to find subjects by name or subject code... </p>
         } else {
             return (
-                Object.keys(results).slice(0, 5).map((subject, key) => (
+                <>
+                {Object.keys(results).slice(start, end).map((subject, key) => (
                     <SubjectCard key={key} subject={results[subject]} />
-                ))
+                ))}
+                <Pagination style={{ float: 'right'}} count={count} onChange={(event, page) => setPage(page)} page={page} />
+                </>
             );
         }
 

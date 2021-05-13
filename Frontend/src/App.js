@@ -46,6 +46,7 @@ function App() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [signupComplete, setSignupComplete] = useState(false);
 
+    const [showProgress, setShowProgress] = useState(false);
 
     const checkUserDetails = useCallback(async () => {
 
@@ -102,7 +103,6 @@ function App() {
     // Fetch full subject list from API
     const fetchSubjects = useCallback(async (withLoading) => {
 
-        console.log('finisng subject')
         if (withLoading) setLoading(true)
 
         fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
@@ -194,7 +194,7 @@ function App() {
         return (
             <>
                 <Router>
-                    <NavWrapper setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
+                    <NavWrapper showProgress={showProgress} setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
                         <Provider value={subjects}>
                             <Switch>
                                 <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
@@ -205,7 +205,7 @@ function App() {
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/home' component={Home} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/subject' component={Subject} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/recommendations' component={Recommendations} />
-                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/search' component={Search} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/search' component={(props) => <Search {...props} setShowProgress={setShowProgress} />} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/account' component={Account} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/favorites' component={Favorites} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/completed' component={Completed} />

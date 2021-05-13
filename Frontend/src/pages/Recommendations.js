@@ -12,7 +12,9 @@ import InterestsCard from '../components/InterestsCard';
 function Recommendations() {  
     
     const data = useContext(AppContext);
+
     const [results, setResults] = useState({}); 
+    const [completed, setCompleted] = useState(false);
    
     const findSubjects = (recommendations) => {
         let subject_obj = {};
@@ -40,6 +42,22 @@ function Recommendations() {
         });
     }
 
+    const callback = (data) => {
+        
+        let curr_res =  results;
+        let new_res = {}
+        
+        Object.keys(curr_res).forEach(elem => {
+            if (!data.includes(elem)) {
+                new_res[elem] = curr_res[elem]
+            }
+        });
+
+        setResults(new_res);
+        setCompleted(data);
+
+    }
+
     const ResetButton = () => {
         if (Object.keys(results).length > 0) {
            return <Button variant="contained" style={{ float: 'right' }} onClick={() => setResults({})}> Reset Recommendations</Button>
@@ -52,11 +70,11 @@ function Recommendations() {
         if (Object.keys(results).length > 0) {
             return (
                 Object.keys(results).slice(0, 5).map((subject, key) => (
-                    <SubjectCard coursesUpdated={() => console.log('test')} key={key} subject={results[subject]} />
+                    <SubjectCard key={key} subject={results[subject]} callback={callback} />
                 ))
             )
          } else {
-            return <p style={{ textAlign:'center' }}> Click find results to begin your search... </p>;
+            return <p style={{ textAlign:'center' }}>  </p>;
          }
     }
 
@@ -74,7 +92,7 @@ function Recommendations() {
                     </Grid>
                 </Grid>
                 <br />
-                <InterestsCard findRecommendations={findRecommendations}></InterestsCard>
+                <InterestsCard completed={completed} findRecommendations={findRecommendations}></InterestsCard>
                 <br />
                 <Results />
             </Container>

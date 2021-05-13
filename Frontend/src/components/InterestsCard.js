@@ -54,22 +54,21 @@ function InterestsCard(props) {
     }, []);
 
     useEffect(() => {
+        console.log(props)
         if (!fetchedStudent) fetchStudent();
     }, [fetchStudent, fetchedStudent]);
 
     if (loading) {
         return (
             <>
-                <Container maxWidth={false}>
-                    <Card elevation={24} style={{padding: '1%', overflow: 'visible', textAlign: 'center'}}>
-                        <CircularProgress />
-                    </Card>
+                <Container style={{ textAlignLast: 'center' , paddingTop: '100px'}} maxWidth={false}>
+                    <CircularProgress />
                 </Container>
             </>
         );
     } else {
         return (
-            <Card elevation={6} style={{marginBottom: '1%', padding: '1%', overflow: 'visible'}}>
+            <Card elevation={8} style={{borderRadius: '25px', marginBottom: '1%', padding: '1%', overflow: 'visible'}}>
                 <CardContent>
                     <Typography style={{marginBottom: '0.5%'}}> Your Interests </Typography>
 
@@ -82,9 +81,9 @@ function InterestsCard(props) {
                     <br />
 
                     <Typography style={{marginBottom: '0.5%'}}> Your Completed Courses </Typography>
-                    <CoursesCompleted courses={completedSubjects} student={fetchedStudent} />
+                    <CoursesCompleted courses={completedSubjects} student={fetchedStudent} limit={5} />
 
-                    <Button variant='contained' style={{float: 'right'}} color='primary' size='small' onClick={() => props.findRecommendations(getStudentObj())}>
+                    <Button variant='contained' style={{float: 'right'}} color='primary' onClick={() => props.findRecommendations(getStudentObj())}>
                         Find Recommendations
                     </Button>
                     <br />

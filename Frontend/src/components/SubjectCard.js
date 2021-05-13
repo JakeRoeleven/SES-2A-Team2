@@ -125,12 +125,18 @@ function SubjectCard(props) {
                         if (courses.includes(code)) setAlertMessage('Added '+ code + ' to courses complete')
                         else setAlertMessage('Removed '+ code + ' to courses complete')
                         setShowAlert(true)
+
+                        if (props.callback) {
+                            props.callback(await courses)
+                        }
+
                     } else {
                         setShowAlert(true)
                         setAlertMessage('Failed to set course complete')
                     }
                 })
                 .catch((err) => {
+                    console.log(err)
                     setShowAlert(true)
                     setAlertMessage('Failed to set course complete')
             });
@@ -150,7 +156,7 @@ function SubjectCard(props) {
     }
 
     const CompleteCircle = () => {   
-        if (completed.includes(code)) {
+        if (completed.includes(code) || complete) {
             return <CheckCircle style={{ color: '#43a047' }}/>
         } else {
             return  <CheckCircleOutline/>

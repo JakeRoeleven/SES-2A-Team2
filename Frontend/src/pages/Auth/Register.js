@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import firebase from '../../firebase';
 import {Button, TextField, Typography, Paper} from '@material-ui/core';
-import {Redirect} from 'react-router-dom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Alert from '../../components/Alert';
 
 function Register(props) {
@@ -14,8 +14,10 @@ function Register(props) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
-	
+    const [loading, setLoading] = useState(false)
+    
     async function login() {
+        setLoading()
         try {
             await firebase.login(email, password).then(() => {
                 props.setAuthenticated(true);
@@ -23,11 +25,14 @@ function Register(props) {
                 props.history.replace('/new/student');
             });
         } catch (error) {
-            alert(error);
+            setAlertMessage(error.message)
+            setShowAlert(true)
+            setLoading(false)
         }
     }
 
     async function register() {
+        setLoading(true)
         try {
             if (confirmPassword === password) {
                 await firebase.register(email, password).then((res)=> {
@@ -36,14 +41,23 @@ function Register(props) {
             } else {
                 setAlertMessage("Passwords do not match!")
                 setShowAlert(true)
+                setLoading(false)
             }
         } catch (error) {
             setAlertMessage(error.message)
             setShowAlert(true)
+            setLoading(false)
         }
     }
 
-    console.log(props)
+
+    const RegisterButton = () => {
+        if (loading) {
+            return <CircularProgress />
+        } else {
+            return <Button fullWidth={true} variant="contained" color="primary" size='large' onClick={() => register()}> Register </Button>
+        }
+    }
 
 
     return (
@@ -68,7 +82,7 @@ function Register(props) {
 
                         <br />
                         <br />
-                        <Button variant="contained" color="primary" size='large' onClick={() => register()}> Register </Button>
+                        <RegisterButton />
 
                         <br />
 
