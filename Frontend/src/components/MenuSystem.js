@@ -82,8 +82,8 @@ function StudentMenu(props) {
     };
 
     console.log(props)
-    
-    if (props.authenticated && props.signupComplete) {
+    let alreadySignedUp = sessionStorage.getItem('signup_complete');
+    if (props.authenticated && alreadySignedUp === "true") {
         return (
             <>
                 <div className={classes.root}>

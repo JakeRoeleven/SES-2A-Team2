@@ -130,8 +130,7 @@ class StudentService {
 
     async signupComplete(id) {
         let student =  await Student.findOne({ _id: id }).lean();
-        console.log(student)
-        if (student.name && student.major && student.degree) {
+        if (student && student.name && student.major && student.degree) {
             return true;
         } else {
             return false;

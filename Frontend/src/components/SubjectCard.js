@@ -131,7 +131,6 @@ function SubjectCard(props) {
                     setAlertMessage('Failed to set course complete')
             });
         } else {
-            debugger;
             setShowAlert(true)
             setAlertMessage('Failed to set course complete')
         }

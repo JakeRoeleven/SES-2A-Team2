@@ -78,27 +78,30 @@ class StudentForm extends Component {
     };
 
     onSubmit = async (event) => {
+
         let student = this.getStudentData();
         this.setState({loading: true});
         event.preventDefault();
+   
         fetch('http://localhost:8080/api/new-student', {
         	method: 'POST',
         	body: JSON.stringify(student),
         	headers: {
         		'Content-Type': 'application/json'
         	}
-        })
-            .then(async (res) => {
-                if (res.status === 200) {
-                    this.props.history.push('/recommendations');
-                } else {
-                    const error = JSON.parse(await res.json());
-                    alert(error);
-                }
-            })
-            .catch((err) => {
-                alert(err);
-            });
+        }).then(async (res) => {
+            if (res.status === 200) {
+                this.props.setSignupComplete(true);
+                this.props.fetchSubjects(true);
+                sessionStorage.setItem('signup_complete', true);
+                this.props.history.push('/recommendations');
+            } else {
+                const error = JSON.parse(await res.json());
+                alert(error);
+            }
+        }).catch((err) => {
+            alert(err);
+        });
     };
 
     render() {

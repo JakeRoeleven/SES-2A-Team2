@@ -28,6 +28,7 @@ import Register from './pages/Auth/Register';
 import StudentForm from './pages/StudentForm';
 import AddCourse from './pages/AdminComponents/AddCourse';
 import EditCourse from './pages/AdminComponents/EditCourse';
+import NewStudentRoute from './components/NewStudentRoute';
 
 function App() {
     // App Context
@@ -40,13 +41,11 @@ function App() {
 
     const [isAuthenticated, setAuth] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [signupComplete, setSignupComplete] = useState(true);
+    const [signupComplete, setSignupComplete] = useState(false);
 
 
     const checkUserDetails = useCallback(async () => {
 
-		console.log("Checking details")
-		
 		if (firebase.getCurrentUsername() !== null) {
             setAuth(true);
             let user_id = await firebase.getCurrentUser();
@@ -55,34 +54,38 @@ function App() {
                 let id = user_id['X']['X'];
 				console.log("setting id")
                 sessionStorage.setItem('user_id', id);
+                await fetch(`http://localhost:8080/api/user/${id}`, {
+                    crossDomain: true,
+                    mode: 'cors',
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                    },
+                }).then(async (res) => {
+                    let data = await res.json();
+                    setLoading(false)
+                    if (data.AccountType === 'admin') {
+                        setIsAdmin(true);
+                    } else {
+                        if (data.signupComplete) {
+                            fetchSubjects();
+                            setSignupComplete(true);
+                            sessionStorage.setItem('favorites', data.favorite_subjects);
+                            sessionStorage.setItem('favorites', data.favorite_subjects);
+                            sessionStorage.setItem('signup_complete', true);
+                        } else {
+                            setSignupComplete(false);
+                        }
+                    }
+                }).catch((err) => {
+                    setError(true);
+                    setLoading(false)
+                });
+            } else {
+                setAuth(false)
+				setLoading(false)
             }
-			await fetch(`http://localhost:8080/api/user/${user_id}`, {
-				crossDomain: true,
-				mode: 'cors',
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					'Access-Control-Allow-Origin': '*',
-				},
-			}).then(async (res) => {
-				let data = await res.json();
-				setLoading(false)
-				console.log('user')
-				if (data.AccountType === 'admin') {
-					setIsAdmin(true);
-				} else {
-					console.log(data)
-					if (data.signupComplete) {
-
-						setSignupComplete(true);
-						sessionStorage.setItem('favorites', data.favorite_subjects);
-						sessionStorage.setItem('courses_completed', data.courses_completed);
-					}
-				}
-			}).catch((err) => {
-				setError(true);
-				setLoading(false)
-			});
         } else {
 			if (sessionStorage.getItem('user_id') === null) {
 				setAuth(false)
@@ -94,7 +97,11 @@ function App() {
     }, [setAuth, setSignupComplete, setIsAdmin]);
 
     // Fetch full subject list from API
-    const fetchSubjects = useCallback(async () => {
+    const fetchSubjects = useCallback(async (withLoading) => {
+
+        console.log('finisng subject')
+        if (withLoading) setLoading(true)
+
         fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
             crossDomain: true,
             mode: 'cors',
@@ -106,6 +113,7 @@ function App() {
         }).then(async (res) => {
 			let data = await res.json();
 			setSubjects(data);
+            if (withLoading) setLoading(false)
 
 			// Record the current date for local storage
 			let currentTime = new Date();
@@ -115,8 +123,10 @@ function App() {
 			localStorage.setItem('hasLoaded', true);
 			localStorage.setItem('subjects', JSON.stringify(data));
 			localStorage.setItem('cacheTime', cachedTime);
+
         }).catch((err) => {
             setError(err);
+            if (withLoading) setLoading(false)
         });
     }, [setSubjects, setError]);
 
@@ -130,7 +140,6 @@ function App() {
 			const hasLoaded = localStorage.getItem('hasLoaded');
 			const subjects = JSON.parse(localStorage.getItem('subjects'));
 			const cachedTime = localStorage.getItem('cacheTime');
-	
 			if (cachedTime < new Date()) {
 				fetchSubjects();
 			} else if (!hasLoaded && typeof subject !== 'undefined' && subjects.length > 10) {
@@ -189,7 +198,7 @@ function App() {
                                 <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth}  checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/register' component={(props) => <Register {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/forgot-password' component={ForgotPassword} />
-                                <Route exact path='/new/student' component={StudentForm} />
+                                <NewStudentRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/new/student' component={(props) => <StudentForm {...props} setSignupComplete={setSignupComplete} fetchSubjects={fetchSubjects}/>} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/home' component={Home} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/recommendations' component={Recommendations} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/search' component={Search} />
