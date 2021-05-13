@@ -42,7 +42,7 @@ function Completed() {
 
     const toggleComplete = async (code) => {
 
-        let url = `http://localhost:8080/api/student/completed`
+        let url = `http://${process.env.REACT_APP_SERVER}/api/student/completed`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {

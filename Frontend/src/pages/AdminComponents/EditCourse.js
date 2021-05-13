@@ -24,7 +24,7 @@ function EditCourse(props) {
     const [courseDescription, setCourseDescription] = useState('');
 
     const editCourse = async () => {
-        // fetch(`http://localhost:8080/api/new-subject`, {
+        // fetch(`http://${process.env.REACT_APP_SERVER}/api/new-subject`, {
         //     crossDomain: true,
         //     mode: 'cors',
         //     method: 'POST',
