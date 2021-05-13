@@ -6,7 +6,8 @@ import {
     CardContent,
     Button,
     Typography,
-    IconButton
+    IconButton,
+    Chip
 } from '@material-ui/core';
 
 import StarOutline from '@material-ui/icons/StarOutline';
@@ -14,36 +15,49 @@ import Star from '@material-ui/icons/Star';
 import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 
+import Alert from '../components/Alert';
+
 function SubjectCard(props) {
 
     const [code, setCode] = useState('');
     const [title, setTitle] = useState('');
     const [faculty, setFaculty] = useState('');
     const [displayParagraph, setDisplayParagraph] = useState('');
+    const [showFullCard, setShowFullCard] = useState(false);
    
     const [favorite, setFavorite] = useState(false);
     const [complete, setComplete] = useState(false);
+    const [favorites, setFavorites] = useState([]);
+    const [completed, setCompleted] = useState([]);
 
-    const [favorites, setFavorites] = useState([])
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     useEffect(() => {
 
         let favorites = sessionStorage.getItem('favorites');
         if (favorites) setFavorites(favorites)
 
+        let completed = sessionStorage.getItem('complete');
+        if (completed) setCompleted(completed)
+
         setCode(props.subject._id)
         setTitle(props.subject._id + " - " + props.subject.course_name);
         setFaculty("Faculty of  " + props.subject.faculty)
-        setDisplayParagraph(props.subject.description.substring(0, 300).trim());
-    }, [setTitle, setFaculty, setDisplayParagraph, props]);
 
-    const displayFullDescription = () => {
-        setDisplayParagraph(props.subject.description)
-    }
+
+        let des = props.subject.description.substring(0, 500).trim();
+        let words = des.split(" ");
+        let last = words[words.length - 1]
+        des = des.replace(last, "");
+        des = des.trim();
+        setDisplayParagraph(des + '...');
+
+    }, [setTitle, setFaculty, setDisplayParagraph, props]);
 
     const toggleFavorite = async (code) => {
 
-        let url = 'http://localhost:8080/api/student/favorites'
+        let url = `http://localhost:8080/api/student/favorites`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {
@@ -59,80 +73,79 @@ function SubjectCard(props) {
             })
                 .then(async (res) => {
                     if (res.status === 200) {
-                        setFavorite(!favorite)
 
+
+                        setFavorite(!favorite)
                         let fav_res = await res.json()
                         setFavorites(await fav_res)
                         sessionStorage.setItem('favorites', await fav_res)
+
+                        if (fav_res.includes(code)) setAlertMessage('Set '+ code + ' as favorite');
+                        else  setAlertMessage('Removed '+ code + ' as favorite');
+                        setShowAlert(true)
+
+
                     } else {
-                        const error = JSON.parse(await res.json());
-                        alert(error)
+                        setShowAlert(true)
+                        setAlertMessage('Failed to set favorite')
                     }
                 })
                 .catch(err => {
-                    alert(err)
+                    setShowAlert(true)
+                    setAlertMessage('Failed to set favorite')
             });
         } else {
-            alert('error')
+            setShowAlert(true)
+            setAlertMessage('Failed to set favorite')
         }
     }
 
-    const toggleComplete = async (id) => {
-        
-        setComplete(!complete);
-        let old_student = {};
+    const toggleComplete = async (code) => {
 
-        let student_id = sessionStorage.getItem('user_id');
-        await fetch(`http://localhost:8080/api/student/${student_id}`, {
-            crossDomain: true,
-            mode: 'cors',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-            },
-        }).then(async (res) => {
-            old_student = await res.json();
-        }).catch((err) => {
-            console.log(err);
-        });
-
-        let completed = old_student['courses_completed'];
-        completed.push(id)
-
-        // Make the student object
-        let student = {}
-        student['id'] = sessionStorage.getItem('user_id');
-        student["student_data"] = {}
-        student["student_data"]['name'] = old_student.name;
-        student["student_data"]['degree'] = old_student.degree;
-        student["student_data"]['major'] = old_student.major;
-        student["student_data"]['year'] = old_student.year;
-        student["student_data"]['postgraduate'] = old_student.postgraduate;
-        student["student_data"]['interests'] = old_student.interests;
-        student["student_data"]['courses_completed'] = completed;
-
-        let url = 'http://localhost:8080/api/update-student'
-		if (old_student == null) url = 'http://localhost:8080/api/new-student'
-
-        fetch(url, {
-            method: 'POST',
-            body: JSON.stringify(student),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(async (res) => {
-                if (res.status === 200) {
-                    props.coursesUpdated()
-                } else {
-                    const error = JSON.parse(await res.json());
-                    alert(error)
+        let url = `http://localhost:8080/api/student/completed`
+        let id = sessionStorage.getItem('user_id');
+    
+        if (id && code) {
+            await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({
+                    "subject_code": code ,
+                    "id": id
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
                 }
             })
-            .catch(err => {
-                alert(err)
-        });
+                .then(async (res) => {
+                    if (res.status === 200) {
+                        //props.coursesUpdated()
+                        setComplete(!complete)
+                        let courses = await res.json()
+                        if (courses.includes(code)) setAlertMessage('Added '+ code + ' to courses complete')
+                        else setAlertMessage('Removed '+ code + ' to courses complete')
+                        setShowAlert(true)
+
+                        if (props.callback) {
+                            setTimeout(() => {
+                                props.callback(courses)
+                            }, 1000)
+                        }
+
+                    } else {
+                        setShowAlert(true)
+                        setAlertMessage('Failed to set course complete')
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                    setShowAlert(true)
+                    setAlertMessage('Failed to set course complete')
+            });
+        } else {
+            setShowAlert(true)
+            setAlertMessage('Failed to set course complete')
+        }
+
     }
 
     const FavoriteStar = () => {   
@@ -144,15 +157,51 @@ function SubjectCard(props) {
     }
 
     const CompleteCircle = () => {   
-        if (complete) {
+        if (completed.includes(code) || complete) {
             return <CheckCircle style={{ color: '#43a047' }}/>
         } else {
             return  <CheckCircleOutline/>
         }
     }
 
+    const Content = () => {
+        if (showFullCard) {
+            return   (
+                <CardContent style={{paddingLeft: '16px', paddingTop: '0px'}}>  
+                    <Chip label={faculty} /> <Chip variant="outlined" label={props.subject.credit_points} />
+                    <Typography paragraph style={{ paddingTop: '10px'}}> {props.subject.description} </Typography>
+                    <p> Pre-requisites: 
+                    {props.subject['pre-requisites'].map((req) => (
+                        <span> {req} </span>
+                    ))}
+                    </p>
+                    <p> Anti-requisites: 
+                    {props.subject['anti-requisites'].map((req) => (
+                        <span> {req} </span>
+                    ))}
+                    </p>
+                </CardContent>
+            )      
+        } else {
+            return (
+                <CardContent style={{paddingLeft: '16px', paddingTop: '0px'}}>  
+                    <Chip label={faculty} />
+                    <Typography paragraph style={{ paddingTop: '10px'}}> {displayParagraph} </Typography>
+                </CardContent>
+            ) 
+        }
+    }
+
+    const ShowMore = () => {
+        if (showFullCard) {
+            return <Button variant="contained" target="_blank" color="primary" size='small' onClick={()=> setShowFullCard(false)} >Show Less</Button>
+        } else {
+            return <Button variant="contained" target="_blank" color="primary" size='small' onClick={()=> setShowFullCard(true)} >Learn More</Button>
+        }
+    }
+
     return (
-        <Card style={{marginBottom: "1%", overflow: 'visible'}}>
+        <Card elevation={4} style={{marginBottom: "1%", overflow: 'visible'}}>
            
            <CardContent style={{display: "flex", paddingBottom: '0px'}}>   
                
@@ -168,15 +217,13 @@ function SubjectCard(props) {
 
             </CardContent>
 
-            <CardContent style={{paddingLeft: '16px', paddingTop: '0px'}}>  
-                <Typography variant="caption"> {faculty} </Typography>
-                <Typography paragraph style={{ paddingTop: '10px'}}> {displayParagraph} <span onClick={() => displayFullDescription()} style={{ fontSize: '0.6em'}}>Read More...</span> </Typography>
-            </CardContent>
+            <Content />
             
             <CardActions style={{paddingRight: '28px', paddingBottom: '12px'}}>
-                <Button  style={{ marginLeft: "auto"}} target="_blank" color="primary" size='small'  href={props.subject.link}>Visit Handbook</Button>
+                <Button variant="contained" style={{ marginLeft: "auto"}} target="_blank" size='small'  href={props.subject.link}>Visit Handbook</Button>
+                <ShowMore />
             </CardActions>
-        
+            <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
         </Card>
     );
 }
