@@ -89,7 +89,7 @@ function App() {
                 let id = user_id['X']['X'];
 				console.log("setting id")
                 sessionStorage.setItem('user_id', id);
-                await fetch(`http://localhost:8080/api/user/${id}`, {
+                await fetch(`http://${process.env.REACT_APP_SERVER}/api/user/${id}`, {
                     crossDomain: true,
                     mode: 'cors',
                     method: 'GET',

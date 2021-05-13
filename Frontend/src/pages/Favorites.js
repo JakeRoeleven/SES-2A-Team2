@@ -44,7 +44,7 @@ function Favorites() {
 
     const toggleFavorite = async (code) => {
 
-        let url = `http://localhost:8080/api/student/favorites`
+        let url = `http://${process.env.REACT_APP_SERVER}/api/student/favorites`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {
