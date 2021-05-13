@@ -29,6 +29,7 @@ import StudentForm from './pages/StudentForm';
 import AddCourse from './pages/AdminComponents/AddCourse';
 import EditCourse from './pages/AdminComponents/EditCourse';
 import NewStudentRoute from './components/NewStudentRoute';
+import Subject from './pages/Subject';
 
 function App() {
     // App Context
@@ -200,6 +201,7 @@ function App() {
                                 <Route exact path='/forgot-password' component={ForgotPassword} />
                                 <NewStudentRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/new/student' component={(props) => <StudentForm {...props} setSignupComplete={setSignupComplete} fetchSubjects={fetchSubjects}/>} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/home' component={Home} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/subject' component={Subject} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/recommendations' component={Recommendations} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/search' component={Search} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/account' component={Account} />

@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-
 import { Typography, Container, Button, IconButton } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Star from '@material-ui/icons/Star';
-
 import {AppContext} from '../AppContext';
+import Alert from '../components/Alert';
+import { useHistory } from "react-router-dom";
 
 function Favorites() {  
 
+    let history = useHistory();
+
     const data = useContext(AppContext);
     const [favorites, setFavorites] = useState([]);
+    
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
 
     const checkUserDetails = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
@@ -26,13 +31,15 @@ function Favorites() {
             let favs = await student_obj.favorite_subjects;
 			sessionStorage.setItem('favorites', favs);
 			setFavorites(favs)
-		}).catch((err) => {
-        }).then(() => {
-		});
+		}).catch(() => {
+            setShowAlert(true)
+            setAlertMessage('Failed to load favorites')
+        })
 	}, []);
 
-    const removeFavorite = async (code) => {
-        let url = `http://${process.env.REACT_APP_SERVER}/api/student/favorites`
+    const toggleFavorite = async (code) => {
+
+        let url = `http://localhost:8080/api/student/favorites`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {
@@ -51,17 +58,26 @@ function Favorites() {
                         let fav_res = await res.json()
                         setFavorites(await fav_res)
                         sessionStorage.setItem('favorites', await fav_res)
+                        if (fav_res.includes(code)) setAlertMessage('Set '+ code + ' as favorite');
+                        else  setAlertMessage('Removed '+ code + ' as favorite');
+                        setShowAlert(true)
                     } else {
-                        const error = JSON.parse(await res.json());
-                        alert(error)
+                        setShowAlert(true)
+                        setAlertMessage('Failed to set favorite')
                     }
                 })
-                .catch(err => {
-                    alert(err)
+                .catch(() => {
+                    setShowAlert(true)
+                    setAlertMessage('Failed to set favorite')
             });
         } else {
-            alert('error')
+            setShowAlert(true)
+            setAlertMessage('Failed to set favorite')
         }
+    }
+
+    const learnMore = async (code) => {
+        history.push(`/subject/?id=${code}`);
     }
 
     useEffect(() => {
@@ -78,14 +94,13 @@ function Favorites() {
             }
         })
 
- 
         return (
             <li>
                 <Paper elevation={3} style={{marginBottom: '10px', padding: '1.5%'}}> 
                     {code + " " + subject_obj["course_name"]}
                     <div style={{float: 'right'}}>
-                        <Button style={{marginTop: '-14px', marginRight: '10px'}}> Learn More </Button>
-                        <IconButton style={{marginTop: '-14px', marginLeft: "auto"}} onClick={() => removeFavorite(code)}>
+                        <Button style={{marginTop: '-14px', marginRight: '10px'}} onClick={() => learnMore(code)}> Learn More </Button>
+                        <IconButton style={{marginTop: '-14px', marginLeft: "auto"}} onClick={() => toggleFavorite(code)}>
                                 <Star style={{ color: '#ffc107'}} />  
                         </IconButton>
                     </div>
@@ -115,6 +130,7 @@ function Favorites() {
                     ))}
                 </ul>
             </Container>
+            <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
             </>
         );    
     }
