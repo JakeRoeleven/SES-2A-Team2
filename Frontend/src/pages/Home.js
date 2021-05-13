@@ -3,16 +3,28 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
+import Transform from '@material-ui/icons/Transform';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Star from '@material-ui/icons/Star';
+
+import { useHistory } from "react-router-dom";
 
 function Home() {
 
+    let history = useHistory();
+
     const [name, setName] = useState('');
 
+ 
     // Get student details from database
     const fetchStudent = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
         if (id != null) {
-            fetch(`http://localhost:8080/api/student/${id}`, {
+            fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
                 crossDomain: true,
                 mode: 'cors',
                 method: 'GET',
@@ -41,21 +53,46 @@ function Home() {
     return (
         <>
             <CssBaseline />
-            <Container maxWidth={false}>
-            <Grid container spacing={3}>
-                <Grid item xs={8}>
+            <Container maxWidth={false} style={{ padding: '-16px'}}>
                     <Typography variant='h4'> Welcome, {name} </Typography>
                     <Typography variant='h6'> Get Started With Course Recommender </Typography>
+                    <Grid className={'homeGrid'} container spacing={2}>
+                        
+                        <Grid item xs={2}>
+                            <Paper onClick={() => history.push('/recommendations')} className={'homeCard'} elevation={3}>
+                                <Transform/><br /><br /><br />
+                                View Recommendations
+                            </Paper>
+                        </Grid>
 
-                    <ul>
-                        <a href='/recommendations'><li>View Recommendations</li></a>
-                        <a href='/search'><li>Search All Courses</li></a>
-                        <a href='/account'><li>Update Your Account</li></a>
-                        <a href='/favorites"'><li>View Your Favorite Courses</li></a>
-                    </ul>
-    
-                </Grid>
-            </Grid>
+                        <Grid item xs={2}>
+                            <Paper onClick={() => history.push('/search')} className={'homeCard'} elevation={3}>
+                                <SearchIcon/><br /><br /><br />
+                                Search Courses
+                            </Paper>
+                        </Grid>
+
+                        <Grid item xs={2}>
+                            <Paper onClick={() => history.push('/account')} className={'homeCard'}  elevation={3}>
+                                <AccountCircle/><br /><br /><br />
+                                Update Account
+                            </Paper>
+                        </Grid>
+
+                        <Grid item xs={2}>
+                            <Paper onClick={() => history.push('/favorites')} className={'homeCard'}  elevation={3}>
+                                <Star/><br /><br /><br />
+                                View Favorites
+                            </Paper>
+                        </Grid>
+
+                        <Grid item xs={2}>
+                            <Paper onClick={() => history.push('/completed')} className={'homeCard'}  elevation={3}>
+                                <CheckCircleOutline/><br /><br /><br />
+                                View Completed Courses
+                            </Paper>
+                        </Grid>    
+                    </Grid>
             </Container>
         </>
     ); 

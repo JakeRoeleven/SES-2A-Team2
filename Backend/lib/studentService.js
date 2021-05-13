@@ -80,7 +80,6 @@ class StudentService {
         await studentObject.save();
     }
 
-    
     async toggleStudentFavorite(id, subject_code) {
 
         let studentObject = await Student.findOne({'_id': id});
@@ -103,18 +102,38 @@ class StudentService {
         return(studentObject.favorite_subjects)
     }
 
+    async toggleStudentCoursesCompleted(id, subject_code) {
+
+        let studentObject = await Student.findOne({'_id': id});
+        let courses = studentObject.courses_completed
+        let new_courses = []
+
+        if (!courses.includes(subject_code)) {
+            new_courses = studentObject.courses_completed;
+            new_courses.push(subject_code)
+        } else {
+            for (let i = 0, length = courses.length; i < length; i++) {
+                if (courses[i] != subject_code) {
+                    new_courses.push(courses[i])
+                }
+            }
+        }
+
+        studentObject.courses_completed = new_courses;
+        await studentObject.save();
+        return(studentObject.courses_completed)
+    }
+
     async getStudent(id) {
         return await Student.findOne({ _id: id }).lean();
     }
 
     async signupComplete(id) {
         let student =  await Student.findOne({ _id: id }).lean();
-        console.log(student)
-        console.log(id)
-        if (student == null) {
-            return false;
+        if (student && student.name && student.major && student.degree) {
+            return true;
         } else {
-            return true
+            return false;
         }
     }
     

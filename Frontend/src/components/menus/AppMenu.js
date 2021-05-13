@@ -8,6 +8,7 @@ import { AppBar, Toolbar, Typography} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 function AppMenu(props) {
 
@@ -16,17 +17,20 @@ function AppMenu(props) {
 
     const handleLogout = async () => {
         await firebase.logout();
-        props.setAuthenticated(false)
-        debugger;
+        sessionStorage.removeItem('signup_complete');
+        sessionStorage.removeItem('user_id');
+        props.setAuthenticated(false);
         history.push("/login");
     } 
 
-
     return (
+        <>
+
         <AppBar position="fixed"  className={clsx(classes.appBar, {  [classes.appBarShift]: props.open, })}>
             <Toolbar>
-                <Typography variant='h6' className={classes.title}>
-                    Course Recommendation System
+                <img alt='' src={window.location.origin + '/small-light-logo.png'} style={{ cursor: 'pointer', width: '2vw', marginRight: '10px'}} onClick={() => history.push('/home')} ></img>
+                <Typography variant='h6' className={classes.title}  style={{ cursor: 'pointer' }} onClick={() => history.push('/home')} >
+                    Course Recommender
                 </Typography>
                 <div style={{marginLeft:'auto'}}>
                     <a href="/account" style={{ color: "inherit" }}>
@@ -34,12 +38,14 @@ function AppMenu(props) {
                             <AccountCircle />
                         </IconButton>
                     </a>
-                    <IconButton color="inherit" onClick={() => handleLogout}>
+                    <IconButton color="inherit" onClick={() => handleLogout()}>
                         <ExitToAppIcon />
                     </IconButton>
                 </div>
             </Toolbar>
+            <LinearProgress hidden={!props.showProgress} />
         </AppBar>
+        </>
     );
 }
 

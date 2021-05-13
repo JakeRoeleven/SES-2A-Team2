@@ -5,7 +5,6 @@ import AppMenu from './menus/AppMenu';
 import AppDrawer from './menus/Drawer';
 
 const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -66,10 +65,10 @@ const useStyles = makeStyles((theme) => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-    }
+    },
 }));
 
-function NavWrapper(props) {
+function StudentMenu(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
@@ -82,23 +81,15 @@ function NavWrapper(props) {
         setOpen(false);
     };
 
-    if (props.authenticated && props.signupComplete) {
+    console.log(props)
+    let alreadySignedUp = sessionStorage.getItem('signup_complete');
+    if (props.authenticated && alreadySignedUp === "true") {
         return (
             <>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppMenu
-                        handleDrawerOpen={handleDrawerOpen}
-                        styles={classes}
-                        open={false}
-                        setAuthenticated={props.setAuthenticated}
-                    />
-                    <AppDrawer
-                        handleDrawerClose={handleDrawerClose}
-                        styles={classes}
-                        open={open}
-                        theme={theme}
-                    />
+                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} setAuthenticated={props.setAuthenticated} />
+                    <AppDrawer handleDrawerClose={handleDrawerClose} styles={classes} open={open} theme={theme} />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
                         {props.children}
@@ -111,11 +102,7 @@ function NavWrapper(props) {
             <>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppMenu
-                        handleDrawerOpen={handleDrawerOpen}
-                        styles={classes}
-                        open={false}
-                    />
+                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
                         {props.children}
@@ -136,4 +123,4 @@ function NavWrapper(props) {
     }
 }
 
-export default NavWrapper;
+export default StudentMenu;

@@ -4,14 +4,17 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import SubjectCard from '../components/SubjectCard';
-
+import Button from '@material-ui/core/Button';
+import ReplayIcon from '@material-ui/icons/Replay';
 import { AppContext } from '../AppContext';
 import InterestsCard from '../components/InterestsCard';
 
 function Recommendations() {  
     
     const data = useContext(AppContext);
+
     const [results, setResults] = useState({}); 
+    const [completed, setCompleted] = useState(false);
    
     const findSubjects = (recommendations) => {
         let subject_obj = {};
@@ -39,21 +42,59 @@ function Recommendations() {
         });
     }
 
+    const callback = (data) => {
+        
+        let curr_res =  results;
+        let new_res = {}
+        
+        Object.keys(curr_res).forEach(elem => {
+            if (!data.includes(elem)) {
+                new_res[elem] = curr_res[elem]
+            }
+        });
+
+        setResults(new_res);
+        setCompleted(data);
+
+    }
+
+    const ResetButton = () => {
+        if (Object.keys(results).length > 0) {
+           return <Button startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => setResults({})}> Clear Recommendations</Button>
+        } else {
+           return null;
+        }
+    }
+
+    const Results = () => {
+        if (Object.keys(results).length > 0) {
+            return (
+                Object.keys(results).slice(0, 5).map((subject, key) => (
+                    <SubjectCard key={key} subject={results[subject]} callback={callback} />
+                ))
+            )
+         } else {
+            return <p style={{ textAlign:'center' }}>  </p>;
+         }
+    }
+
     return (
         <>
             <CssBaseline />
             <Container maxWidth={false}>
                 <Grid container spacing={3}>
-                    <Grid item xs={8}>
+                    <Grid item xs={6}>
                         <Typography variant='h5'> Course Recommendations </Typography>
+                    </Grid>
+
+                    <Grid item xs={6}>
+                        <ResetButton />
                     </Grid>
                 </Grid>
                 <br />
-                <InterestsCard findRecommendations={findRecommendations}></InterestsCard>
+                <InterestsCard completed={completed} findRecommendations={findRecommendations}></InterestsCard>
                 <br />
-                {Object.keys(results).slice(0, 5).map((subject, key) => (
-                    <SubjectCard coursesUpdated={() => console.log('test')} key={key} subject={results[subject]} />
-                ))}
+                <Results />
             </Container>
         </>
     );

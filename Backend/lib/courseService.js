@@ -22,6 +22,23 @@ class CourseService {
         await courseObject.save();
     }
 
+    async updateCourse(id, course) {
+
+        let course_object = await Course.findOne({'_id': id});
+
+        course_object['course_name'] = course.course_name
+        course_object['credit_points'] = course.credit_points
+        course_object['faculty'] = course.faculty
+        course_object['postgraduate'] = course.postgraduate
+        course_object['pre-requisite'] = course['pre-requisites']
+        course_object['anti-requisites'] = course['ani-requisites']
+        course_object['description'] = course.description
+        course_object['link'] = course.link
+       
+        await courseObject.save();
+        
+    }
+
     async setAllCourses() {
         let courses = await JSON.parse(fs.readFileSync('./json/uts_subjects.json'));
         Object.keys(courses).forEach(elem => {

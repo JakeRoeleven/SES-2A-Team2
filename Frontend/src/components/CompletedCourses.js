@@ -1,90 +1,63 @@
 import React, {useState, useEffect, useContext, useCallback} from 'react';
 import Chip from '@material-ui/core/Chip';
-import { AppContext } from '../AppContext';
+import {AppContext} from '../AppContext';
+import { useHistory } from "react-router-dom";
 
 function CoursesCompleted(props) {
+    
+	let history = useHistory();
+    const data = useContext(AppContext);
 
-		const data = useContext(AppContext);
+    const [courses, setCourses] = useState([]);
+    const [subjects, setSubjects] = useState({});
 
-		const [courses, setCourses] = useState([]);
-		const [subjects, setSubjects] = useState({});
+    const findSubjects = useCallback(() => {
+        setCourses(props.courses);
+        let subject_obj = {};
+        data.forEach((elem) => {
+            if (courses.includes(elem._id)) {
+                subject_obj[elem._id] = elem;
+            }
+        });
 
-		const deleteSubject = (subject_code) => {
-			
-			// Delete subject from array
-			const index = courses.indexOf(subject_code);
-			let new_courses = courses
-			if (courses.length === 1) {
-				new_courses = []
-			} else if (index > -1) {
-				new_courses = courses.splice(index, 1);
-			}
+        setSubjects(subject_obj);
+    }, [courses, data, props.courses]);
 
-			// Make the student object
-			let student = {}
-			student['id'] =  sessionStorage.getItem('user_id');
-			student["student_data"] = {}
-			student["student_data"]['name'] = props.student.name;
-			student["student_data"]['degree'] = props.student.degree;
-			student["student_data"]['major'] = props.student.major;
-			student["student_data"]['year'] = props.student.year;
-			student["student_data"]['postgraduate'] = props.student.postgraduate;
-			student["student_data"]['interests'] = props.student.interests;
-			student["student_data"]['courses_completed'] = new_courses;
+    useEffect(() => {
+        if (props.courses) setSubjects(props.courses)
+        findSubjects();
+    }, [findSubjects, props]);
 
+    let limit = Object.keys(subjects).length;
+    if (props.limit) limit = props.limit;
 
-			let url = 'http://${process.env.REACT_APP_SERVER}/api/update-student'
-			if (props.student == null) url = 'http://${process.env.REACT_APP_SERVER}/api/new-student'
-
-			fetch(url, {
-				method: 'POST',
-				body: JSON.stringify(student),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			})
-				.then(async (res) => {
-					if (res.status === 200) {
-						alert("Details updated")
-						setCourses(new_courses)
-					} else {
-						const error = JSON.parse(await res.json());
-						alert(error)
-					}
-				})
-				.catch(err => {
-					alert(err)
-			});
-
-		}
-
-		const findSubjects = useCallback(() => {
-			setCourses(props.courses)
-			let subject_obj = {};
-			data.forEach(elem => {
-				if (courses.includes(elem._id)) {
-					subject_obj[elem._id] = elem
-				}
-			})
-			setSubjects(subject_obj);
-		}, [courses, data, props.courses]);
-
-		useEffect(() => {
-			findSubjects()
-		}, [findSubjects]);
-
-		if (courses.length > 0 && Object.keys(subjects).length > 0) {
-			return (
-				Object.keys(courses).map((index) => (
-						<Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index] + " - " + subjects[courses[index]]['course_name']}  onDelete={() => deleteSubject(courses[index])} color="primary" />
-				))
-			);
-		} else {
-			return (
-				<p>No Courses Completed...</p>
-			)
-		}
- 
+    if (courses.length > 0 && Object.keys(subjects).length > 0 && Object.keys(subjects).length > limit) {
+        return (
+            <>
+                {Object.keys(courses)
+                    .splice(0, limit)
+                    .map((index) => (
+                        <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index]} color='primary'/>
+                    ))}
+                <p style={{ display: 'none' }}> {props.courses} </p>
+                <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={'Show All'} onClick={() => history.push('/completed')} />
+            </>
+        );
+    } else if (courses.length > 0 && Object.keys(subjects).length > 0) {
+		return (
+            <>
+                {Object.keys(courses)
+                    .splice(0, limit)
+                    .map((index) => (
+                        <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={courses[index]} color='primary'/>
+                    ))}
+                      <p style={{ display: 'none' }}> {props.courses} </p>
+                <Chip style={{marginBottom: '10px', marginRight: '0.5%'}} label={'More Details'} onClick={() => history.push('/completed')} />
+            </>
+        );
+    } else {
+        return <p>No Courses Completed...</p>;
+    }
 }
 
 export default CoursesCompleted;

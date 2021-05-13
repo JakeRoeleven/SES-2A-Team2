@@ -4,6 +4,8 @@ import {Button, TextField, Container, Grid, Typography} from '@material-ui/core'
 import Select from 'react-select';
 import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
+import {FormControlLabel} from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const degreeYearOptions = [
     {value: '1', label: '1'},
@@ -15,8 +17,7 @@ const degreeYearOptions = [
 ];
 
 class StudentForm extends Component {
-    // TODO: Postgrad, DEgree Name, Redirect if already have details, for validation
-
+ 
     constructor(props) {
         super(props);
         this.state = {
@@ -24,6 +25,7 @@ class StudentForm extends Component {
             lastname: '',
             major: '',
             degree: '',
+            postgraduate: false,
             yearOfDegree: '',
             current_interests: [],
             displayed_interests: [],
@@ -57,7 +59,6 @@ class StudentForm extends Component {
        
         let student = {};
 
-        // TODO use Clalabakc to fix this???
         let id = sessionStorage.getItem('user_id');
 
         // Push id from firebase
@@ -70,34 +71,37 @@ class StudentForm extends Component {
         student['student_data']['degree'] = this.state.degree;
         student['student_data']['major'] = this.state.major;
         student['student_data']['year'] = this.state.yearOfDegree;
-        student['student_data']['postgraduate'] = false;
+        student['student_data']['postgraduate'] = this.state.postgraduate;
         student['student_data']['interests'] = this.state.current_interests;
 
         return student;
     };
 
     onSubmit = async (event) => {
+
         let student = this.getStudentData();
         this.setState({loading: true});
         event.preventDefault();
-        fetch('http://${process.env.REACT_APP_SERVER}/api/new-student', {
+   
+        fetch('http://localhost:8080/api/new-student', {
         	method: 'POST',
         	body: JSON.stringify(student),
         	headers: {
         		'Content-Type': 'application/json'
         	}
-        })
-            .then(async (res) => {
-                if (res.status === 200) {
-                    this.props.history.push('/recommendations');
-                } else {
-                    const error = JSON.parse(await res.json());
-                    alert(error);
-                }
-            })
-            .catch((err) => {
-                alert(err);
-            });
+        }).then(async (res) => {
+            if (res.status === 200) {
+                this.props.setSignupComplete(true);
+                this.props.fetchSubjects(true);
+                sessionStorage.setItem('signup_complete', true);
+                this.props.history.push('/recommendations');
+            } else {
+                const error = JSON.parse(await res.json());
+                alert(error);
+            }
+        }).catch((err) => {
+            alert(err);
+        });
     };
 
     render() {
@@ -119,11 +123,12 @@ class StudentForm extends Component {
                     <Form size='large' onSubmit={this.onSubmit}>
 
                         <br />
-                        <TextField name='firstname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='First Name' value={this.state.firstname} onChange={this.handleInputChange} />
-                        <TextField name='lastname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='Last Name' value={this.state.lastname} onChange={this.handleInputChange} />
+                        <TextField variant='outlined' style={{ marginRight: '15px'}} name='firstname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='First Name' value={this.state.firstname} onChange={this.handleInputChange} />
+                        <TextField variant='outlined' style={{ marginRight: '15px'}} name='lastname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='Last Name' value={this.state.lastname} onChange={this.handleInputChange} />
+                        <FormControlLabel control={<Checkbox name='postgraduate' value={this.state.postgraduate} checked={this.state.postgraduate} onChange={(e) => this.setState({'postgraduate': !this.state.postgraduate})} />} label='Postgraduate' color="primary"/>
 
                         <br /><br />
-                        <TextField name='degree' required minLength='3' maxLength='200' fluid icon='paper' iconPosition='left' placeholder='Degree' value={this.state.degree} onChange={this.handleInputChange} />
+                        <TextField variant='outlined' fullWidth={true} name='degree' required minLength='3' maxLength='200' fluid icon='paper' iconPosition='left' placeholder='Degree' value={this.state.degree} onChange={this.handleInputChange} />
 
                         <br /><br />
                         <Select type='yearOfDegree' name='yearOfDegree' required options={degreeYearOptions} defaultValue={this.state.yearOfDegree} placeholder={'Select Year Of Study'} onChange={this.handleSelectInputChange} />
