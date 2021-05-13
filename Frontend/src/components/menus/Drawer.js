@@ -8,7 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Transform from '@material-ui/icons/Transform';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Favorite from '@material-ui/icons/Favorite';
+import Star from '@material-ui/icons/Star';
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline';
 
 export default function AppDrawer(props) {
    
@@ -51,8 +52,14 @@ export default function AppDrawer(props) {
                 </a>
                 <a className="unstyled_link" href={'/favorites'}>
                     <ListItem button>
-                        <ListItemIcon><Favorite/></ListItemIcon>
+                        <ListItemIcon><Star/></ListItemIcon>
                         <ListItemText primary={"Favorites"} />
+                    </ListItem>
+                </a>
+                <a className="unstyled_link" href={'/completed'}>
+                    <ListItem button>
+                        <ListItemIcon><CheckCircleOutline/></ListItemIcon>
+                        <ListItemText primary={"Completed"} />
                     </ListItem>
                 </a>
              </List>

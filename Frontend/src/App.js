@@ -10,7 +10,7 @@ import Recommendations from './pages/Recommendations';
 import NavWrapper from './components/MenuSystem';
 import Search from './pages/Search';
 import Account from './pages/Account';
-import LikedCourses from './pages/Favorites';
+import Fav from './pages/Favorites';
 import ForgotPassword from './pages/Auth/ForgotPassword';
 import AdminDash from './pages/AdminComponents/AdminDash';
 
@@ -30,6 +30,8 @@ import AddCourse from './pages/AdminComponents/AddCourse';
 import EditCourse from './pages/AdminComponents/EditCourse';
 import NewStudentRoute from './components/NewStudentRoute';
 import Subject from './pages/Subject';
+import Favorites from './pages/Favorites';
+import Completed from './pages/Completed';
 
 function App() {
     // App Context
@@ -73,7 +75,7 @@ function App() {
                             fetchSubjects();
                             setSignupComplete(true);
                             sessionStorage.setItem('favorites', data.favorite_subjects);
-                            sessionStorage.setItem('favorites', data.favorite_subjects);
+                            sessionStorage.setItem('complete', data.courses_completed);
                             sessionStorage.setItem('signup_complete', true);
                         } else {
                             setSignupComplete(false);
@@ -205,7 +207,8 @@ function App() {
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/recommendations' component={Recommendations} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/search' component={Search} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/account' component={Account} />
-                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/favorites' component={LikedCourses} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/favorites' component={Favorites} />
+                                <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/completed' component={Completed} />
                             </Switch>
                         </Provider>
                     </NavWrapper>

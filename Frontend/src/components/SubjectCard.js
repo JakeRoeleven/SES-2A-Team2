@@ -29,6 +29,7 @@ function SubjectCard(props) {
     const [favorite, setFavorite] = useState(false);
     const [complete, setComplete] = useState(false);
     const [favorites, setFavorites] = useState([]);
+    const [completed, setCompleted] = useState([]);
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
@@ -37,6 +38,9 @@ function SubjectCard(props) {
 
         let favorites = sessionStorage.getItem('favorites');
         if (favorites) setFavorites(favorites)
+
+        let completed = sessionStorage.getItem('complete');
+        if (completed) setCompleted(completed)
 
         setCode(props.subject._id)
         setTitle(props.subject._id + " - " + props.subject.course_name);
@@ -146,7 +150,7 @@ function SubjectCard(props) {
     }
 
     const CompleteCircle = () => {   
-        if (complete) {
+        if (completed.includes(code)) {
             return <CheckCircle style={{ color: '#43a047' }}/>
         } else {
             return  <CheckCircleOutline/>
