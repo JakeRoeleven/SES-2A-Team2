@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
+//import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,8 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import { IconButton } from '@material-ui/core';
-import MenuIcon from "@material-ui/icons/Menu";
+import GitHubIcon from '@material-ui/icons/GitHub';
+import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 
 function Copyright() {
   return (
@@ -29,6 +30,16 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+    body: {
+        margin:theme.spacing(1, 'auto'),
+    },
+    root: {
+        flexGrow: 1,
+        margin: 0,
+    },
+    title: {
+        flexGrow: 1,
+    },
     icon: {
         marginRight: theme.spacing(2),
     },
@@ -57,13 +68,6 @@ const useStyles = makeStyles((theme) => ({
     footer: {
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(6),
-
-    root: {
-        flexGrow: 1,
-    },
-    title: {
-        flexGrow: 1,
-    },
   },
 }));
 
@@ -74,43 +78,51 @@ export default function Album() {
 
   return (
     <React.Fragment>
-      <CssBaseline />
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
                 <Typography variant="h6" className={classes.title}>
                     Course Recommendation System
                 </Typography>
-                <Button color="inherit">Login</Button>
+                <a style={{ color: "inherit" }}>
+                        <IconButton color="inherit">
+                            <AccountCircle />
+                        </IconButton>
+                </a>
                 </Toolbar>
             </AppBar>
         </div>
+      <CssBaseline />
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container maxWidth="lg">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                Number 1 <br/>Most Reliable Course Recommender<br/> Within Your Reach
+            <Typography component="h1" variant="h2" align="left" color="textPrimary" gutterBottom>
+               The right courses for you
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-                Don&apos;t know which subject to choose for next semester? <br></br> We are here to help! 
+            <Typography variant="h5" align="left" color="textSecondary" paragraph>
+            Ready to take the next step? <br/> We are here to help! 
+            </Typography>
+            <Typography variant="h6" align="left" color="textSecondary" paragraph>
+            The Most Reliable Course Recommender Within Your Reach.
             </Typography>
             <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
+              <Grid container spacing={2} justify="left">
                 <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
+                  <Button href="/login" variant="contained" color="primary">
+                    Login
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
+                  <Button href="/register" variant="outlined" color="primary">
+                    Register
                   </Button>
                 </Grid>
               </Grid>
             </div>
           </Container>
         </div>
+        <hr/>
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
@@ -124,10 +136,10 @@ export default function Album() {
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                      Faculty
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe the content.
+                      Faculty info
                     </Typography>
                   </CardContent>
                 </Card>
@@ -135,14 +147,17 @@ export default function Album() {
             ))}
           </Grid>
         </Container>
+        <hr/>
       </main>
       {/* Footer */}
       <footer className={classes.footer}>
         <Typography variant="h6" align="center" gutterBottom>
-          
+            <IconButton color="inherit" href="https://github.com/JakeRoeleven/SES-2A-Team2">
+                <GitHubIcon  fontSize="large" alignItems="center"/>
+            </IconButton>
         </Typography>
         <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          for all courses within UTS Handbook
+          for all courses within UTS Handbook          
         </Typography>
         <Copyright />
       </footer>
