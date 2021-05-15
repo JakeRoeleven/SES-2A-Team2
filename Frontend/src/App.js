@@ -47,7 +47,7 @@ function App() {
     const [error, setError] = useState(false);
 
     const [isAuthenticated, setAuth] = useState(true);
-    const [isAdmin, setIsAdmin] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [signupComplete, setSignupComplete] = useState(false);
 
     const [showProgress, setShowProgress] = useState(false);
@@ -60,7 +60,7 @@ function App() {
             setLoadingMessage('Finding All Courses...')
         }
 
-        fetch(`https://${process.env.REACT_APP_SERVER}/api/subjects`, {
+        fetch(`https://api.courses4you.club/api/subjects`, {
             crossDomain: true,
             mode: 'cors',
             method: 'GET',
@@ -104,7 +104,7 @@ function App() {
                 let id = user_id['X']['X'];
 				console.log("setting id")
                 sessionStorage.setItem('user_id', id);
-                await fetch(`https://${process.env.REACT_APP_SERVER}/api/user/${id}`, {
+                await fetch(`https://api.courses4you.club/api/user/${id}`, {
                     crossDomain: true,
                     mode: 'cors',
                     method: 'GET',
@@ -201,11 +201,11 @@ function App() {
                     <AdminMenu setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
                         <Provider value={subjects}>
                             <Switch>
-                                <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
+                                <Route exact path='/' component={(props) => <Landing {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
                                 <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails} />} />
                                 <Route exact path='/register' component={Register} />
                                 <Route exact path='/forgot-password' component={ForgotPassword} />
-                                <Route exact path='/new/student' component={(props) => <StudentForm {...props} setSignupComplete={setSignupComplete} fetchSubjects={fetchSubjects} isAdmin={isAdmin}/>} />
+                                <Route exact path='/new/student' component={AdminDash} />
                                 <Route exact path='/home' component={AdminDash} />
                                 <Route exact path='/admin' component={AdminDash} />
                                 <Route exact path='/admin/add/course' component={(props) => <AddCourse {...props} fetchSubjects={fetchSubjects} />} />

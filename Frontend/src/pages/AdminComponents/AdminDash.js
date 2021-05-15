@@ -89,7 +89,7 @@ export default function AdminDash() {
         setCurrentSelected(empty);
         if (students === false) {
             setLoading(true);
-            fetch(`https://${process.env.REACT_APP_SERVER}/api/admin/students`, {
+            fetch(`https://api.courses4you.club/api/admin/students`, {
                 crossDomain: true,
                 mode: 'cors',
                 method: 'GET',
@@ -124,7 +124,7 @@ export default function AdminDash() {
         current.forEach(async (id) => {
 
             // Post to server
-            await fetch(`https://${process.env.REACT_APP_SERVER}/api/admin/subject/delete/${id}`, {
+            await fetch(`https://api.courses4you.club/api/admin/subject/delete/${id}`, {
                 crossDomain: true,
                 mode: 'cors',
                 method: 'GET',
@@ -170,7 +170,7 @@ export default function AdminDash() {
         current.forEach(async (id) => {
 
             // Post to server
-            await fetch(`https://${process.env.REACT_APP_SERVER}/api/admin/student/delete/${id}`, {
+            await fetch(`https://api.courses4you.club/api/admin/student/delete/${id}`, {
                 crossDomain: true,
                 mode: 'cors',
                 method: 'GET',

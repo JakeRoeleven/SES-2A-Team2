@@ -48,7 +48,7 @@ function AddCourse(props) {
             setAnti(anti)
         }
 
-        fetch(`https://${process.env.REACT_APP_SERVER}/api/new-subject`, {
+        fetch(`https://api.courses4you.club/api/new-subject`, {
             crossDomain: true,
             mode: 'cors',
             method: 'POST',
