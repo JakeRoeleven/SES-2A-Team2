@@ -4,10 +4,11 @@ import {Grid, Container, CssBaseline, Typography, Card, TextField, Button, FormC
 import Checkbox from '@material-ui/core/Checkbox';
 import {Form, Label} from 'semantic-ui-react';
 import MajorSelect from '../../components/MajorSelect';
+import Alert from '../../components/Alert';
 
 import {useHistory} from 'react-router-dom';
 
-function AddCourse() {
+function AddCourse(props) {
     let history = useHistory();
 
     const [courseID, setCourseID] = useState('');
@@ -15,40 +16,74 @@ function AddCourse() {
     const [creditPoints, setCreditPoints] = useState('');
     const [postgraduate, setPostgraduate] = useState(false);
     const [faculty, setFaculty] = useState('');
-    const [coursePrerequisites, setPre] = useState('');
-    const [courseAntirequisites, setAnti] = useState('');
+    const [coursePrerequisites, setPre] = useState([]);
+    const [courseAntirequisites, setAnti] = useState([]);
     const [courseDescription, setCourseDescription] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState(false);
+
 
     const addCourse = async () => {
-        // fetch(`http://${process.env.REACT_APP_SERVER}/api/new-subject`, {
-        //     crossDomain: true,
-        //     mode: 'cors',
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Access-Control-Allow-Origin': '*',
-        //     },
-        //     body: JSON.stringify({
-        //         id: courseID,
-        //         courseData: {
-        //             course_name: courseName,
-        //             credit_points: creditPoints,
-        //             'pre-requisites': coursePrerequisites,
-        //             'anti-requisites': courseAntirequisites,
-        //             postgraduate: postgraduate,
-        //             faculty: faculty,
-        //             description: courseDescription,
-        //             link: '#',
-        //         },
-        //     }),
-        // })
-        //     .then(async (res) => {
-        //         let data = await res.json();
-        //         console.log(data);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
+
+        let pre = []
+        let anti = []
+        
+        if (coursePrerequisites && coursePrerequisites.length > 1) {
+            const current_pre = coursePrerequisites
+            if (current_pre.includes(',')) {
+                pre = current_pre.split(',')
+            } else {
+                pre = [current_pre]
+            }
+            setPre(pre)
+        }
+
+        if (courseAntirequisites && courseAntirequisites.length > 1) {
+            const current_pre = courseAntirequisites
+            if (current_pre.includes(',')) {
+                anti = current_pre.split(',')
+            } else {
+                anti = [current_pre]
+            }
+            setAnti(anti)
+        }
+
+        fetch(`https://${process.env.REACT_APP_SERVER}/api/new-subject`, {
+            crossDomain: true,
+            mode: 'cors',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+            body: JSON.stringify({
+                id: courseID,
+                courseData: {
+                    course_name: courseName,
+                    credit_points: creditPoints,
+                    'pre-requisites': pre,
+                    'anti-requisites': anti,
+                    postgraduate: postgraduate,
+                    faculty: faculty,
+                    description: courseDescription,
+                    link: '#',
+                },
+            }),
+        }).then(async (res) => {
+            if (res.status === 200) {
+                setAlertMessage('Course Added')
+                setShowAlert(true);
+                props.fetchSubjects(true);
+                history.push('/admin');
+            } else  {
+                setAlertMessage('Failed to add course, check course details and try again!')
+                setShowAlert(true);
+            }
+
+        }).catch(() => {
+            setAlertMessage('Failed to add course, check details and try again!')
+            setShowAlert(true);
+        });
     };
 
     return (
@@ -104,9 +139,11 @@ function AddCourse() {
                     <MajorSelect setMajor={setFaculty} major={faculty} />
 
                     <br />
-                    <Button style={{float: 'right'}} variant='contained' color='primary' onClick={() => addCourse()}>Add Course</Button>
-                    <br />
+  
                 </Form>
+                <Button style={{float: 'right'}} variant='contained' color='primary' onClick={() => addCourse()}>Add Course</Button>
+                <br />
+                <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
             </Card>
         </>
     );

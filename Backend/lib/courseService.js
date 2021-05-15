@@ -25,7 +25,7 @@ class CourseService {
     async updateCourse(id, course) {
 
         let course_object = await Course.findOne({'_id': id});
-
+       
         course_object['course_name'] = course.course_name
         course_object['credit_points'] = course.credit_points
         course_object['faculty'] = course.faculty
@@ -35,7 +35,7 @@ class CourseService {
         course_object['description'] = course.description
         course_object['link'] = course.link
        
-        await courseObject.save();
+        await course_object.save();
         
     }
 
@@ -78,6 +78,7 @@ class CourseService {
 
     async deleteCourse(id) {
         await Course.deleteOne({ _id: id });
+        return true;
     }
 
 }

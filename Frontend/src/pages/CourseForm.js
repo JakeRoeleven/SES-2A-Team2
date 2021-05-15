@@ -1,6 +1,5 @@
 import React, {Component} from 'react'; 
 import { Form, Segment, Button, Message } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import Select from 'react-select';
 
 class CourseForm extends Component {

@@ -7,6 +7,7 @@ This is the repository of Team 2 for UTS Software Engineering Studio 2A. This re
  - [JakeRoeleven](https://github.com/JakeRoeleven) -> Jake Roeleven - 13246638
  - [Ashwin Saji](https://github.com/shwin132) -> Ashwin Saji - 13537598
  - [Khurshid Manal](https://github.com/13556042) -> Khurshid Manal - 13556042  
+ - [Aung Soe Kyaw](https://github.com/AungSoeKyaw00s) -> Aung Soe Kyaw - 13480494
 
 ## System Architecture
 

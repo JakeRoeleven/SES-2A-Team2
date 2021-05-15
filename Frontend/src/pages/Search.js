@@ -42,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
 
 function Search(props) {
 
+    document.body.style.overflow = 'auto';
+
     const data = useContext(AppContext);
     const classes = useStyles();
 
@@ -133,10 +135,10 @@ function Search(props) {
             <CssBaseline />
             <Container maxWidth={false}>
                 <Grid container spacing={3}>
-                    <Grid item xs={8}>
+                    <Grid item xs={4}>
                         <Typography variant='h5' style={{ paddingTop: '10px' }}> Subject List Search </Typography>
                     </Grid>
-                    <Grid item xs={4} alignItems={'flex-end'} alignContent={'flex-end'}>
+                    <Grid item xs={8} alignItems={'flex-end'} alignContent={'flex-end'}>
                         <div className={classes.search}>
                             <Paper component='form' className={classes.root}>
                                 <InputBase className={classes.input} placeholder='Search Subjects' value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />

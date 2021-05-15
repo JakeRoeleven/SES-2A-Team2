@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useHistory } from "react-router-dom";
-import firebase from '../../firebase';
+import firebase from '../../../firebase';
 
 // Material UI Imports
 import { AppBar, Toolbar, Typography} from '@material-ui/core';

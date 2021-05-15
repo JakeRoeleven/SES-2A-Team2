@@ -1,8 +1,8 @@
 import React from 'react';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppMenu from './menus/AppMenu';
-import AppDrawer from './menus/Drawer';
+import AppMenu from './student/AppMenu';
+import AppDrawer from './student/Drawer';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -81,9 +81,18 @@ function StudentMenu(props) {
         setOpen(false);
     };
 
-    console.log(props)
     let alreadySignedUp = sessionStorage.getItem('signup_complete');
-    if (props.authenticated && alreadySignedUp === "true") {
+    if (window.location.pathname === "/") {
+        return (
+            <>
+                <div className={classes.root} style={{ padding: '0px'}}>
+                    <div className={classes.content} style={{ padding: '0px'}}>
+                        {props.children}
+                    </div>
+                </div>
+            </>
+        );
+    } else if (props.authenticated && alreadySignedUp === "true" && window.location.pathname !== "/") {
         return (
             <>
                 <div className={classes.root}>
@@ -97,12 +106,12 @@ function StudentMenu(props) {
                 </div>
             </>
         );
-    } else if (props.authenticated) {
+    } else if (props.authenticated && window.location.pathname !== "/") {
         return (
             <>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} />
+                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} setAuthenticated={props.setAuthenticated} />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
                         {props.children}

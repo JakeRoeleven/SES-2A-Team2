@@ -62,8 +62,8 @@ function Register(props) {
 
     return (
         <div className={'animateBackground'}>
-                <div style={{marginTop: '8%', textAlign: 'center'}}>
-                    <img src={window.location.origin + '/small-light-logo.png'} style={{width: '15vw', marginRight: '10px'}} alt=''></img>
+                <div style={{marginTop: '20vh', textAlign: 'center'}}>
+                    <img src={window.location.origin + '/small-light-logo.png'} style={{width: '12vw', marginRight: '10px'}} alt=''></img>
 
                     <Paper elevation={24} style={{ padding: '1%', width: '400px', marginLeft: 'auto', marginRight: 'auto', marginTop: '2%'}}>
                         

@@ -11,6 +11,8 @@ import InterestsCard from '../components/InterestsCard';
 
 function Recommendations() {  
     
+    document.body.style.overflow = 'auto';
+
     const data = useContext(AppContext);
 
     const [results, setResults] = useState({}); 
@@ -28,7 +30,7 @@ function Recommendations() {
     }
 
     const findRecommendations = (student) => {  
-        fetch(`http://${process.env.REACT_APP_SERVER}/api/recommendation`, {
+        fetch(`https://${process.env.REACT_APP_SERVER}/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
             headers: {

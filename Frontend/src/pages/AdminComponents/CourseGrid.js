@@ -16,6 +16,6 @@ export default function CourseGrid(props) {
 	} 
 
 	return (
-		<DataGrid onSelectionModelChange={(e) =>  setSelectedData(e)} autoHeight="true" rows={props.rows} columns={columns} checkboxSelection pageSize={20} />
+		<DataGrid onSelectionModelChange={(e) =>  setSelectedData(e)} autoHeight="true" rows={props.rows} columns={columns} checkboxSelection pageSize={10} />
 	);
 }

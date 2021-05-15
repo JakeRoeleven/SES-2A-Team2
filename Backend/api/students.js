@@ -8,6 +8,19 @@ router.get('/students', async (req, res) => {
     res.status(200).json(student_list);
 });
 
+router.get('/admin/students', async (req, res) => {
+    const studentService = new StudentService();
+    let student_list = await studentService.getAllStudentsAdmin();
+    res.status(200).json(student_list);
+});
+
+router.get('/admin/student/delete/:id', async (req, res) => {
+    let id = req.params.id;
+    const studentService = new StudentService();
+    let student_list = await studentService.deleteStudent(id);
+    res.status(200).json(student_list);
+});
+
 router.get('/student/:id', async (req, res) => {
     
     let id = req.params.id;
@@ -26,7 +39,7 @@ router.get('/student/signup_complete/:id', async (req, res) => {
     let id = req.params.id;
     
     const studentService = new StudentService();
-    let student = await studentService.signupComplete(id);
+    let student = await studentService.deleteStudent(id);
     res.status(200).json(student);
 
 });
