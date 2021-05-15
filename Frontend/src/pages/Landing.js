@@ -83,7 +83,7 @@ const cardImg = ['https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?i
 export default function Album(props) {
     const classes = useStyles();
     let history = useHistory();
-	
+
     document.body.style.overflow = 'auto';
 
 	if (sessionStorage.getItem('user_id') === null) {
@@ -107,7 +107,7 @@ export default function Album(props) {
 	
 				<main>
 					{/* Hero unit */}
-					<div className={classes.heroContent} className='animated'>
+					<div className={classes.heroContent + ' animated'}>
 						<Container style={{padding: '3%', maxWidth: '95%', textAlign: 'center ', color: 'white', fontWeight: '100'}}>
 							<img alt='' src={window.location.origin + '/small-light-logo.png'} style={{cursor: 'pointer', width: '12vw', marginRight: '10px'}} onClick={() => history.push('/land')}></img>
 							<Typography component='h1' variant='h2' gutterBottom style={{fontWeight: 'bold'}}>
@@ -138,7 +138,7 @@ export default function Album(props) {
 						<Grid container spacing={4} style={{ paddingTop: '0px'}}>
 							{cards.map((card, index) => (
 								<Grid item key={card} xs={12} sm={6} md={4}>
-									<Card className={classes.card} className='animatedHover'>
+									<Card className={classes.card + ' animatedHover'}>
 										<CardMedia className={classes.cardMedia} image={cardImg[index]} title='Image title' />
 										<CardContent className={classes.cardContent}>
 											<Typography gutterBottom variant='h5' component='h2'>{card}</Typography>
