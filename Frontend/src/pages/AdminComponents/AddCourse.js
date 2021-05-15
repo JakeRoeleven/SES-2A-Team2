@@ -20,7 +20,7 @@ function AddCourse() {
     const [courseDescription, setCourseDescription] = useState('');
 
     const addCourse = async () => {
-        // fetch(`http://${process.env.REACT_APP_SERVER}/api/new-subject`, {
+        // fetch(`https://${process.env.REACT_APP_SERVER}/api/new-subject`, {
         //     crossDomain: true,
         //     mode: 'cors',
         //     method: 'POST',

@@ -58,7 +58,7 @@ function Account() {
 
         let id = sessionStorage.getItem('user_id');
         if (id != null) {
-            fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
+            fetch(`https://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
                 crossDomain: true,
                 mode: 'cors',
                 method: 'GET',
@@ -141,8 +141,8 @@ function Account() {
         let student_data = getFormattedStudentData();
         if (student_data !== false) {
             // TODO: Handle this in backend
-            let url = `http://${process.env.REACT_APP_SERVER}/api/update-student`;
-            if (userDetails == null) url = `http://${process.env.REACT_APP_SERVER}/api/new-student`;
+            let url = `https://${process.env.REACT_APP_SERVER}/api/update-student`;
+            if (userDetails == null) url = `https://${process.env.REACT_APP_SERVER}/api/new-student`;
 
             // Send to database
             fetch(url, {

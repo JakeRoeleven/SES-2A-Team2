@@ -24,7 +24,7 @@ function Home() {
     const fetchStudent = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
         if (id != null) {
-            fetch(`http://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
+            fetch(`https://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
                 crossDomain: true,
                 mode: 'cors',
                 method: 'GET',

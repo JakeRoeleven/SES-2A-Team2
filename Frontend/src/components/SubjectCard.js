@@ -57,7 +57,7 @@ function SubjectCard(props) {
 
     const toggleFavorite = async (code) => {
 
-        let url = `http://${process.env.REACT_APP_SERVER}/api/student/favorites`
+        let url = `https://${process.env.REACT_APP_SERVER}/api/student/favorites`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {
@@ -102,7 +102,7 @@ function SubjectCard(props) {
 
     const toggleComplete = async (code) => {
 
-        let url = `http://${process.env.REACT_APP_SERVER}/api/student/completed`
+        let url = `https://${process.env.REACT_APP_SERVER}/api/student/completed`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {

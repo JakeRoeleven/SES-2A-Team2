@@ -51,7 +51,7 @@ function App() {
 
         if (withLoading) setLoading(true)
 
-        fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
+        fetch(`https://${process.env.REACT_APP_SERVER}/api/subjects`, {
             crossDomain: true,
             mode: 'cors',
             method: 'GET',
@@ -89,7 +89,7 @@ function App() {
                 let id = user_id['X']['X'];
 				console.log("setting id")
                 sessionStorage.setItem('user_id', id);
-                await fetch(`http://${process.env.REACT_APP_SERVER}/api/user/${id}`, {
+                await fetch(`https://${process.env.REACT_APP_SERVER}/api/user/${id}`, {
                     crossDomain: true,
                     mode: 'cors',
                     method: 'GET',

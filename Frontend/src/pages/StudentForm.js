@@ -83,7 +83,7 @@ class StudentForm extends Component {
         this.setState({loading: true});
         event.preventDefault();
    
-        fetch(`http://${process.env.REACT_APP_SERVER}/api/new-student`, {
+        fetch(`https://${process.env.REACT_APP_SERVER}/api/new-student`, {
         	method: 'POST',
         	body: JSON.stringify(student),
         	headers: {
