@@ -42,10 +42,11 @@ function Login(props) {
         return (
             <>
             <div className={'animateBackground'}>
-                <div style={{marginTop: '10%', textAlign: 'center'}}>
-                    <img src={window.location.origin + '/small-light-logo.png'} style={{width: '15vw', marginRight: '10px'}} alt=''></img>
+                <div style={{marginTop: '20vh', textAlign: 'center'}}>
+                    
+                    <img src={window.location.origin + '/small-light-logo.png'} style={{width: '12vw', marginRight: '10px'}} alt=''></img>
           
-                    <Paper elevation={24} style={{ padding: '1%', width: '400px', marginLeft: 'auto', marginRight: 'auto', marginTop: '2%'}}>
+                    <Paper elevation={24} style={{ padding: '1em', width: '400px', marginLeft: 'auto', marginRight: 'auto', marginTop: '2%'}}>
        
                         <Typography variant='h5' component='h1' gutterBottom>Course Recommender</Typography>
                         <br />

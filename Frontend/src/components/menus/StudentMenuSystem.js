@@ -81,9 +81,18 @@ function StudentMenu(props) {
         setOpen(false);
     };
 
-    console.log(props)
     let alreadySignedUp = sessionStorage.getItem('signup_complete');
-    if (props.authenticated && alreadySignedUp === "true") {
+    if (window.location.pathname === "/") {
+        return (
+            <>
+                <div className={classes.root} style={{ padding: '0px'}}>
+                    <div className={classes.content} style={{ padding: '0px'}}>
+                        {props.children}
+                    </div>
+                </div>
+            </>
+        );
+    } else if (props.authenticated && alreadySignedUp === "true" && window.location.pathname !== "/") {
         return (
             <>
                 <div className={classes.root}>
@@ -97,7 +106,7 @@ function StudentMenu(props) {
                 </div>
             </>
         );
-    } else if (props.authenticated) {
+    } else if (props.authenticated && window.location.pathname !== "/") {
         return (
             <>
                 <div className={classes.root}>

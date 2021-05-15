@@ -31,14 +31,19 @@ import Subject from './pages/Subject';
 import Favorites from './pages/Favorites';
 import Completed from './pages/Completed';
 import AdminMenu from './components/menus/AdminMenu';
+import Landing from './pages/Landing';
 
 function App() {
+
+    document.body.style.overflow = 'auto';
+
     // App Context
     const {Provider} = AppContext;
 
     const [subjects, setSubjects] = useState({});
 
     const [loading, setLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState('Loading Course Recommender...');
     const [error, setError] = useState(false);
 
     const [isAuthenticated, setAuth] = useState(true);
@@ -50,7 +55,10 @@ function App() {
     // Fetch full subject list from API
     const fetchSubjects = useCallback(async (withLoading) => {
 
-        if (withLoading) setLoading(true)
+        if (withLoading) {
+            setLoading(true)
+            setLoadingMessage('Finding All Courses...')
+        }
 
         fetch(`https://${process.env.REACT_APP_SERVER}/api/subjects`, {
             crossDomain: true,
@@ -63,7 +71,10 @@ function App() {
         }).then(async (res) => {
 			let data = await res.json();
 			setSubjects(data);
-            if (withLoading) setLoading(false)
+            if (withLoading) {
+                setLoading(false)
+                setLoadingMessage('Loading Course Recommender...')
+            }
 
 			// Record the current date for local storage
 			let currentTime = new Date();
@@ -76,7 +87,10 @@ function App() {
 
         }).catch((err) => {
             setError(err);
-            if (withLoading) setLoading(false)
+            if (withLoading) {
+                setLoading(false)
+                setLoadingMessage('Loading Course Recommender...')
+            }
         });
     }, [setSubjects, setError]);
 
@@ -107,6 +121,7 @@ function App() {
                         sessionStorage.setItem('isAdmin', true);
                     } else {
                         if (data.signupComplete) {
+                            fetchSubjects(true);
                             setSignupComplete(true);
                             sessionStorage.setItem('favorites', data.favorite_subjects);
                             sessionStorage.setItem('complete', data.courses_completed);
@@ -166,7 +181,7 @@ function App() {
                 <Container maxWidth={false} className={'loadingContainer'}>
                     <CircularProgress size={50} color={'primary'} />
                     <br /><br />
-                    <Typography color='textPrimary'>{'Loading Course Recommender!'}</Typography>
+                    <Typography color='textPrimary'>{loadingMessage}</Typography>
                 </Container>
             </>
         );
@@ -208,7 +223,7 @@ function App() {
                     <StudentMenu showProgress={showProgress} setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
                         <Provider value={subjects}>
                             <Switch>
-                                <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
+                                <Route exact path='/' component={(props) => <Landing {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
                                 <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth}  checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/register' component={(props) => <Register {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/forgot-password' component={ForgotPassword} />

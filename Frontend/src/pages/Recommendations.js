@@ -11,6 +11,8 @@ import InterestsCard from '../components/InterestsCard';
 
 function Recommendations() {  
     
+    document.body.style.overflow = 'auto';
+
     const data = useContext(AppContext);
 
     const [results, setResults] = useState({}); 

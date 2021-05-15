@@ -23,9 +23,6 @@ export default function AppDrawer(props) {
     const [favActive, setFavActive] = useState(false)
     const [compActive, setCompActive] = useState(false)
 
-
-
-
     useEffect(() => {
         let location = window.location.pathname
 
