@@ -14,7 +14,8 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import IconButton from '@material-ui/core/IconButton';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+//import AccountCircle from '@material-ui/icons/AccountCircle';
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -75,24 +76,22 @@ const cards = [1, 2, 3, 4, 5, 6];
 
 export default function Album() {
   const classes = useStyles();
+  let history = useHistory();
 
   return (
     <React.Fragment>
+      <CssBaseline />
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
+                <img alt='' src={window.location.origin + '/small-light-logo.png'} style={{ cursor: 'pointer', width: '2vw', marginRight: '10px'}} onClick={() => history.push('/land')} ></img>
                 <Typography variant="h6" className={classes.title}>
-                    Course Recommendation System
+                    Course4You
                 </Typography>
-                <a style={{ color: "inherit" }}>
-                        <IconButton color="inherit">
-                            <AccountCircle />
-                        </IconButton>
-                </a>
                 </Toolbar>
             </AppBar>
         </div>
-      <CssBaseline />
+      
       <main>
         {/* Hero unit */}
         <div className={classes.heroContent}>
