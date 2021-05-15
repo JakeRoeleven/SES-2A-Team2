@@ -65,8 +65,26 @@
     cursor: pointer
 }
 
+.animatedHover:hover {
+    background: linear-gradient(-90deg, #2242cf, #4e9ce6, #23a6d5, #04c6f7);
+	background-size: 400% 400%;
+	animation: gradient 5s ease infinite;
+    color: white;
+    cursor: pointer
+}
+
 .homeCard svg {
     font-size: 4em;
+}
+
+.homeText {
+    text-align: center;
+}
+
+.animated {
+    background: linear-gradient(-45deg, #2242cf, #4e9ce6, #23a6d5, #04c6f7);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite; 
 }
 
 .animateBackground {

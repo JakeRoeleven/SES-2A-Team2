@@ -30,7 +30,7 @@ import NewStudentRoute from './components/NewStudentRoute';
 import Subject from './pages/Subject';
 import Favorites from './pages/Favorites';
 import Completed from './pages/Completed';
-import Land from './pages/Land';
+import Landing from './pages/Landing';
 
 function App() {
     // App Context
@@ -204,8 +204,7 @@ function App() {
                     <NavWrapper showProgress={showProgress} setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
                         <Provider value={subjects}>
                             <Switch>
-                                <Route exact path='/land' component={Land} />
-                                <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
+                                <Route exact path='/' component={(props) => <Landing {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
                                 <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth}  checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/register' component={(props) => <Register {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/forgot-password' component={ForgotPassword} />
