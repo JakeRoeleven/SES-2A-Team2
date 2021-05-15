@@ -21,7 +21,7 @@ function Favorites() {
 
     const checkUserDetails = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
-		await fetch(`https://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
+		await fetch(`https://api.courses4you.club/api/student/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
@@ -44,7 +44,7 @@ function Favorites() {
 
     const toggleFavorite = async (code) => {
 
-        let url = `https://${process.env.REACT_APP_SERVER}/api/student/favorites`
+        let url = `https://api.courses4you.club/api/student/favorites`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {

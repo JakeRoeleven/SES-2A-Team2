@@ -51,7 +51,7 @@ function EditCourse(props) {
             setAnti(anti)
         }
 
-        fetch(`https://${process.env.REACT_APP_SERVER}/api/update-course`, {
+        fetch(`https://api.courses4you.club/api/update-course`, {
             crossDomain: true,
             mode: 'cors',
             method: 'POST',

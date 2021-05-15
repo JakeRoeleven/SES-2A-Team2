@@ -19,7 +19,7 @@ function Completed() {
 
     const checkUserDetails = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');
-		await fetch(`https://${process.env.REACT_APP_SERVER}/api/student/${id}`, {
+		await fetch(`https://api.courses4you.club/api/student/${id}`, {
 			crossDomain: true,
 			mode: 'cors',
 			method: 'GET',
@@ -42,7 +42,7 @@ function Completed() {
 
     const toggleComplete = async (code) => {
 
-        let url = `https://${process.env.REACT_APP_SERVER}/api/student/completed`
+        let url = `https://api.courses4you.club/api/student/completed`
         let id = sessionStorage.getItem('user_id');
     
         if (id && code) {
