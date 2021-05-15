@@ -7,7 +7,7 @@ import MajorSelect from '../../components/MajorSelect';
 
 import {useHistory} from 'react-router-dom';
 import {AppContext} from '../../AppContext';
-
+import Alert from '../../components/Alert';
 
 function EditCourse(props) {
 
@@ -22,37 +22,71 @@ function EditCourse(props) {
     const [coursePrerequisites, setPre] = useState('');
     const [courseAntirequisites, setAnti] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
+    const [courseLink, setCourseLink] = useState('#');
+    const [showAlert, setShowAlert] = useState(false);
+	const [alertMessage, setAlertMessage] = useState(false);
 
     const editCourse = async () => {
-        // fetch(`https://${process.env.REACT_APP_SERVER}/api/new-subject`, {
-        //     crossDomain: true,
-        //     mode: 'cors',
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Access-Control-Allow-Origin': '*',
-        //     },
-        //     body: JSON.stringify({
-        //         id: courseID,
-        //         courseData: {
-        //             course_name: courseName,
-        //             credit_points: creditPoints,
-        //             'pre-requisites': coursePrerequisites,
-        //             'anti-requisites': courseAntirequisites,
-        //             postgraduate: postgraduate,
-        //             faculty: faculty,
-        //             description: courseDescription,
-        //             link: '#',
-        //         },
-        //     }),
-        // })
-        //     .then(async (res) => {
-        //         let data = await res.json();
-        //         console.log(data);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
+        
+        let pre = []
+        let anti = []
+        
+        if (coursePrerequisites && coursePrerequisites.length > 1) {
+            const current_pre = coursePrerequisites
+            if (current_pre.includes(',')) {
+                pre = current_pre.split(',')
+            } else {
+                pre = [current_pre]
+            }
+            setPre(pre)
+        }
+
+        if (courseAntirequisites && courseAntirequisites.length > 1) {
+            const current_pre = courseAntirequisites
+            if (current_pre.includes(',')) {
+                anti = current_pre.split(',')
+            } else {
+                anti = [current_pre]
+            }
+            setAnti(anti)
+        }
+
+        fetch(`https://${process.env.REACT_APP_SERVER}/api/update-course`, {
+            crossDomain: true,
+            mode: 'cors',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+            body: JSON.stringify({
+                id: courseID,
+                courseData: {
+                    course_name: courseName,
+                    credit_points: creditPoints,
+                    'pre-requisites': pre,
+                    'anti-requisites': anti,
+                    postgraduate: postgraduate,
+                    faculty: faculty,
+                    description: courseDescription,
+                    link: courseLink
+                },
+            }),
+        }).then(async (res) => {
+            if (res.status === 200) {
+                setAlertMessage('Course Edited')
+                setShowAlert(true);
+                props.fetchSubjects(true);
+                history.push('/admin');
+            } else  {
+                setAlertMessage('Failed to edit course, check course details and try again!')
+                setShowAlert(true);
+            }
+
+        }).catch(() => {
+            setAlertMessage('Failed to edit course, check details and try again!')
+            setShowAlert(true);
+        });
     };
 
     useEffect(() => {
@@ -73,6 +107,7 @@ function EditCourse(props) {
                     setAnti(course['anti-requisites'])
                     setCourseDescription(course.description)
                     setFaculty(course.faculty)
+                    setCourseLink(course.link)
                 }
 
             }
@@ -100,7 +135,7 @@ function EditCourse(props) {
 
             <Card style={{padding: '2%', overflow: 'visible'}}>
                 <Form>
-                    <TextField id='outlined-disabled' label='Course ID' variant='outlined' style={{marginRight: '2%'}} value={courseID} onChange={(e) => setCourseID(e.target.value)} />
+                    <TextField disabled id='outlined-disabled' label='Course ID' variant='outlined' style={{marginRight: '2%'}} value={courseID} onChange={(e) => setCourseID(e.target.value)} />
 
                     <TextField id='outlined-disabled' label='Course Name' variant='outlined' style={{marginRight: '2%'}} value={courseName} onChange={(e) => setCourseName(e.target.value)} />
 
@@ -132,11 +167,12 @@ function EditCourse(props) {
                     <br /> <br />
                     <Label style={{  marginBottom: '10px' }}> Select Faculty </Label>
                     <MajorSelect setMajor={setFaculty} major={faculty} />
+                    <br />
 
-                    <br />
-                    <Button style={{float: 'right'}} variant='contained' color='primary' onClick={() => editCourse()}>Edit Course</Button>
-                    <br />
-                </Form>
+                </Form> 
+                <Button style={{float: 'right'}} variant='contained' color='primary' onClick={() => editCourse()}>Edit Course</Button>
+                <br />  
+                <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
             </Card>
         </>
     );

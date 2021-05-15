@@ -15,11 +15,12 @@ import { useHistory } from "react-router-dom";
 
 function Home() {
 
-    let history = useHistory();
+    // Hacky way to override overflow
+    document.body.style.overflow = 'auto';
 
+    let history = useHistory();
     const [name, setName] = useState('');
 
- 
     // Get student details from database
     const fetchStudent = useCallback(async () => {
         let id = sessionStorage.getItem('user_id');

@@ -1,6 +1,8 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 
 import CourseGrid from './CourseGrid';
+import StudentGrid from './StudentGrid';
+
 import {AppContext} from '../../AppContext';
 import CourseEditButtons from './CourseEditButtons';
 
@@ -12,6 +14,12 @@ import CardContent from '@material-ui/core/CardContent';
 import Alert from '../../components/Alert';
 
 import { useHistory } from "react-router-dom";
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import {CircularProgress} from '@material-ui/core';
+import StudentEditButtons from './StudentEditButtons';
+
 
 export default function AdminDash() {
     
@@ -20,10 +28,15 @@ export default function AdminDash() {
 	const data = useContext(AppContext);
     const [courses, setCourses] = useState([]);
     const [current, setCurrentSelected] = useState([]);
+    const [currentStudentsNames, setCurrentStudentsNames] = useState([]);
     const [showDelete, setShowDelete] = useState(true);
 	
 	const [showAlert, setShowAlert] = useState(false);
-	const [alertMessage, setAlertMessage] = useState(false)
+	const [alertMessage, setAlertMessage] = useState(false);
+
+    const [studentMode, setStudentMode] = useState(false);
+    const [students, setStudents] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     // Convert to a formate useable in the rows
     const dataToRows = useCallback(() => {
@@ -46,6 +59,19 @@ export default function AdminDash() {
     const handleSelected = (grid_selected) => {
         let selected = grid_selected;
         setCurrentSelected(selected);	
+        
+        if (studentMode) {
+            let names = []
+            students.forEach(elem => {
+                if (selected.includes(elem.id)) {
+                    names.push(elem.name);
+                }
+            });
+            setCurrentStudentsNames(names);
+        } else {
+            setCurrentStudentsNames([]);
+        }
+
         setShowDelete(true);
     };
 
@@ -57,6 +83,36 @@ export default function AdminDash() {
         history.push(`/admin/edit/course?id=${current}`);
     }
 
+    const changeMode = () => {
+        setStudentMode(!studentMode);
+        let empty = [];
+        setCurrentSelected(empty);
+        if (students === false) {
+            setLoading(true);
+            fetch(`https://${process.env.REACT_APP_SERVER}/api/admin/students`, {
+                crossDomain: true,
+                mode: 'cors',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            }).then(async (res) => {
+                    let data = await res.json()
+                    let rows = [];
+                    for (let i = 0, length = data.length; i < length; i++) {
+                        let student = data[i];
+                        student['id'] = student._id;
+                        rows[i] = student;
+                    }
+                    setStudents(rows);
+                    setLoading(false);
+            }).catch((e) => {
+                setLoading(false);
+            });
+        }
+    }
+
     // Delete Functions
     const handleDelete = () => {
 	    setShowDelete(false);
@@ -64,7 +120,30 @@ export default function AdminDash() {
 	
     const confirmDelete = () => {
 
-		// Remove from courses
+		// Post to server
+        current.forEach(async (id) => {
+
+            // Post to server
+            await fetch(`https://${process.env.REACT_APP_SERVER}/api/admin/subject/delete/${id}`, {
+                crossDomain: true,
+                mode: 'cors',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            }).then(async (res) => {
+                // Alert
+                setAlertMessage('Course(s) Deleted')
+                setShowAlert(true);
+            }).catch(() => {
+                // Alert
+                setAlertMessage('Failed to delete course')
+                setShowAlert(true);
+            });
+        });
+
+        // Remove from courses
 		let rows = [];
         for (let i = 0, length = courses.length; i < length; i++) {
             let course = courses[i];
@@ -75,55 +154,154 @@ export default function AdminDash() {
         }
         setCourses(rows);
 
-		// Post to server
-
-		// Alert
-		setAlertMessage('Course(s) Deleted')
-		setShowAlert(true);
-
         let selected = [];
         setCurrentSelected(selected);	
 
 	    setShowDelete(true);
     };
 
-    return (
-        <>
-            <div>
-                <div>
-                    <center>
-                        <header>
-                            <strong>Admin Dashboard</strong>
-                        </header>
-                    </center>
-                </div>
-                <br />
+    // Delete Student Functions
+    const handleStudentDelete = () => {
+        setShowDelete(false);
+    };
+    
+    const confirmStudentDelete = async () => {
 
-                <div style={{paddingBottom: '10px', textAlign: 'right'}}>
-                    <CourseEditButtons current={current} handleDelete={handleDelete} handleAdd={handleAdd} handleEdit={handleEdit}/>
-                </div>
+        current.forEach(async (id) => {
 
-                <br />
-                <Card variant='outlined' hidden={showDelete}>
-                    <CardContent style={{ paddingTop: '0px', paddingBottom: '0px' }}>
-                        <p> Please confirm you wish to delete: </p>
-                        <ul>
-                            {current.map((code, key) => (
-                                <li key={key}> Subject: {code} </li>
-                            ))}
-                        </ul>
-                    </CardContent>
-                    <CardActions>
-                        <Button size='small' onClick={() => setShowDelete(true)}>Cancel</Button>
-                        <Button size='small' onClick={() => confirmDelete()}>Confirm Delete</Button>
-                    </CardActions>
-                </Card>
-                <br />
+            // Post to server
+            await fetch(`https://${process.env.REACT_APP_SERVER}/api/admin/student/delete/${id}`, {
+                crossDomain: true,
+                mode: 'cors',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            }).then(async (res) => {
+                // Alert
+                setAlertMessage('Student(s) Deleted')
+                setShowAlert(true);
+            }).catch(() => {
+                // Alert
+                setAlertMessage('Failed to delete student')
+                setShowAlert(true);
+            });
+        });
 
-                <CourseGrid rows={courses} handleSelected={handleSelected} />
+        // Remove from courses
+		let rows = [];
+        for (let i = 0, length = students.length; i < length; i++) {
+            let student = students[i];
+			if (student && !current.includes(student._id)) {
+				student['id'] = student._id;
+				rows[i] = student;
+			}
+        }
+        setStudents(rows);
 
-				<Alert open={showAlert} close={setShowAlert} message={alertMessage} />
-            </div>
-        </>
-    );
+        let selected = [];
+        setCurrentSelected(selected);	
+        setCurrentStudentsNames(selected);
+        setShowDelete(true);
+
+    };
+
+    if (loading) {
+        return (
+            <>
+                <Container maxWidth={false} className={'loadingContainer'}>
+                    <CircularProgress size={50} color={'primary'} />
+                    <br /><br />
+                    <Typography color='textPrimary'>{'Finding Students (This may take a minute!)'}</Typography>
+                </Container>
+            </>
+        );
+    } else if (!studentMode) {
+        return (
+            <>
+                <Container maxWidth={false}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={4}>
+                            <Typography variant='h5' style={{ paddingTop: '10px' }}> Course Admin
+                                <Button  variant="outlined" style={{ marginLeft: '30px' }} size='small' onClick={() => changeMode()}> Student Mode </Button>
+                            </Typography>
+          
+                        </Grid>
+    
+                        <Grid item xs={8} style={{ textAlignLast: 'right'}}>
+                            <CourseEditButtons current={current} handleDelete={handleDelete} handleAdd={handleAdd} handleEdit={handleEdit}/>
+                        </Grid>
+    
+                    </Grid>
+    
+                    <br />
+                    <Card variant='outlined' hidden={showDelete}>
+                        <CardContent style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                            <p> Please confirm you wish to delete: </p>
+                            <ul>
+                                {current.map((code, key) => (
+                                    <li key={key}> Subject: {code} </li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                        <CardActions style={{ float: 'right' }} >
+                            <Button style={{ float: 'right' }} variant='contained' color='secondary' size='small' onClick={() => setShowDelete(true)}>Cancel</Button>
+                            <Button style={{ float: 'right' }} variant='contained' color='primary' size='small' onClick={() => confirmDelete()}>Confirm Delete</Button>
+                        </CardActions>
+                    </Card>
+                    <br />
+    
+                    <CourseGrid rows={courses} handleSelected={handleSelected} />
+    
+                    <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
+    
+                </Container>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <Container maxWidth={false}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={4}>
+                            <Typography variant='h5' style={{ paddingTop: '10px' }}> Student Admin
+                                <Button  variant="outlined" style={{ marginLeft: '30px' }} size='small' onClick={() => changeMode()}> Course Mode </Button>
+                            </Typography>
+          
+                        </Grid>
+    
+                        <Grid item xs={8} style={{ textAlignLast: 'right'}}>
+                            <StudentEditButtons current={current} handleDelete={handleStudentDelete} />
+                        </Grid>
+    
+                    </Grid>
+
+                    <br />
+                    <Card variant='outlined' hidden={showDelete}>
+                        <CardContent style={{ paddingTop: '0px', paddingBottom: '0px' }}>
+                            <p> Please confirm you wish to delete: </p>
+                            <ul>
+                                {currentStudentsNames.map((code, key) => (
+                                    <li key={key}> Student: {code} </li>
+                                ))}
+                            </ul>
+                        </CardContent>
+                        <CardActions style={{ float: 'right' }} >
+                            <Button style={{ float: 'right' }} variant='contained' color='secondary' size='small' onClick={() => setShowDelete(true)}>Cancel</Button>
+                            <Button style={{ float: 'right' }}  variant='contained' color='primary' size='small' onClick={() => confirmStudentDelete()}>Confirm Delete</Button>
+                        </CardActions>
+                    </Card>
+                    <br />
+    
+             
+                    <StudentGrid rows={students} handleSelected={handleSelected} />
+    
+                    <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
+    
+                </Container>
+            </>
+        );
+    }
+
 }

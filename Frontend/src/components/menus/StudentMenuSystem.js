@@ -1,8 +1,8 @@
 import React from 'react';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppMenu from './menus/AppMenu';
-import AppDrawer from './menus/Drawer';
+import AppMenu from './student/AppMenu';
+import AppDrawer from './student/Drawer';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -102,7 +102,7 @@ function StudentMenu(props) {
             <>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} />
+                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} setAuthenticated={props.setAuthenticated} />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
                         {props.children}

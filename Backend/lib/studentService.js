@@ -142,6 +142,31 @@ class StudentService {
         return studentRef;
     }
 
+    async getAllStudentsAdmin() {
+
+        const studentRef = Student.find({}, { year: 1, name : 1 , interests : 1 , major : 1, degree: 1, postgraduate: 1, courses_completed: 1} ).lean();
+        const privateStudents = [];
+
+        (await studentRef).forEach(elem => {
+            const name = elem.name;
+            let newName = ''
+            for (var i = 0; i < name.length; i++) {
+                if (name[i] !== ' ' && name[i] === name[i].toLowerCase() ) {
+                    newName = newName.concat('*')
+                } else if (name[i] === ' ') {
+                    newName = newName.concat(' ')
+                } else {
+                    newName = newName.concat(name[i])
+                }
+            }
+            elem.name = newName;
+            privateStudents.push(elem)
+        })
+
+        return privateStudents
+        ;
+    }
+
     async getAllKNNStudentsByMajor(major) {
         if (major) {
             const studentRef = await Student.find({ major: major }, { _id: 1 , courses_completed : 1 , interests : 1 , postgraduate : 1, year: 1} ).lean();
@@ -154,6 +179,7 @@ class StudentService {
 
     async deleteStudent(id) {
         await Student.deleteOne({ _id: id });
+        return true;
     }
 
 }

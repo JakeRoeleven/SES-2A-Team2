@@ -6,6 +6,7 @@ import InterestSelect from '../components/InterestSelects';
 import MajorSelect from '../components/MajorSelect';
 import {FormControlLabel} from '@material-ui/core';
 import Checkbox from '@material-ui/core/Checkbox';
+import { Redirect } from 'react-router-dom';
 
 const degreeYearOptions = [
     {value: '1', label: '1'},
@@ -105,48 +106,52 @@ class StudentForm extends Component {
     };
 
     render() {
-        return (
-            <Segment color='blue' padded textAlign='center'>
-                <br />
-                {/* <Message
-                    hidden={this.state.hidden}
-                    error
-                    header={this.state.errorHeading}
-                    content={this.state.errorMessage}
-                /> */}
-                <Container maxWidth={false}>
-                    <Grid container spacing={0}>
-                        <Grid item xs={8}>
-                            <Typography variant='h5'> Setup Your Account To Begin </Typography>
+        if (!this.props.isAdmin) {
+            return (
+                <Segment color='blue' padded textAlign='center'>
+                    <br />
+                    {/* <Message
+                        hidden={this.state.hidden}
+                        error
+                        header={this.state.errorHeading}
+                        content={this.state.errorMessage}
+                    /> */}
+                    <Container maxWidth={false}>
+                        <Grid container spacing={0}>
+                            <Grid item xs={8}>
+                                <Typography variant='h5'> Setup Your Account To Begin </Typography>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Form size='large' onSubmit={this.onSubmit}>
-
-                        <br />
-                        <TextField variant='outlined' style={{ marginRight: '15px'}} name='firstname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='First Name' value={this.state.firstname} onChange={this.handleInputChange} />
-                        <TextField variant='outlined' style={{ marginRight: '15px'}} name='lastname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='Last Name' value={this.state.lastname} onChange={this.handleInputChange} />
-                        <FormControlLabel control={<Checkbox name='postgraduate' value={this.state.postgraduate} checked={this.state.postgraduate} onChange={(e) => this.setState({'postgraduate': !this.state.postgraduate})} />} label='Postgraduate' color="primary"/>
-
-                        <br /><br />
-                        <TextField variant='outlined' fullWidth={true} name='degree' required minLength='3' maxLength='200' fluid icon='paper' iconPosition='left' placeholder='Degree' value={this.state.degree} onChange={this.handleInputChange} />
-
-                        <br /><br />
-                        <Select type='yearOfDegree' name='yearOfDegree' required options={degreeYearOptions} defaultValue={this.state.yearOfDegree} placeholder={'Select Year Of Study'} onChange={this.handleSelectInputChange} />
-                        
-                        <br />
-                        <MajorSelect setMajor={this.setMajor} />
-                        
-                        <br />
-                        <InterestSelect displayed_interests={this.state.displayed_interests} setCurrentInterests={this.setCurrentInterests} setDisplayedInterests={this.setDisplayedInterests} />
-                        
-                        <br />
-                        <Button loading={this.state.loading} type='submit' value='Submit' color='blue' fluid size='large' style={{float: 'right'}}>
-                            Create Account
-                        </Button>
-                    </Form>
-                </Container>
-            </Segment>
-        );
+                        <Form size='large' onSubmit={this.onSubmit}>
+    
+                            <br />
+                            <TextField variant='outlined' style={{ marginRight: '15px'}} name='firstname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='First Name' value={this.state.firstname} onChange={this.handleInputChange} />
+                            <TextField variant='outlined' style={{ marginRight: '15px'}} name='lastname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='Last Name' value={this.state.lastname} onChange={this.handleInputChange} />
+                            <FormControlLabel control={<Checkbox name='postgraduate' value={this.state.postgraduate} checked={this.state.postgraduate} onChange={(e) => this.setState({'postgraduate': !this.state.postgraduate})} />} label='Postgraduate' color="primary"/>
+    
+                            <br /><br />
+                            <TextField variant='outlined' fullWidth={true} name='degree' required minLength='3' maxLength='200' fluid icon='paper' iconPosition='left' placeholder='Degree' value={this.state.degree} onChange={this.handleInputChange} />
+    
+                            <br /><br />
+                            <Select type='yearOfDegree' name='yearOfDegree' required options={degreeYearOptions} defaultValue={this.state.yearOfDegree} placeholder={'Select Year Of Study'} onChange={this.handleSelectInputChange} />
+                            
+                            <br />
+                            <MajorSelect setMajor={this.setMajor} />
+                            
+                            <br />
+                            <InterestSelect displayed_interests={this.state.displayed_interests} setCurrentInterests={this.setCurrentInterests} setDisplayedInterests={this.setDisplayedInterests} />
+                            
+                            <br />
+                            <Button loading={this.state.loading} type='submit' value='Submit' color='blue' fluid size='large' style={{float: 'right'}}>
+                                Create Account
+                            </Button>
+                        </Form>
+                    </Container>
+                </Segment>
+            );
+        } else {
+            return <Redirect to="/admin" />
+        }
     }
 }
 

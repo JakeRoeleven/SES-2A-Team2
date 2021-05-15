@@ -2,12 +2,12 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 // Import Private Route
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/routes/PrivateRoute';
 
 // Import Pages
 import Home from './pages/Home';
 import Recommendations from './pages/Recommendations';
-import NavWrapper from './components/MenuSystem';
+import StudentMenu from './components/menus/StudentMenuSystem';
 import Search from './pages/Search';
 import Account from './pages/Account';
 import ForgotPassword from './pages/Auth/ForgotPassword';
@@ -26,10 +26,11 @@ import Register from './pages/Auth/Register';
 import StudentForm from './pages/StudentForm';
 import AddCourse from './pages/AdminComponents/AddCourse';
 import EditCourse from './pages/AdminComponents/EditCourse';
-import NewStudentRoute from './components/NewStudentRoute';
+import NewStudentRoute from './components/routes/NewStudentRoute';
 import Subject from './pages/Subject';
 import Favorites from './pages/Favorites';
 import Completed from './pages/Completed';
+import AdminMenu from './components/menus/AdminMenu';
 
 function App() {
     // App Context
@@ -41,7 +42,7 @@ function App() {
     const [error, setError] = useState(false);
 
     const [isAuthenticated, setAuth] = useState(true);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(true);
     const [signupComplete, setSignupComplete] = useState(false);
 
     const [showProgress, setShowProgress] = useState(false);
@@ -100,11 +101,12 @@ function App() {
                 }).then(async (res) => {
                     let data = await res.json();
                     setLoading(false)
-                    if (data.AccountType === 'admin') {
+                    fetchSubjects(true);
+                    if (data.accountType === 'admin') {
                         setIsAdmin(true);
+                        sessionStorage.setItem('isAdmin', true);
                     } else {
                         if (data.signupComplete) {
-                            fetchSubjects();
                             setSignupComplete(true);
                             sessionStorage.setItem('favorites', data.favorite_subjects);
                             sessionStorage.setItem('complete', data.courses_completed);
@@ -137,6 +139,9 @@ function App() {
 		if (sessionStorage.getItem('user_id') === null) {
 			setAuth(false)
 			setSignupComplete(false)
+            if (sessionStorage.getItem('isAdmin') === null) {
+                setIsAdmin(false)
+            }
 		} else {
 			const hasLoaded = localStorage.getItem('hasLoaded');
 			const subjects = JSON.parse(localStorage.getItem('subjects'));
@@ -161,7 +166,7 @@ function App() {
                 <Container maxWidth={false} className={'loadingContainer'}>
                     <CircularProgress size={50} color={'primary'} />
                     <br /><br />
-                    <Typography color='textPrimary'>{'Loading Application'}</Typography>
+                    <Typography color='textPrimary'>{'Loading Course Recommender!'}</Typography>
                 </Container>
             </>
         );
@@ -178,21 +183,21 @@ function App() {
         return (
             <>
                 <Router>
-                    <NavWrapper setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
+                    <AdminMenu setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
                         <Provider value={subjects}>
                             <Switch>
                                 <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
                                 <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails} />} />
                                 <Route exact path='/register' component={Register} />
                                 <Route exact path='/forgot-password' component={ForgotPassword} />
-                                <Route exact path='/new/student' component={StudentForm} />
+                                <Route exact path='/new/student' component={(props) => <StudentForm {...props} setSignupComplete={setSignupComplete} fetchSubjects={fetchSubjects} isAdmin={isAdmin}/>} />
                                 <Route exact path='/home' component={AdminDash} />
                                 <Route exact path='/admin' component={AdminDash} />
-                                <Route exact path='/admin/add/course' component={AddCourse} />
-                                <Route exact path='/admin/edit/course' component={EditCourse} />
+                                <Route exact path='/admin/add/course' component={(props) => <AddCourse {...props} fetchSubjects={fetchSubjects} />} />
+                                <Route exact path='/admin/edit/course' component={(props) => <EditCourse {...props} fetchSubjects={fetchSubjects} />} />
                             </Switch>
                         </Provider>
-                    </NavWrapper>
+                    </AdminMenu>
                 </Router>
             </>
         );
@@ -200,14 +205,14 @@ function App() {
         return (
             <>
                 <Router>
-                    <NavWrapper showProgress={showProgress} setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
+                    <StudentMenu showProgress={showProgress} setAuthenticated={setAuth} authenticated={isAuthenticated} signupComplete={signupComplete}>
                         <Provider value={subjects}>
                             <Switch>
                                 <Route exact path='/' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} />} />
                                 <Route exact path='/login' component={(props) => <Login {...props} authenticated={isAuthenticated} setAuthenticated={setAuth}  checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/register' component={(props) => <Register {...props} authenticated={isAuthenticated} setAuthenticated={setAuth} checkUserDetails={checkUserDetails}/>} />
                                 <Route exact path='/forgot-password' component={ForgotPassword} />
-                                <NewStudentRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/new/student' component={(props) => <StudentForm {...props} setSignupComplete={setSignupComplete} fetchSubjects={fetchSubjects}/>} />
+                                <NewStudentRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/new/student' component={(props) => <StudentForm {...props} setSignupComplete={setSignupComplete} fetchSubjects={fetchSubjects} isAdmin={isAdmin}/>} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/home' component={Home} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/subject' component={Subject} />
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/recommendations' component={Recommendations} />
@@ -217,7 +222,7 @@ function App() {
                                 <PrivateRoute signupComplete={signupComplete} authenticated={isAuthenticated} exact path='/completed' component={Completed} />
                             </Switch>
                         </Provider>
-                    </NavWrapper>
+                    </StudentMenu>
                 </Router>
             </>
         );
