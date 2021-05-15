@@ -111,7 +111,7 @@ function StudentMenu(props) {
             <>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} />
+                    <AppMenu showProgress={props.showProgress} handleDrawerOpen={handleDrawerOpen} styles={classes} open={false} setAuthenticated={props.setAuthenticated} />
                     <div className={classes.content}>
                         <div className={classes.toolbar} />
                         {props.children}

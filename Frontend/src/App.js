@@ -33,12 +33,16 @@ import Completed from './pages/Completed';
 import Landing from './pages/Landing';
 
 function App() {
+
+    document.body.style.overflow = 'auto';
+
     // App Context
     const {Provider} = AppContext;
 
     const [subjects, setSubjects] = useState({});
 
     const [loading, setLoading] = useState(false);
+    const [loadingMessage, setLoadingMessage] = useState('Loading Course Recommender...');
     const [error, setError] = useState(false);
 
     const [isAuthenticated, setAuth] = useState(true);
@@ -50,7 +54,10 @@ function App() {
     // Fetch full subject list from API
     const fetchSubjects = useCallback(async (withLoading) => {
 
-        if (withLoading) setLoading(true)
+        if (withLoading) {
+            setLoading(true)
+            setLoadingMessage('Finding All Courses...')
+        }
 
         fetch(`http://${process.env.REACT_APP_SERVER}/api/subjects`, {
             crossDomain: true,
@@ -63,7 +70,10 @@ function App() {
         }).then(async (res) => {
 			let data = await res.json();
 			setSubjects(data);
-            if (withLoading) setLoading(false)
+            if (withLoading) {
+                setLoading(false)
+                setLoadingMessage('Loading Course Recommender...')
+            }
 
 			// Record the current date for local storage
 			let currentTime = new Date();
@@ -76,7 +86,10 @@ function App() {
 
         }).catch((err) => {
             setError(err);
-            if (withLoading) setLoading(false)
+            if (withLoading) {
+                setLoading(false)
+                setLoadingMessage('Loading Course Recommender...')
+            }
         });
     }, [setSubjects, setError]);
 
@@ -105,7 +118,7 @@ function App() {
                         setIsAdmin(true);
                     } else {
                         if (data.signupComplete) {
-                            fetchSubjects();
+                            fetchSubjects(true);
                             setSignupComplete(true);
                             sessionStorage.setItem('favorites', data.favorite_subjects);
                             sessionStorage.setItem('complete', data.courses_completed);
@@ -162,7 +175,7 @@ function App() {
                 <Container maxWidth={false} className={'loadingContainer'}>
                     <CircularProgress size={50} color={'primary'} />
                     <br /><br />
-                    <Typography color='textPrimary'>{'Loading Application'}</Typography>
+                    <Typography color='textPrimary'>{loadingMessage}</Typography>
                 </Container>
             </>
         );
