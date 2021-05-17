@@ -79,7 +79,7 @@ def getRecommendations(KNN, x, students):
                 KNNCourses[course] += 1
             else:
                 KNNCourses[course] = 1
-    while len(recommendations) < x:
+    while len(recommendations) < x and len(recommendations) < len(KNNCourses):
         recommended = max(KNNCourses, key=(KNNCourses.get))
         recommendations.append(recommended)
         KNNCourses.pop(recommended)
