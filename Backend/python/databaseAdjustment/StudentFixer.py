@@ -10,6 +10,9 @@ for student in students:
     for course in student["courses_completed"]:
         if course.endswith("c"):
             course = course[:-1]
+        if course not in courses.keys():
+            impossibleCourses.append(course)
+            continue
         for requisite in courses[course]["pre-requisites"]:
             if requisite == '-1':
                 impossibleCourses.append(course)
