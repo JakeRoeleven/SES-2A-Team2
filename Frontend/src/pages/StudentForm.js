@@ -73,7 +73,7 @@ class StudentForm extends Component {
         student['student_data']['degree'] = this.state.degree;
         student['student_data']['major'] = this.state.major;
         student['student_data']['year'] = this.state.yearOfDegree;
-        student['student_data']['postgraduate'] = this.state.postgraduate;
+        student['student_data']['postgraduate'] = false;
         student['student_data']['interests'] = this.state.current_interests;
 
         return student;
@@ -130,8 +130,7 @@ class StudentForm extends Component {
                                 <br />
                                 <TextField variant='outlined' style={{ marginRight: '15px'}} name='firstname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='First Name' value={this.state.firstname} onChange={this.handleInputChange} />
                                 <TextField variant='outlined' style={{ marginRight: '15px'}} name='lastname' required minLength='3' maxLength='20' fluid icon='user' iconPosition='left' placeholder='Last Name' value={this.state.lastname} onChange={this.handleInputChange} />
-                                <FormControlLabel control={<Checkbox name='postgraduate' value={this.state.postgraduate} checked={this.state.postgraduate} onChange={(e) => this.setState({'postgraduate': !this.state.postgraduate})} />} label='Postgraduate' color="primary"/>
-
+            
                                 <br /><br />
                                 <TextField variant='outlined' fullWidth={true} name='degree' required minLength='3' maxLength='200' fluid icon='paper' iconPosition='left' placeholder='Degree' value={this.state.degree} onChange={this.handleInputChange} />
 
