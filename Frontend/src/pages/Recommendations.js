@@ -32,6 +32,7 @@ function Recommendations() {
     }
 
     const findRecommendations = (student) => {  
+        setPage(1)
         fetch(`https://api.courses4you.club/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
