@@ -7,7 +7,7 @@ import Alert from '../../components/Alert';
 function Register(props) {
 
     // Hacky way to override overflow
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflowX = 'hidden';
 
     const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -62,7 +62,7 @@ function Register(props) {
 
     return (
         <div className={'animateBackground'}>
-                <div style={{marginTop: '20vh', textAlign: 'center'}}>
+                <div style={{marginTop: '20vh', textAlign: 'center'}} className='registerScale'>
                     <img src={window.location.origin + '/small-light-logo.png'} style={{width: '12vw', marginRight: '10px'}} alt=''></img>
 
                     <Paper elevation={24} style={{ padding: '1%', width: '400px', marginLeft: 'auto', marginRight: 'auto', marginTop: '2%'}}>

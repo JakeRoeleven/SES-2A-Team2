@@ -61,7 +61,8 @@ function Search(props) {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
-    const searchSubjects = async () => {
+    const searchSubjects = async (e) => {
+        e.preventDefault();
         if (searchValue.length > 1) {
             setLoading(true)
             setError(false)
@@ -90,7 +91,15 @@ function Search(props) {
     useEffect(() => {
         setSubjects(data);
     }, [data]);
-
+    
+    const handleKeyPress = (e) => {
+        debugger;
+        e.preventDefault();
+        if (e.key === 'Enter') {
+            searchSubjects()
+        }
+    }
+    
     // "Component that displays results or error messages"
     const ResultsDisplay = () => {
 
@@ -143,7 +152,7 @@ function Search(props) {
                             <Paper component='form' className={classes.root}>
                                 <InputBase className={classes.input} placeholder='Search Subjects' value={searchValue} onChange={(e) => setSearchValue(e.target.value)} />
                                 <Divider className={classes.divider} orientation='vertical' />
-                                <IconButton onClick={searchSubjects} className={classes.iconButton} aria-label='search'>
+                                <IconButton onClick={(e) => searchSubjects(e)} className={classes.iconButton} aria-label='search' onKeyPress={(e) => handleKeyPress(e)}>
                                     <SearchIcon />
                                 </IconButton>
                             </Paper>

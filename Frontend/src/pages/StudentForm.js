@@ -145,9 +145,11 @@ class StudentForm extends Component {
                                 <InterestSelect displayed_interests={this.state.displayed_interests} setCurrentInterests={this.setCurrentInterests} setDisplayedInterests={this.setDisplayedInterests} />
                                 
                                 <br />
-                                <Button loading={this.state.loading} type='submit' value='Submit' color='blue' fluid size='large' style={{float: 'right'}}>
+                                <Button variant='contained' color='primary' loading={this.state.loading} type='submit' value='Submit' fluid size='large' style={{float: 'right'}}>
                                     Create Account
                                 </Button>
+                                <br />
+                                <br />
                             </Form>
                         </Card>
                     </Container>
