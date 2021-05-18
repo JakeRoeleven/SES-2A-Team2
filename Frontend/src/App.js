@@ -48,7 +48,7 @@ function App() {
 
     const [isAuthenticated, setAuth] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [signupComplete, setSignupComplete] = useState(false);
+    const [signupComplete, setSignupComplete] = useState(true);
 
     const [showProgress, setShowProgress] = useState(false);
    
@@ -120,6 +120,7 @@ function App() {
                         setIsAdmin(true);
                         sessionStorage.setItem('isAdmin', true);
                     } else {
+                        debugger;
                         if (data.signupComplete) {
                             fetchSubjects(true);
                             setSignupComplete(true);
@@ -153,7 +154,6 @@ function App() {
 
 		if (sessionStorage.getItem('user_id') === null) {
 			setAuth(false)
-			setSignupComplete(false)
             if (sessionStorage.getItem('isAdmin') === null) {
                 setIsAdmin(false)
             }

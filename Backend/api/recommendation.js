@@ -43,8 +43,9 @@ router.post('/recommendation', async (req, res) => {
     const all_interests = getAllInterests();
 
     // Get request contents
-    // TODO: Error handeling and validation
     let student_req = req.body.student;
+
+    console.log(student_req)
     
     // Set candidate student
     let student = {}

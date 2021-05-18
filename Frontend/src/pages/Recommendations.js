@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import ReplayIcon from '@material-ui/icons/Replay';
 import { AppContext } from '../AppContext';
 import InterestsCard from '../components/InterestsCard';
+import Pagination from '@material-ui/lab/Pagination';
 
 function Recommendations() {  
     
@@ -17,7 +18,8 @@ function Recommendations() {
 
     const [results, setResults] = useState({}); 
     const [completed, setCompleted] = useState(false);
-   
+    const [page, setPage]= useState(1);
+
     const findSubjects = (recommendations) => {
         let subject_obj = {};
         let subject_ids = recommendations;
@@ -69,11 +71,19 @@ function Recommendations() {
     }
 
     const Results = () => {
+
+        let start = (0 + (page - 1) * 5)
+        let end = (5 + (page - 1) * 5)
+        let count = parseInt(Object.keys(results).length / 5);
+        
         if (Object.keys(results).length > 0) {
             return (
-                Object.keys(results).slice(0, 5).map((subject, key) => (
+                <>
+                {Object.keys(results).slice(start, end).map((subject, key) => (
                     <SubjectCard key={key} subject={results[subject]} callback={callback} />
-                ))
+                ))}
+                <Pagination style={{ float: 'right'}} count={count} onChange={(event, page) => setPage(page)} page={page} />
+                </>
             )
          } else {
             return <p style={{ textAlign:'center' }}>  </p>;

@@ -94,13 +94,10 @@ export default function Album(props) {
 				<div className={classes.root}>
 					<AppBar position='static'>
 						<Toolbar>
-							<img alt='' src={window.location.origin + '/small-light-logo.png'} style={{cursor: 'pointer', width: '2vw', marginRight: '10px'}} onClick={() => history.push('/land')}></img>
+							<img alt='' src={window.location.origin + '/small-light-logo.png'} style={{cursor: 'pointer', width: '2vw', marginRight: '10px'}} onClick={() => history.push('/')}></img>
 							<Typography variant='h6' className={classes.title}>
 								Course Recommender
 							</Typography>
-							<Button href='/login' variant='outlined' style={{color: 'white', borderColor: 'white'}}>
-								Login
-							</Button>
 						</Toolbar>
 					</AppBar>
 				</div>
@@ -109,7 +106,7 @@ export default function Album(props) {
 					{/* Hero unit */}
 					<div className={classes.heroContent + ' animated'}>
 						<Container style={{padding: '3%', maxWidth: '95%', textAlign: 'center ', color: 'white', fontWeight: '100'}}>
-							<img alt='' src={window.location.origin + '/small-light-logo.png'} style={{cursor: 'pointer', width: '12vw', marginRight: '10px'}} onClick={() => history.push('/land')}></img>
+							<img alt='' src={window.location.origin + '/small-light-logo.png'} style={{cursor: 'pointer', width: '12vw', marginRight: '10px'}} onClick={() => history.push('/')}></img>
 							<Typography component='h1' variant='h2' gutterBottom style={{fontWeight: 'bold'}}>
 								{' '}
 								FIND THE COURSES YOU NEED, NOW!{' '}
@@ -157,8 +154,8 @@ export default function Album(props) {
 						</Grid>
 						<Grid item style={{ textAlign: 'right' }} xs={6}>
 							<Typography variant='subtitle1' color='textSecondary' component='p'>
-								For courses in the UTS Handbook
-								<IconButton color='inherit' href='https://github.com/JakeRoeleven/SES-2A-Team2'>
+								<span style={{ marginRight: '30px', marginTop: '10px'}}>Works with all courses in the UTS Handbook</span>
+								<IconButton size='small' color='inherit' href='https://github.com/JakeRoeleven/SES-2A-Team2'>
 									<GitHubIcon fontSize='large' alignItems='center' />
 								</IconButton>
 							</Typography>
