@@ -69,24 +69,25 @@ def getKNNStudents(k, newStudent, studentList, students):
     del relationships
     return neighbours
 
-#Will give you x course recommendations based on your K nearest neighbours
-def getRecommendations(KNN, x, students):
+#Will give you course recommendations based on your K nearest neighbours
+def getRecommendations(KNN, students):
     KNNCourses = {}
-    recommendations = []
+    #recommendations = []
     for id in KNN:
         for course in students[id]["courses_completed"]:
             if course in KNNCourses:
                 KNNCourses[course] += 1
             else:
                 KNNCourses[course] = 1
-    while len(recommendations) < x and len(recommendations) < len(KNNCourses):
-        recommended = max(KNNCourses, key=(KNNCourses.get))
-        recommendations.append(recommended)
-        KNNCourses.pop(recommended)
-    del KNNCourses
-    return recommendations
+    #while len(recommendations) < x and len(recommendations) < len(KNNCourses):
+    #    recommended = max(KNNCourses, key=(KNNCourses.get))
+    #    recommendations.append(recommended)
+    #    KNNCourses.pop(recommended)
+    #del KNNCourses
+    #return recommendations
+    return sorted(KNNCourses.keys(), key=KNNCourses.get, reverse=True)
 
-def main(courses, students, newStudent, K, amount, **keyValuePair):
+def main(courses, students, newStudent, K, **keyValuePair):
 
     ####Converted JSON Format####
     #All courses (Dictionary)
@@ -125,11 +126,11 @@ def main(courses, students, newStudent, K, amount, **keyValuePair):
 
     studentList = getStudentSet(students, getMatchingCourseList(courses, **keyValuePair));
     KNN = getKNNStudents(K, newStudent, studentList, students);
-    print(getRecommendations(KNN, amount, students));
+    print(getRecommendations(KNN, students));
     exit()
 
 
 # Pass system arguments
 data_in = json.loads(sys.stdin.read())
 student_faculty = data_in['student']['major']
-main(data_in['courses'], data_in['students'], data_in['student'], 2, 10)
+main(data_in['courses'], data_in['students'], data_in['student'], 30, faculty = student_faculty)
