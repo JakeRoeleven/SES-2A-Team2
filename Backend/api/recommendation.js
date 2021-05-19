@@ -45,8 +45,6 @@ router.post('/recommendation', async (req, res) => {
     // Get request contents
     let student_req = req.body.student;
 
-    console.log(student_req)
-    
     // Set candidate student
     let student = {}
     student.major = student_req.faculty
@@ -54,7 +52,9 @@ router.post('/recommendation', async (req, res) => {
 
     // Format candidate student
     let interest_array = [];
+
     let interests_json = student_req.interests
+    interest_array.push(student_req.courses_completed.length)
     for (var i = 0, len = all_interests.length; i < len; i++) {    
         if (interests_json.indexOf(all_interests[i]) > -1) {
             interest_array.push(1)
@@ -72,7 +72,12 @@ router.post('/recommendation', async (req, res) => {
     for (var i = 0, len = Object.keys(student_list).length; i < len; i++) {   
 
         let interest_array = [];
+
+
         if (student_list[i]) {
+
+            interest_array.push(student_list[i].courses_completed.length)
+
             let interests_json = student_list[i].interests
         
             // Loop through interests and transform
@@ -112,6 +117,7 @@ router.post('/recommendation', async (req, res) => {
         students: formatted_student_list
     }
 
+
     // Python scripts takes arguments in order as main(courses, students, student, k, recommendations)
     try {
         
@@ -123,7 +129,6 @@ router.post('/recommendation', async (req, res) => {
         
         pyshell.on('message', async function (recommendations) {
             // received a message sent from the Python script (a simple "print" statement)
-
             recommendations = recommendations.split(",")
             let subject_ids = [];
             for (var i = 0, len = recommendations.length; i < len; i++) {   

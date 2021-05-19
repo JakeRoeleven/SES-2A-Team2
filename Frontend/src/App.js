@@ -120,7 +120,6 @@ function App() {
                         setIsAdmin(true);
                         sessionStorage.setItem('isAdmin', true);
                     } else {
-                        debugger;
                         if (data.signupComplete) {
                             fetchSubjects(true);
                             setSignupComplete(true);

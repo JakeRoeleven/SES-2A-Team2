@@ -1,6 +1,5 @@
 import React, {useState, useContext} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import SubjectCard from '../components/SubjectCard';
@@ -9,6 +8,7 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import { AppContext } from '../AppContext';
 import InterestsCard from '../components/InterestsCard';
 import Pagination from '@material-ui/lab/Pagination';
+import {CircularProgress, Typography} from '@material-ui/core';
 
 function Recommendations() {  
     
@@ -16,24 +16,31 @@ function Recommendations() {
 
     const data = useContext(AppContext);
 
-    const [results, setResults] = useState({}); 
+    const [results, setResults] = useState({});
+    const [orderResults, setOrderedResults] = useState([]); 
     const [completed, setCompleted] = useState(false);
+    const [time, setTime] = useState('');
     const [page, setPage]= useState(1);
+    const [loading, setLoading]= useState(false);
 
     const findSubjects = (recommendations) => {
+
         let subject_obj = {};
         let subject_ids = recommendations;
         data.forEach(elem => {
             if (subject_ids.includes(elem._id)) {
                 subject_obj[elem._id] = elem
             }
-        })
+        });
+
+        setOrderedResults(recommendations)
         setResults(subject_obj);
     }
 
     const findRecommendations = (student) => {  
+        setLoading(true)
         setPage(1)
-        fetch(`https://api.courses4you.club/api/recommendation`, {
+        fetch(`http://localhost:8080/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
             headers: {
@@ -41,16 +48,27 @@ function Recommendations() {
             },
         }).then(async (res) => {
             let json = await res.json(res)
+            setTime(json.time)
             findSubjects(json.recommendations)
+            setLoading(false)
         }).catch((err) => {
             console.log(err)
         });
     }
 
+    const clearResults = () => {
+        let new_res = {};
+        let new_ordered_res = []; 
+        setOrderedResults(new_ordered_res);
+        setResults(new_res);
+    }
+
     const callback = (data) => {
-        
+      
         let curr_res =  results;
-        let new_res = {}
+        let current_ordered_res = orderResults;
+        let new_res = {};
+        let new_ordered_res = [];
         
         Object.keys(curr_res).forEach(elem => {
             if (!data.includes(elem)) {
@@ -58,6 +76,13 @@ function Recommendations() {
             }
         });
 
+        current_ordered_res.forEach(elem => {
+            if (!data.includes(elem)) {
+                new_ordered_res.push(elem)
+            }
+        });
+
+        setOrderedResults(new_ordered_res);
         setResults(new_res);
         setCompleted(data);
 
@@ -65,7 +90,7 @@ function Recommendations() {
 
     const ResetButton = () => {
         if (Object.keys(results).length > 0) {
-           return <Button startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => setResults({})}> Clear Recommendations</Button>
+           return <Button startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => clearResults()}> Clear Recommendations</Button>
         } else {
            return null;
         }
@@ -75,13 +100,30 @@ function Recommendations() {
 
         let start = (0 + (page - 1) * 5)
         let end = (5 + (page - 1) * 5)
-        let count = parseInt(Object.keys(results).length / 5);
+        let count = parseInt(Object.keys(orderResults).length / 5);
         
-        if (Object.keys(results).length > 0) {
+        if (loading) {
             return (
                 <>
-                {Object.keys(results).slice(start, end).map((subject, key) => (
-                    <SubjectCard key={key} subject={results[subject]} callback={callback} />
+                <div style={{ textAlign: 'center'}}>
+                <CircularProgress size={50} color={'primary'} />
+                <br /><br />
+                <Typography color='textPrimary'> Finding courses based on you interests... </Typography>
+                </div>
+                </>
+            )
+        } else if (orderResults.length > 0 && Object.keys(results).length > 0) {
+            return (
+                <>
+                <div style={{ textAlign: 'end'}}>
+                <Typography variant='p' style={{ textAlign: 'right' }}> Found {orderResults.length} Results in {time}s </Typography>
+                </div>
+         
+                <br />
+                {orderResults.slice(start, end).map((subject, key) => (
+                    <>
+                    {results[subject] && <SubjectCard key={key} subject={results[subject]} callback={callback} /> }
+                    </>
                 ))}
                 <Pagination style={{ float: 'right'}} count={count} onChange={(event, page) => setPage(page)} page={page} />
                 </>

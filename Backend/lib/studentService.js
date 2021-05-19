@@ -169,8 +169,14 @@ class StudentService {
 
     async getAllKNNStudentsByMajor(major) {
         if (major) {
-            const studentRef = await Student.find({ major: major }, { _id: 1 , courses_completed : 1 , interests : 1 , postgraduate : 1, year: 1} ).lean();
-            return studentRef;
+            let studentRef = await Student.find({ major: major }, { _id: 1 , courses_completed : 1 , interests : 1 , postgraduate : 1, year: 1} ).lean();
+            
+            if (Object.keys(studentRef).length < 10) {
+                studentRef = (await Student.find({}, { _id: 1 , courses_completed : 1 , interests : 1 , postgraduate : 1, year: 1} ).lean()).splice(0, 200);
+                return studentRef;
+            } else {
+                return studentRef;
+            }
         } else {
             const studentRef = await Student.find().lean();
             return studentRef;

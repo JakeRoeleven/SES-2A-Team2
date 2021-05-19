@@ -93,7 +93,6 @@ function Search(props) {
     }, [data]);
     
     const handleKeyPress = (e) => {
-        debugger;
         e.preventDefault();
         if (e.key === 'Enter') {
             searchSubjects()
