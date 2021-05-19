@@ -52,7 +52,9 @@ router.post('/recommendation', async (req, res) => {
 
     // Format candidate student
     let interest_array = [];
+
     let interests_json = student_req.interests
+    interest_array.push(student_req.courses_completed.length)
     for (var i = 0, len = all_interests.length; i < len; i++) {    
         if (interests_json.indexOf(all_interests[i]) > -1) {
             interest_array.push(1)
@@ -64,18 +66,18 @@ router.post('/recommendation', async (req, res) => {
 
     // Get and format students
     const studentService = new StudentService();
-    console.log("Pre Lists")
-    
     let student_list = await studentService.getAllKNNStudentsByMajor(student.major);
-    console.log(student_list.length)
-
-    console.log("Post list")
     let formatted_student_list = {};
 
     for (var i = 0, len = Object.keys(student_list).length; i < len; i++) {   
 
         let interest_array = [];
+
+
         if (student_list[i]) {
+
+            interest_array.push(student_list[i].courses_completed.length)
+
             let interests_json = student_list[i].interests
         
             // Loop through interests and transform
@@ -115,7 +117,6 @@ router.post('/recommendation', async (req, res) => {
         students: formatted_student_list
     }
 
-    console.log("py time")
 
     // Python scripts takes arguments in order as main(courses, students, student, k, recommendations)
     try {
@@ -128,7 +129,6 @@ router.post('/recommendation', async (req, res) => {
         
         pyshell.on('message', async function (recommendations) {
             // received a message sent from the Python script (a simple "print" statement)
-            console.log(recommendations)
             recommendations = recommendations.split(",")
             let subject_ids = [];
             for (var i = 0, len = recommendations.length; i < len; i++) {   
@@ -137,7 +137,6 @@ router.post('/recommendation', async (req, res) => {
 
             let subjects = [];
             for (var i = 0, len = subject_ids.length; i < len; i++) {   
-                console.log(subject_ids[i])
                 if (student.courses_completed.indexOf(subject_ids[i]) == -1) subjects.push(subject_ids[i])
             }
 
