@@ -44,6 +44,7 @@ router.post('/recommendation', async (req, res) => {
 
     // Get request contents
     let student_req = req.body.student;
+    console.log(student_req)
 
     console.log(student_req)
     
@@ -123,7 +124,7 @@ router.post('/recommendation', async (req, res) => {
         
         pyshell.on('message', async function (recommendations) {
             // received a message sent from the Python script (a simple "print" statement)
-
+            console.log(recommendations)
             recommendations = recommendations.split(",")
             let subject_ids = [];
             for (var i = 0, len = recommendations.length; i < len; i++) {   
@@ -132,6 +133,7 @@ router.post('/recommendation', async (req, res) => {
 
             let subjects = [];
             for (var i = 0, len = subject_ids.length; i < len; i++) {   
+                console.log(subject_ids[i])
                 if (student.courses_completed.indexOf(subject_ids[i]) == -1) subjects.push(subject_ids[i])
             }
 

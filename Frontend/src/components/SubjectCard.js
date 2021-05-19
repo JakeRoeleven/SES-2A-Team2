@@ -41,10 +41,10 @@ function SubjectCard(props) {
         let completed = sessionStorage.getItem('complete');
         if (completed) setCompleted(completed)
 
+        debugger;
         setCode(props.subject._id)
         setTitle(props.subject._id + " - " + props.subject.course_name);
         setFaculty("Faculty of  " + props.subject.faculty)
-
 
         let des = props.subject.description.substring(0, 500).trim();
         let words = des.split(" ");
@@ -220,7 +220,7 @@ function SubjectCard(props) {
             <Content />
             
             <CardActions style={{paddingRight: '28px', paddingBottom: '12px'}}>
-                <Button variant="contained" style={{ marginLeft: "auto"}} target="_blank" size='small'  href={props.subject.link}>Visit Handbook</Button>
+                <Button variant="contained" style={{ marginLeft: "auto"}} target="_blank" size='small'  href={'#'}>Visit Handbook</Button>
                 <ShowMore />
             </CardActions>
             <Alert open={showAlert} close={setShowAlert} message={alertMessage} />

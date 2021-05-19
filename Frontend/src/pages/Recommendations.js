@@ -16,24 +16,28 @@ function Recommendations() {
 
     const data = useContext(AppContext);
 
-    const [results, setResults] = useState({}); 
+    const [results, setResults] = useState({});
+    const [orderResults, setOrderedResults] = useState([]); 
     const [completed, setCompleted] = useState(false);
     const [page, setPage]= useState(1);
 
     const findSubjects = (recommendations) => {
+
         let subject_obj = {};
         let subject_ids = recommendations;
         data.forEach(elem => {
             if (subject_ids.includes(elem._id)) {
                 subject_obj[elem._id] = elem
             }
-        })
+        });
+
+        setOrderedResults(recommendations)
         setResults(subject_obj);
     }
 
     const findRecommendations = (student) => {  
         setPage(1)
-        fetch(`https://api.courses4you.club/api/recommendation`, {
+        fetch(`http://localhost:8080/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
             headers: {
@@ -41,16 +45,28 @@ function Recommendations() {
             },
         }).then(async (res) => {
             let json = await res.json(res)
+            console.log(json.recommendations)
             findSubjects(json.recommendations)
         }).catch((err) => {
             console.log(err)
         });
     }
 
+    const clearResults = () => {
+        let new_res = {};
+        let new_ordered_res = []; 
+        setOrderedResults(new_ordered_res);
+        setResults(new_res);
+    }
+
     const callback = (data) => {
+
+        console.log("callback")
         
         let curr_res =  results;
-        let new_res = {}
+        let current_ordered_res = orderResults;
+        let new_res = {};
+        let new_ordered_res = [];
         
         Object.keys(curr_res).forEach(elem => {
             if (!data.includes(elem)) {
@@ -58,6 +74,13 @@ function Recommendations() {
             }
         });
 
+        current_ordered_res.forEach(elem => {
+            if (!data.includes(elem)) {
+                new_ordered_res.push(elem)
+            }
+        });
+
+        setOrderedResults(new_ordered_res);
         setResults(new_res);
         setCompleted(data);
 
@@ -65,7 +88,7 @@ function Recommendations() {
 
     const ResetButton = () => {
         if (Object.keys(results).length > 0) {
-           return <Button startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => setResults({})}> Clear Recommendations</Button>
+           return <Button startIcon={<ReplayIcon />} size='small' variant="outlined" style={{ float: 'right' }} onClick={() => clearResults()}> Clear Recommendations</Button>
         } else {
            return null;
         }
@@ -75,13 +98,15 @@ function Recommendations() {
 
         let start = (0 + (page - 1) * 5)
         let end = (5 + (page - 1) * 5)
-        let count = parseInt(Object.keys(results).length / 5);
+        let count = parseInt(Object.keys(orderResults).length / 5);
         
-        if (Object.keys(results).length > 0) {
+        if (orderResults.length > 0 && Object.keys(results).length > 0) {
             return (
                 <>
-                {Object.keys(results).slice(start, end).map((subject, key) => (
-                    <SubjectCard key={key} subject={results[subject]} callback={callback} />
+                {orderResults.slice(start, end).map((subject, key) => (
+                    <>
+                    {results[subject] && <SubjectCard key={key} subject={results[subject]} callback={callback} /> }
+                    </>
                 ))}
                 <Pagination style={{ float: 'right'}} count={count} onChange={(event, page) => setPage(page)} page={page} />
                 </>
