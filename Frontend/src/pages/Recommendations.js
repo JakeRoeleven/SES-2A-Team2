@@ -40,7 +40,7 @@ function Recommendations() {
     const findRecommendations = (student) => {  
         setLoading(true)
         setPage(1)
-        fetch(`http://localhost:8080/api/recommendation`, {
+        fetch(`https://api.courses4you.club/api/recommendation`, {
             method: 'POST',
             body: JSON.stringify({student}),
             headers: {
