@@ -1,6 +1,5 @@
 import React, {useState, useContext} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import SubjectCard from '../components/SubjectCard';
@@ -9,6 +8,7 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import { AppContext } from '../AppContext';
 import InterestsCard from '../components/InterestsCard';
 import Pagination from '@material-ui/lab/Pagination';
+import {CircularProgress, Typography} from '@material-ui/core';
 
 function Recommendations() {  
     
@@ -19,7 +19,9 @@ function Recommendations() {
     const [results, setResults] = useState({});
     const [orderResults, setOrderedResults] = useState([]); 
     const [completed, setCompleted] = useState(false);
+    const [time, setTime] = useState('');
     const [page, setPage]= useState(1);
+    const [loading, setLoading]= useState(false);
 
     const findSubjects = (recommendations) => {
 
@@ -36,6 +38,7 @@ function Recommendations() {
     }
 
     const findRecommendations = (student) => {  
+        setLoading(true)
         setPage(1)
         fetch(`http://localhost:8080/api/recommendation`, {
             method: 'POST',
@@ -45,8 +48,9 @@ function Recommendations() {
             },
         }).then(async (res) => {
             let json = await res.json(res)
-            console.log(json.recommendations)
+            setTime(json.time)
             findSubjects(json.recommendations)
+            setLoading(false)
         }).catch((err) => {
             console.log(err)
         });
@@ -60,9 +64,7 @@ function Recommendations() {
     }
 
     const callback = (data) => {
-
-        console.log("callback")
-        
+      
         let curr_res =  results;
         let current_ordered_res = orderResults;
         let new_res = {};
@@ -100,9 +102,24 @@ function Recommendations() {
         let end = (5 + (page - 1) * 5)
         let count = parseInt(Object.keys(orderResults).length / 5);
         
-        if (orderResults.length > 0 && Object.keys(results).length > 0) {
+        if (loading) {
             return (
                 <>
+                <div style={{ textAlign: 'center'}}>
+                <CircularProgress size={50} color={'primary'} />
+                <br /><br />
+                <Typography color='textPrimary'> Finding courses based on you interests... </Typography>
+                </div>
+                </>
+            )
+        } else if (orderResults.length > 0 && Object.keys(results).length > 0) {
+            return (
+                <>
+                <div style={{ textAlign: 'end'}}>
+                <Typography variant='p' style={{ textAlign: 'right' }}> Found {orderResults.length} Results in {time}s </Typography>
+                </div>
+         
+                <br />
                 {orderResults.slice(start, end).map((subject, key) => (
                     <>
                     {results[subject] && <SubjectCard key={key} subject={results[subject]} callback={callback} /> }
