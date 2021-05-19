@@ -44,10 +44,7 @@ router.post('/recommendation', async (req, res) => {
 
     // Get request contents
     let student_req = req.body.student;
-    console.log(student_req)
 
-    console.log(student_req)
-    
     // Set candidate student
     let student = {}
     student.major = student_req.faculty
@@ -67,7 +64,12 @@ router.post('/recommendation', async (req, res) => {
 
     // Get and format students
     const studentService = new StudentService();
+    console.log("Pre Lists")
+    
     let student_list = await studentService.getAllKNNStudentsByMajor(student.major);
+    console.log(student_list.length)
+
+    console.log("Post list")
     let formatted_student_list = {};
 
     for (var i = 0, len = Object.keys(student_list).length; i < len; i++) {   
@@ -112,6 +114,8 @@ router.post('/recommendation', async (req, res) => {
         courses: formatted_course_list,
         students: formatted_student_list
     }
+
+    console.log("py time")
 
     // Python scripts takes arguments in order as main(courses, students, student, k, recommendations)
     try {
