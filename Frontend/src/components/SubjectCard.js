@@ -21,6 +21,7 @@ function SubjectCard(props) {
 
     const [code, setCode] = useState('');
     const [title, setTitle] = useState('');
+    const [link, setLink] = useState('#');
     const [faculty, setFaculty] = useState('');
     const [displayParagraph, setDisplayParagraph] = useState('');
     const [showFullCard, setShowFullCard] = useState(false);
@@ -41,7 +42,7 @@ function SubjectCard(props) {
         let completed = sessionStorage.getItem('complete');
         if (completed) setCompleted(completed)
 
-        debugger;
+        if (props.subjects && props.subject.link) setLink(props.subject.link);
         setCode(props.subject._id)
         setTitle(props.subject._id + " - " + props.subject.course_name);
         setFaculty("Faculty of  " + props.subject.faculty)
@@ -220,7 +221,7 @@ function SubjectCard(props) {
             <Content />
             
             <CardActions style={{paddingRight: '28px', paddingBottom: '12px'}}>
-                <Button variant="contained" style={{ marginLeft: "auto"}} target="_blank" size='small'  href={'#'}>Visit Handbook</Button>
+                <Button variant="contained" style={{ marginLeft: "auto"}} target="_blank" size='small'  href={link}>Visit Handbook</Button>
                 <ShowMore />
             </CardActions>
             <Alert open={showAlert} close={setShowAlert} message={alertMessage} />
