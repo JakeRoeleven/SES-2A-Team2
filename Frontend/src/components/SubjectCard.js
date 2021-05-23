@@ -42,7 +42,7 @@ function SubjectCard(props) {
         let completed = sessionStorage.getItem('complete');
         if (completed) setCompleted(completed)
 
-        if (props.subjects && props.subject.link) setLink(props.subject.link);
+        if (props.subject && props.subject.link) setLink(props.subject.link);
         setCode(props.subject._id)
         setTitle(props.subject._id + " - " + props.subject.course_name);
         setFaculty("Faculty of  " + props.subject.faculty)
